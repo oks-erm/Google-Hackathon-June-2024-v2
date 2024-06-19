@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .image-container {
+            flex: 1;
+            padding: 10px;
+        }
+        .report-container {
+            flex: 3;
+            padding: 10px;
+        }
+        .report-item {
+            margin-bottom: 20px;
+        }
+        .report-item div {
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Report</h1>
+
+    <div class="container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" style="width: 100%; height: auto;">
+        </div>
+        <div class="report-container">
+            {% if report_data %}
+            <div class="report-item">
+                <div><strong>ID:</strong> {{ report_data.id }}</div>
+                <div><strong>Title:</strong> {{ report_data.title }}</div>
+                <div><strong>Population Year:</strong> {{ report_data.popyear }}</div>
+                <div><strong>ISO3:</strong> {{ report_data.iso3 }}</div>
+            </div>
+            {% else %}
+            <div class="report-item">
+                <p>No data available.</p>
+            </div>
+            {% endif %}
+
+            <button onclick="downloadReport()">Download</button>
+            <button onclick="saveReport()">Save</button>
+            <button onclick="shareReport()">Share</button>
+        </div>
+    </div>
+
+    <script>
+        function downloadReport() {
+            const data = {{ report_data | tojson }};
+            const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
+            const link = document.createElement('a');
+            link.href = jsonString;
+            link.download = 'report.json';
+            link.click();
+        }
+
+        function saveReport() {
+            alert('Save functionality to be implemented.');
+        }
+
+        function shareReport() {
+            const shareData = {
+                title: 'Report',
+                text: 'Check out this report!',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).then(() => {
+                    console.log('Report shared successfully.');
+                }).catch((error) => {
+                    console.error('Error sharing report:', error);
+                });
+            } else {
+                alert('Share not supported on this browser.');
+            }
+        }
+    </script>
+</body>
+</html>

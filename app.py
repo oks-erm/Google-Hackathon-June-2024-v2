@@ -86,5 +86,30 @@ def login():
 
     return render_template('login.html')
 
+
+@app.route('/report', methods=['GET', 'POST'])
+def report():
+    response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
+
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Select specific fields from the response
+        if data["data"]:
+            item = data["data"][0]
+            report_data = {
+                "id": item["id"],
+                "title": item["title"],
+                "popyear": item["popyear"],
+                "iso3": item["iso3"]
+            }
+        else:
+            report_data = {}
+
+        return render_template('report.html', report_data=report_data)
+    else:
+        return render_template('error.html', error="Failed to retrieve data"), response.status_code
+    
+
 if __name__ == '__main__':
     app.run(debug=True)
