@@ -10,6 +10,8 @@ from flask import (
     flash
 )
 import requests
+from dotenv import load_dotenv
+import os
 
 def get_now():
     from datetime import datetime as dt
@@ -24,16 +26,16 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    if 'index' not in session:
-        session['index'] = 0
+    # if 'index' not in session:
+    #     session['index'] = 0
     return render_template('index.html')
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    if not session.get("isAuthenticated", False):
-        return redirect(url_for('index'))
-    print(session)
-    return render_template('run.html')
+    # if not session.get("isAuthenticated", False):
+    #     return redirect(url_for('index'))
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    return render_template('run.html', google_map_api_key=google_map_api_key)
 
 
 # this is not used as of now
