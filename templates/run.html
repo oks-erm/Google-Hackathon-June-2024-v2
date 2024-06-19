@@ -15,8 +15,33 @@
   src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
 </iframe>
 <div>
-    <div class=""></div>
-    <div class></div>
+    <!-- Modal Button (Modal is the popup card) -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Open Pop-Up Card
+    </button>
+     <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Pop-Up Card Title</h4>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+          This is the content of the pop-up card. You can put any text or HTML content here.
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- JavaScript for the Modal -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </div>
 <div class="scrollable-box">
   {% for item in items %}
