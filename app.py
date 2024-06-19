@@ -28,14 +28,14 @@ def hash_password(password):
 def index():
     # if 'index' not in session:
     #     session['index'] = 0
-    return render_template('index.html')
+    return render_template('index.html', isAuthenticated=session.get("isAuthenticated", False))
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     # if not session.get("isAuthenticated", False):
     #     return redirect(url_for('index'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    return render_template('run.html', google_map_api_key=google_map_api_key)
+    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key)
 
 
 # this is not used as of now
@@ -66,11 +66,12 @@ def signup():
         flash('User created successfully', 'success')
         return redirect(url_for('index'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    session["isAuthenticated"] = True
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -88,7 +89,7 @@ def login():
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
 
-    return render_template('login.html')
+    return render_template('login.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/report', methods=['GET', 'POST'])
