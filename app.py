@@ -11,7 +11,6 @@ from flask import (
 )
 import requests
 
-
 def get_now():
     from datetime import datetime as dt
 
@@ -31,8 +30,9 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not logged in
-    #     return redirect(url_for('index'))
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('index'))
+    print(session)
     return render_template('run.html')
 
 
@@ -79,6 +79,7 @@ def login():
 
         if login and login.password == current_entered_pass:
             session['user_id'] = login.id
+            session["isAuthenticated"] = True
             flash('Login successful', 'success')
             return redirect(url_for('index'))
         else:
