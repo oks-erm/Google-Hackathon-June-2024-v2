@@ -9,6 +9,9 @@ from flask import (
     session,
     flash
 )
+import requests
+from dotenv import load_dotenv
+import os
 
 import requests
 
@@ -25,15 +28,19 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    if 'index' not in session:
-        session['index'] = 0
-    return render_template('index.html')
+    # if 'index' not in session:
+    #     session['index'] = 0
+    return render_template('index.html', isAuthenticated=session.get("isAuthenticated", False))
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not logged in
-    #     return redirect(url_for('index'))
-    return render_template('run.html')
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    # def index():
+    items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
+    # return render_template('index.html', items=items)
+    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items)
 
 
 # this is not used as of now
@@ -64,7 +71,7 @@ def signup():
         flash('User created successfully', 'success')
         return redirect(url_for('index'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,13 +86,43 @@ def login():
 
         if login and login.password == current_entered_pass:
             session['user_id'] = login.id
+            session["isAuthenticated"] = True
             flash('Login successful', 'success')
             return redirect(url_for('index'))
         else:
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
 
-    return render_template('login.html')
+    return render_template('login.html', isAuthenticated=session.get("isAuthenticated", False))
+
+
+@app.route('/report', methods=['GET', 'POST'])
+def report():
+    if request.method == 'POST':
+        num_fields = int(request.form.get('num_fields', 10))
+    else:
+        num_fields = int(request.args.get('num_fields', 10))
+
+    response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
+
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Select specific fields from the response
+        report_data = [
+            {
+                "id": item["id"],
+                "title": item["title"],
+                "popyear": item["popyear"],
+                "iso3": item["iso3"]
+            }
+            for item in data["data"][:num_fields]
+        ]
+
+        return render_template('report.html', report_data=report_data, num_fields = num_fields)
+    else:
+        return render_template('error.html', error="Failed to retrieve data"), response.status_code
+    
 
 
 @app.route('/report', methods=['GET', 'POST'])
