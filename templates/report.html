@@ -56,7 +56,7 @@
                 <div><strong>Population Year:</strong> {{ item.popyear }}</div>
                 <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
             </div>
-            <button id="downloader + {{  item.id }}" data-report="{{ item }}" onclick="downloadReport()">Download</button>
+            <button class="report-btn" data-report="{{ item }}">Download</button>
         </div>
         {% endfor %}
     </div>
@@ -68,15 +68,16 @@
     </div>
 
     <script>
-        function downloadReport(e) {
-            console.log(e)
-            // const data = { report };
-            // const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
-            // const link = document.createElement('a');
-            // link.href = jsonString;
-            // link.download = 'report.json';
-            // link.click();
-        }
+         document.addEventListener('DOMContentLoaded', function() {
+            var buttons = document.querySelectorAll('.report-btn');
+
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const reportData = this.getAttribute('data-report');
+                    console.log(reportData);
+                });
+            });
+        });
 
         function saveReport() {
             alert('Save functionality to be implemented.');
