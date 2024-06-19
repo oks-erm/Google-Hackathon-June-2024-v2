@@ -1,49 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-
-<body>
-    <h1 class="header">Users List</h1>
-    <div class="content">
-        {% if user %}
-        <div>ID: {{ user.id }}</div>
-        <div>USER: {{ user.name }}</div>
-        <div>CREATED AT: {{ user.timestamp }}</div>
-        <div>CUNTNESS LEVEL: {{ user.Cuntness }}</div>
-
-    </div>
-    {% else %}
-    <div>No users! cunt...</div>
-    {% endif %}
-    <div class="panel">
-        <div class="buttons">
-            <form action="/previous" method="GET">
-                <button type="submit" {% if previous_disabled %}disabled{% endif %}>Previous</button>
-            </form>
-            <form action="/next" method="GET">
-                <button type="submit" {% if next_disabled %}disabled{% endif %}>Next</button>
-            </form>
-            <form action="/input_user" method="GET">
-                <button type="submit">Input user</button>
-            </form>
-        </div>
-    </div>
-    <div class="panel">
-        <div class="buttons">
-            <form action="/login" method="GET">
-                <button type="submit">login</button>
-            </form>
-            <form action="/signup" method="GET">
-                <button type="submit">signup</button>
-            </form>
-        </div>
-    </div>
-</body>
-
-</html>
+{% block title %}
+    Index
+{% endblock %}
+{% block content %}
+    <h1>Index</h1>
+    <p class="important">
+      Welcome to my awesome homepage.
+    </p>
+{% endblock %}
