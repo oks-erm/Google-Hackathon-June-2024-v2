@@ -16,9 +16,18 @@
             <img id="logo" src="../static/assets/logo.png">
         </a>
         <div class="buttons">
+            {% if isAuthenticated %}
+            <form action="/report" method="GET">
+                <button type="submit">Reports</button>
+            </form>
+            <form action="/profile" method="GET">
+                <button type="submit">U</button>
+            </form>
+            {% else %}
             <form action="/login" method="GET">
                 <button type="submit">Sign in</button>
             </form>
+            {% endif %}
         </div>
     </div>
 

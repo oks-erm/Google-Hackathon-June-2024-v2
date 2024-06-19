@@ -10,7 +10,8 @@ from flask import (
     flash
 )
 import requests
-
+from dotenv import load_dotenv
+import os
 
 def get_now():
     from datetime import datetime as dt
@@ -25,15 +26,16 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    if 'index' not in session:
-        session['index'] = 0
-    return render_template('index.html')
+    # if 'index' not in session:
+    #     session['index'] = 0
+    return render_template('index.html', isAuthenticated=session.get("isAuthenticated", False))
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not logged in
+    # if not session.get("isAuthenticated", False):
     #     return redirect(url_for('index'))
-    return render_template('run.html')
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key)
 
 
 # this is not used as of now
@@ -64,7 +66,7 @@ def signup():
         flash('User created successfully', 'success')
         return redirect(url_for('index'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,13 +81,14 @@ def login():
 
         if login and login.password == current_entered_pass:
             session['user_id'] = login.id
+            session["isAuthenticated"] = True
             flash('Login successful', 'success')
             return redirect(url_for('index'))
         else:
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
 
-    return render_template('login.html')
+    return render_template('login.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/report', methods=['GET', 'POST'])
