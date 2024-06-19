@@ -56,31 +56,71 @@
                 <div><strong>Population Year:</strong> {{ item.popyear }}</div>
                 <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
             </div>
-            <button class="report-btn" data-report="{{ item }}">Download</button>
+            <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
         </div>
         {% endfor %}
     </div>
 
     <div class="buttons-container">
         <button onclick="downloadReport()">Download</button>
-        <button onclick="saveReport()">Save</button>
         <button onclick="shareReport()">Share</button>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             var buttons = document.querySelectorAll('.report-btn');
 
             buttons.forEach(function(button) {
                 button.addEventListener('click', function() {
-                    const reportData = this.getAttribute('data-report');
-                    console.log(reportData);
+                    const id = this.getAttribute('data-id');
+                    const title = this.getAttribute('data-title');
+                    const popyear = this.getAttribute('data-popyear');
+                    const iso3 = this.getAttribute('data-iso3');
+
+                    const reportData = {
+                        id: id,
+                        title: title,
+                        popyear: popyear,
+                        iso3: iso3
+                    };
+
+                    createAndDownloadPDF(reportData);
                 });
             });
         });
 
-        function saveReport() {
-            alert('Save functionality to be implemented.');
+        function createAndDownloadPDF(reportData) {
+            const docDefinition = {
+                content: [
+                    { text: 'Report', style: 'header' },
+                    { text: `ID: ${reportData.id}`, style: 'subheader' },
+                    { text: `Title: ${reportData.title}`, style: 'subheader' },
+                    { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
+                    { text: `ISO3: ${reportData.iso3}`, style: 'subheader' }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 22,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    },
+                    subheader: {
+                        fontSize: 16,
+                        bold: true,
+                        margin: [0, 10, 0, 5]
+                    },
+                    quote: {
+                        italics: true,
+                        alignment: 'right',
+                        margin: [0, 10, 0, 10]
+                    }
+                }
+            };
+
+            pdfMake.createPdf(docDefinition).download('report.pdf');
         }
 
         function shareReport() {
