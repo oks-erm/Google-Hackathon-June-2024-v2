@@ -28,6 +28,12 @@ def index():
         session['index'] = 0
     return render_template('index.html')
 
+@app.route('/run', methods=['GET', 'POST'])
+def run():
+    # if not logged in
+    #     return redirect(url_for('index'))
+    return render_template('run.html')
+
 
 # this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])
