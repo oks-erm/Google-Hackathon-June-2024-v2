@@ -9,40 +9,16 @@
 </head>
 
 <body>
-    <h1 class="header">Users List</h1>
-    <div class="content">
-        {% if user %}
-        <div>ID: {{ user.id }}</div>
-        <div>USER: {{ user.name }}</div>
-        <div>CREATED AT: {{ user.timestamp }}</div>
-        <div>CUNTNESS LEVEL: {{ user.Cuntness }}</div>
-
-    </div>
-    {% else %}
-    <div>No users! cunt...</div>
-    {% endif %}
-    <div class="panel">
-        <div class="buttons">
-            <form action="/previous" method="GET">
-                <button type="submit" {% if previous_disabled %}disabled{% endif %}>Previous</button>
-            </form>
-            <form action="/next" method="GET">
-                <button type="submit" {% if next_disabled %}disabled{% endif %}>Next</button>
-            </form>
-            <form action="/input_user" method="GET">
-                <button type="submit">Input user</button>
-            </form>
-        </div>
-    </div>
     <div class="panel">
         <div class="buttons">
             <form action="/login" method="GET">
-                <button type="submit">login</button>
-            </form>
-            <form action="/signup" method="GET">
-                <button type="submit">signup</button>
+                <button type="submit">Sign in</button>
             </form>
         </div>
+    </div>
+
+    <div class="content">
+        <h1>Hello World</h1>
     </div>
 </body>
 
