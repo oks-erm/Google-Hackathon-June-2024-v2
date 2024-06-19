@@ -13,6 +13,8 @@ import requests
 from dotenv import load_dotenv
 import os
 
+import requests
+
 def get_now():
     from datetime import datetime as dt
 
@@ -32,10 +34,13 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not session.get("isAuthenticated", False):
-    #     return redirect(url_for('index'))
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key)
+    # def index():
+    items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
+    # return render_template('index.html', items=items)
+    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items)
 
 
 # this is not used as of now

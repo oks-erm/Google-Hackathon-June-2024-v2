@@ -122,3 +122,22 @@ input[type="text"]
     padding: 5% 0;
     box-shadow: -20px 15px 50px #00000015;
 }
+
+.scrollable-box {
+    width: 300px;
+    height: 400px; /* Fixed height to enable scrolling */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.item {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fafafa;
+}
