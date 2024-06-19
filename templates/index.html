@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-
-<body>
-    <div class="panel">
-        <div class="buttons">
-            <form action="/login" method="GET">
-                <button type="submit">Sign in</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="content">
-        <h1>Hello World</h1>
-    </div>
-</body>
-
-</html>
+{% block title %}
+    Index
+{% endblock %}
+{% block content %}
+    <h1>Index</h1>
+    <p class="important">
+      Welcome to my awesome homepage.
+    </p>
+{% endblock %}

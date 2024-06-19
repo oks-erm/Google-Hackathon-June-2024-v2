@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input User</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+{% block content %}
     <h1>Users List</h1>
     <table border="1">
         <thead>
@@ -27,6 +25,4 @@
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
-
+{% endblock %}
