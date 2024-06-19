@@ -7,29 +7,37 @@
     <style>
         .container {
             display: flex;
-        }
-        .image-container {
-            flex: 1;
-            padding: 10px;
+            flex-direction: column;
+            align-items: center;
         }
         .report-container {
-            flex: 3;
+            width: 60%;
+            padding: 10px;
+            border: 1px solid black;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .image-container {
+            width: 20%;
             padding: 10px;
         }
+        .image-container img {
+            width: 100%;
+            height: auto;
+        }
         .report-item {
-            margin-bottom: 20px;
+            width: 75%;
+            padding-left: 20px;
         }
         .report-item div {
             margin-bottom: 10px;
         }
-        table {
+        .buttons-container {
             width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -37,33 +45,31 @@
     <h1>Report</h1>
 
     <div class="container">
-        <div class="image-container">
-            <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" style="width: 100%; height: auto;">
-        </div>
+        {% for item in report_data %}
         <div class="report-container">
-            {% if report_data %}
-            <div class="report-item">
-                <div><strong>ID:</strong> {{ report_data.id }}</div>
-                <div><strong>Title:</strong> {{ report_data.title }}</div>
-                <div><strong>Population Year:</strong> {{ report_data.popyear }}</div>
-                <div><strong>ISO3:</strong> {{ report_data.iso3 }}</div>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map">
             </div>
-            {% else %}
             <div class="report-item">
-                <p>No data available.</p>
+                <div><strong>ID:</strong> {{ item.id }}</div>
+                <div><strong>Title:</strong> {{ item.title }}</div>
+                <div><strong>Population Year:</strong> {{ item.popyear }}</div>
+                <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
             </div>
-            {% endif %}
-
-            <button onclick="downloadReport()">Download</button>
-            <button onclick="saveReport()">Save</button>
-            <button onclick="shareReport()">Share</button>
         </div>
+        {% endfor %}
+    </div>
+
+    <div class="buttons-container">
+        <button onclick="downloadReport()">Download</button>
+        <button onclick="saveReport()">Save</button>
+        <button onclick="shareReport()">Share</button>
     </div>
 
     <script>
         function downloadReport() {
             const data = {{ report_data | tojson }};
-            const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
+            const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
             const link = document.createElement('a');
             link.href = jsonString;
             link.download = 'report.json';
