@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+{% block content %}
+
+<iframe
+  width="600"
+  height="450"
+  style="border:0"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
+</iframe>
+<div>
+    <div class=""></div>
+    <div class></div>
+</div>
+
+{% endblock %}
