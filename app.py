@@ -71,7 +71,6 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session["isAuthenticated"] = True
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
