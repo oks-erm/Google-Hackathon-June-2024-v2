@@ -4,14 +4,18 @@
     Index
 {% endblock %}
 {% block content %}
-    <h1>Index</h1>
-    <p class="important">
+<div class="index">
+    <h1 class="intro-title">Index</h1>
+    <p class="important intro-text">
       Welcome to my awesome homepage.
     </p>
-    <select name="regions">
-        <option>Lisboa</option>
-    </select>
+    <div class="regions-container">
+        <select name="regions" class="regions">
+            <option>Lisboa</option>
+        </select>
+    </div>
     <form action="/run" method="GET">
-        <button type="submit">Miaw!</button>
+        <button class="index-button" type="submit">Miaw!</button>
     </form>
+</div>
 {% endblock %}
