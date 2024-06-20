@@ -93,8 +93,9 @@ Report
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                canvas.width = imgElement.width;
-                canvas.height = imgElement.height;
+                // Use naturalWidth and naturalHeight to get the original image dimensions
+                canvas.width = imgElement.naturalWidth;
+                canvas.height = imgElement.naturalHeight;
                 ctx.drawImage(imgElement, 0, 0);
 
                 const imageData = canvas.toDataURL('image/png');
@@ -106,39 +107,41 @@ Report
     });
 
     function createAndDownloadPDF(reportData) {
-        const docDefinition = {
-            content: [
-                { text: 'Report', style: 'header' },
-                { text: `ID: ${reportData.id}`, style: 'subheader' },
-                { text: `Title: ${reportData.title}`, style: 'subheader' },
-                { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
-                { text: `ISO3: ${reportData.iso3}`, style: 'subheader' },
-                {
-                    image: reportData.imageData,
-                    width: 150
-                }
-            ],
-            styles: {
-                header: {
-                    fontSize: 22,
-                    bold: true,
-                    margin: [0, 0, 0, 10]
-                },
-                subheader: {
-                    fontSize: 16,
-                    bold: true,
-                    margin: [0, 10, 0, 5]
-                },
-                quote: {
-                    italics: true,
-                    alignment: 'right',
-                    margin: [0, 10, 0, 10]
-                }
+    const docDefinition = {
+        content: [
+            { text: 'Report', style: 'header' },
+            {
+                image: reportData.imageData,
+                width: 300,
+                alignment: 'center',
+                margin: [0, 10, 0, 20]
+            },
+            { text: `ID: ${reportData.id}`, style: 'subheader' },
+            { text: `Title: ${reportData.title}`, style: 'subheader' },
+            { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
+            { text: `ISO3: ${reportData.iso3}`, style: 'subheader' }
+        ],
+        styles: {
+            header: {
+                fontSize: 22,
+                bold: true,
+                margin: [0, 0, 0, 10]
+            },
+            subheader: {
+                fontSize: 16,
+                bold: true,
+                margin: [0, 10, 0, 5]
+            },
+            quote: {
+                italics: true,
+                alignment: 'right',
+                margin: [0, 10, 0, 10]
             }
-        };
+        }
+    };
 
-        pdfMake.createPdf(docDefinition).download('report.pdf');
-    }
+    pdfMake.createPdf(docDefinition).download('report.pdf');
+}
 
     function shareReport() {
         const shareData = {
