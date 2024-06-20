@@ -57,7 +57,7 @@ Relatórios
             <div><strong>Population Year:</strong> {{ item.popyear }}</div>
             <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
         </div>
-        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
+        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Descarregar</button>
     </div>
     {% endfor %}
 </div>
@@ -123,12 +123,12 @@ Relatórios
             header: {
                 fontSize: 22,
                 bold: true,
-                margin: [0, 0, 0, 10]
+                margin: [0, 0, 0, 10],
+                alignment: 'center'
             },
             subheader: {
-                fontSize: 16,
-                bold: true,
-                margin: [0, 10, 0, 5]
+                fontSize: 14,
+                margin: [0, 10, 0, 10]
             },
             quote: {
                 italics: true,
