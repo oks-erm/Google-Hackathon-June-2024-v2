@@ -1,103 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report</title>
-    <style>
-        .container {
-            display: flex;
-        }
-        .image-container {
-            flex: 1;
-            padding: 10px;
-        }
-        .report-container {
-            flex: 3;
-            padding: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+{% extends "base.html" %}
+
+{% block title %}
+Relatórios
+{% endblock %}
+
+{% block content %}
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.report-container {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid black;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.image-container {
+    width: 20%;
+    padding: 10px;
+}
+.image-container img {
+    width: 100%;
+    height: auto;
+}
+.report-item {
+    width: 75%;
+    padding-left: 20px;
+}
+.report-item div {
+    margin-bottom: 10px;
+}
+.buttons-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+</style>
+
 </head>
 <body>
-    <h1>Report</h1>
-
-    <form method="POST" action="{{ url_for('report') }}">
-        <label for="num_fields">Number of fields to display:</label>
-        <input type="number" id="num_fields" name="num_fields" min="1" value="{{ num_fields }}">
-        <button type="submit">Update</button>
-    </form>
-
-    <div class="container">
+<div class="container">
+    {% for item in report_data %}
+    <div class="report-container">
         <div class="image-container">
-            <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" style="width: 100%; height: auto;">
+            <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" id="reportImage">
         </div>
-        <div class="report-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Popyear</th>
-                        <th>ISO3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in report_data %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.title }}</td>
-                        <td>{{ item.popyear }}</td>
-                        <td>{{ item.iso3 }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <button onclick="downloadReport()">Download</button>
-            <button onclick="saveReport()">Save</button>
-            <button onclick="shareReport()">Share</button>
+        <div class="report-item">
+            <div><strong>ID:</strong> {{ item.id }}</div>
+            <div><strong>Title:</strong> {{ item.title }}</div>
+            <div><strong>Population Year:</strong> {{ item.popyear }}</div>
+            <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
         </div>
+        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
     </div>
+    {% endfor %}
+</div>
 
-    <script>
-        function downloadReport() {
-            const data = {{ report_data | tojson }};
-            const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
-            const link = document.createElement('a');
-            link.href = jsonString;
-            link.download = 'report.json';
-            link.click();
-        }
+<div class="buttons-container">
+    <button onclick="downloadReport()">Download</button>
+    <button onclick="shareReport()">Share</button>
+</div>
 
-        function saveReport() {
-            alert('Save functionality to be implemented.');
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
 
-        function shareReport() {
-            const shareData = {
-                title: 'Report',
-                text: 'Check out this report!',
-                url: window.location.href
-            };
-            if (navigator.share) {
-                navigator.share(shareData).then(() => {
-                    console.log('Report shared successfully.');
-                }).catch((error) => {
-                    console.error('Error sharing report:', error);
-                });
-            } else {
-                alert('Share not supported on this browser.');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var buttons = document.querySelectorAll('.report-btn');
+
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const title = this.getAttribute('data-title');
+                const popyear = this.getAttribute('data-popyear');
+                const iso3 = this.getAttribute('data-iso3');
+
+                const reportData = {
+                    id: id,
+                    title: title,
+                    popyear: popyear,
+                    iso3: iso3
+                };
+
+                // Convert the image to a base64 string
+                const imgElement = document.getElementById('reportImage');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Use naturalWidth and naturalHeight to get the original image dimensions
+                canvas.width = imgElement.naturalWidth;
+                canvas.height = imgElement.naturalHeight;
+                ctx.drawImage(imgElement, 0, 0);
+
+                const imageData = canvas.toDataURL('image/png');
+                reportData.imageData = imageData;
+
+                createAndDownloadPDF(reportData);
+            });
+        });
+    });
+
+    function createAndDownloadPDF(reportData) {
+    const docDefinition = {
+        content: [
+            { text: 'Report', style: 'header' },
+            {
+                image: reportData.imageData,
+                width: 300,
+                alignment: 'center',
+                margin: [0, 10, 0, 20]
+            },
+            { text: `ID: ${reportData.id}`, style: 'subheader' },
+            { text: `Title: ${reportData.title}`, style: 'subheader' },
+            { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
+            { text: `ISO3: ${reportData.iso3}`, style: 'subheader' }
+        ],
+        styles: {
+            header: {
+                fontSize: 22,
+                bold: true,
+                margin: [0, 0, 0, 10]
+            },
+            subheader: {
+                fontSize: 16,
+                bold: true,
+                margin: [0, 10, 0, 5]
+            },
+            quote: {
+                italics: true,
+                alignment: 'right',
+                margin: [0, 10, 0, 10]
             }
         }
-    </script>
-</body>
-</html>
+    };
+
+    pdfMake.createPdf(docDefinition).download('report.pdf');
+}
+
+    function shareReport() {
+        const shareData = {
+            title: 'Report',
+            text: 'Check out this report!',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData).then(() => {
+                console.log('Report shared successfully.');
+            }).catch((error) => {
+                console.error('Error sharing report:', error);
+            });
+        } else {
+            alert('Share not supported on this browser.');
+        }
+    }
+</script>
+{% endblock %}

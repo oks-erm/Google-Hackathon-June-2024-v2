@@ -1,52 +1,207 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Index
+    Programa
 {% endblock %}
 {% block content %}
 
-<iframe
-  width="600"
-  height="450"
-  style="border:0"
-  loading="lazy"
-  allowfullscreen
-  referrerpolicy="no-referrer-when-downgrade"
-  src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
-</iframe>
-<div>
-    <!-- Modal Button (Modal is the popup card) -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Open Pop-Up Card
-    </button>
-     <!-- The Modal -->
-  <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Pop-Up Card Title</h4>
-        </div>
-        <!-- Modal Body -->
-        <div class="modal-body">
-          This is the content of the pop-up card. You can put any text or HTML content here.
-        </div>
-        <!-- Modal Footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+<div id="prediction-container" class="container-fluid runs mt-4">
+  <iframe
+    width="600"
+    height="450"
+    style="border:0"
+    loading="lazy"
+    allowfullscreen
+    referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
+  </iframe>
+  <div class="run-modal">
+    <div>
+      <!-- The Modal -->
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">"Localização"</h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <div class="d-flex flex-row justify-content-around">
+                <div>
+                  <img src="https://static.javatpoint.com/ds/images/line-graph2.png" alt="visual" width="400" height="400">
+                </div>
+                <div class="d-flex flex-column justify-content-around">
+                  <div>
+                    <h5>Metrica 1</h5>
+                    <p>valores</p>
+                  </div>
+                  <div>
+                    <h5>Metrica 2</h5>
+                    <p>valores</p>
+                  </div>
+                  <div>
+                    <h5>Metrica 3</h5>
+                    <p>valores</p>
+                  </div>
+                  <div>
+                    <h5>Metrica 4</h5>
+                    <p>valores</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <h3 class="mx-auto">
+      Previsões
+    </h3>
+    <div class="entry-wrap">
+      <div class="scrollable-box">
+        {% for item in items %}
+            <div class="item">{{ item }}
+              <!-- Modal Button (Modal is the popup card) -->
+              <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+                  Abrir
+              </button>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="button" class="add" onclick="showEditPredictionPage()">
+      Adicionar Pontos
+    </button>
   </div>
-  <!-- JavaScript for the Modal -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</div>
-<div class="scrollable-box">
-  {% for item in items %}
-      <div class="item">{{ item }}</div>
-  {% endfor %}
 </div>
 
+<div id="edit-prediction-container" class="runs">
+  <div class="container">
+    <div class="row ma-0 pa-0">
+      <div class="col ma-0 pa-0" style="padding-right: 5px;">
+        <div id="map" style="height: 450px;"></div>
+      </div>
+
+      <div class="col run-model ma-0 pa-0" style="padding-right: 0px;">
+        <div class="d-flex flex-row justify-content-between">
+          <h3 class="my-auto">
+            Adicionar Pontos
+          </h3>
+        </div>
+
+        <div id="add-new-pins"></div>
+
+        <div class="d-flex flex-row justify-content-between">
+          <div class="d-flex flex-row">
+            <button type="button" onclick="addNewDraggablePoint('fixed')">Adicionar ponto fixo</button>
+            <button type="button" style="margin-left: 10px;" onclick="addNewDraggablePoint('mobile')">Adicionar ponto móvel</button>
+          </div>
+          <button type="button" class="" onclick="showPredictionPage()">Voltar</button>
+        </div>
+        </div>
+      </div>
+
+      <div class="mx-20">
+        <button type="button" style="margin: 10px auto;" onclick="saveReport()">Guardar Relatório</button>
+      </div>
+  </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
+<script>
+  /* map stuff */
+  let map;
+
+  async function addNewDraggablePoint(type) {
+    // create a new pin
+    let newPin = document.createElement("div");
+    newPin.className = "new-pin";
+    newPin.innerText = type;
+
+    let newPinesContainer = document.getElementById("add-new-pins");
+    newPinesContainer.appendChild(newPin);
+
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    const randomNess = Math.random() * 0.001;
+    const draggableMarker = new AdvancedMarkerElement({
+      map,
+      position: { lat: 38.73067129535301, lng: -9.129937518620784 + randomNess },
+      gmpDraggable: true,
+      title: type,
+    });
+
+    draggableMarker.addListener("dragend", (event) => {
+      const position = draggableMarker.position;
+
+      infoWindow.close();
+      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
+      infoWindow.open(draggableMarker.map, draggableMarker);
+    });
+  }
+
+  async function initMap() {
+    // Request needed libraries.
+    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    map = new Map(document.getElementById("map"), {
+      center: { lat: 38.73067129535301, lng: -9.129937518620784 },
+      zoom: 16,
+      mapId: "4504f8b37365c3d0",
+    });
+    const infoWindow = new InfoWindow();
+    const draggableMarker = new AdvancedMarkerElement({
+      map,
+      position: { lat: 38.73067129535301, lng: -9.129937518620784 },
+      gmpDraggable: true,
+      title: "This marker is draggable.",
+    });
+
+    draggableMarker.addListener("dragend", (event) => {
+      const position = draggableMarker.position;
+
+      infoWindow.close();
+      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
+      infoWindow.open(draggableMarker.map, draggableMarker);
+    });
+  }
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+     document.getElementById("edit-prediction-container").style.visibility = "hidden";
+  });
+
+  function showEditPredictionPage() {
+    console.log("showEditPredictionPage");
+    let predictionContainer = document.getElementById("prediction-container");
+    let editPredictionContainer = document.getElementById("edit-prediction-container");
+
+    predictionContainer.style.visibility = "hidden";
+    predictionContainer.style.display = "none";
+    editPredictionContainer.style.visibility = "visible";
+    editPredictionContainer.style.display = "flex";
+  }
+
+  function showPredictionPage() {
+    let predictionContainer = document.getElementById("prediction-container");
+    let editPredictionContainer = document.getElementById("edit-prediction-container");
+
+    predictionContainer.style.visibility = "visible";
+    predictionContainer.style.display = "flex";
+
+    editPredictionContainer.style.visibility = "hidden";
+    editPredictionContainer.style.display = "none";
+  }
+
+  function saveReport() {
+    // do a post request to save the report
+    console.log("saveReport");
+  }
+
+</script>
 {% endblock %}

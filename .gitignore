@@ -1,3 +1,7 @@
 .env
 /__pycache__
 /venv
+.DS_Store
+static/.DS_Store
+static/a
+ssets/.DS_Store
