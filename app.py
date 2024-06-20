@@ -102,7 +102,7 @@ def report():
 
     if response.status_code == 200:
         data = response.json()
-        
+
         # Select specific fields from the response
         report_data = [
             {
@@ -117,7 +117,14 @@ def report():
         return render_template('report.html', report_data=report_data)
     else:
         return render_template('error.html', error="Failed to retrieve data"), response.status_code
-    
+
+
+
+@app.route('/save-report', methods=['POST'])
+def save_report():
+    if request.method == 'POST':
+       print(request.form)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
