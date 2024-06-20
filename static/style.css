@@ -13,12 +13,6 @@
     font-weight: 400;
 }
 
-h1
-{
-    font-family: "Archivo Black", sans-serif;
-    font-style: normal;
-}
-
 .content {
     font-size: 16px;
     line-height: 1.5;
@@ -103,6 +97,8 @@ button, input[type="submit"]
 {
     padding: 10px 0 0 0;
     font-size: 66px;
+    font-family: "Archivo Black", sans-serif;
+    font-style: normal;
 }
 
 .intro-text
