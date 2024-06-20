@@ -85,6 +85,7 @@ def login():
         if login and login.password == current_entered_pass:
             session['user_id'] = login.id
             session["isAuthenticated"] = True
+            session['username'] = username
             flash('Login successful', 'success')
             return redirect(url_for('index'))
         else:
@@ -93,11 +94,20 @@ def login():
 
     return render_template('login.html', isLoginPage=True, isAuthenticated=session.get("isAuthenticated", False))
 
+@app.route('/logout', methods=['GET'])
+def logout():
+    session["isAuthenticated"] = False
+    return redirect(url_for('index'))
+
+
+
 @app.route("/profile")
 def profile():
     if not session.get("isAuthenticated", False):
         return redirect(url_for('login'))
-    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
+    user = session.get("username")
+    print(user)
+    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
 
 
 @app.route('/report', methods=['GET', 'POST'])

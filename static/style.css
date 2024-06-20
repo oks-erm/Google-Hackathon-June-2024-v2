@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
 
 /* base.html */
 .container-fluid
@@ -8,6 +9,8 @@
     padding: 0;
     width: 100%;
     background-color: #f8f8f8;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
 }
 
 .content {
@@ -47,8 +50,8 @@
 button, input[type="submit"]
 {
     background-color: darkblue;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
     color : #f8f8f8;
     border: none;
     padding: 10px 15px;
@@ -94,11 +97,14 @@ button, input[type="submit"]
 {
     padding: 10px 0 0 0;
     font-size: 66px;
+    font-family: "Archivo Black", sans-serif;
+    font-style: normal;
 }
 
 .intro-text
 {
     font-size: 28px;
+    color: grey;
 }
 
 .regions-container
@@ -114,6 +120,12 @@ button, input[type="submit"]
 .regions
 {
     padding: 6px 12%;
+}
+
+.years-lookahead
+{
+    margin: 10px;
+    padding: 6px 3%;
 }
 
 
@@ -137,7 +149,7 @@ button, input[type="submit"]
     width: 120px;
 }
 
-input[type="text"]
+input[type="text"], input[type="password"]
 {
     font-size: 20px;
 }
@@ -160,17 +172,17 @@ input[type="text"]
     justify-content: center;
 }
 
-.item {
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background-color: #fafafa;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.item, .new-pin {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
+    padding: 5px;
+    margin: 5px 5%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .run-modal
@@ -189,9 +201,11 @@ input[type="text"]
 
 .entry-wrap
 {
-    padding-left: 0px;
+    margin: 0;
+    padding: 0 5px;
     max-height: 55vh;
     overflow-y: scroll;
+    height: 332.5px !important;
 }
 
 .entry-wrap::-webkit-scrollbar {
@@ -231,16 +245,26 @@ input[type="text"]
     scrollbar-width: none;  /* Firefox */
 }
 
-/* for the run.html page */
-.new-pin {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    align-items: center;
+.new-pin
+{
     padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background-color: #fafafa;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+}
+
+/* profile.html */
+.profile-pic
+{
+    padding: 50px;
+    border-radius: 50%;
+    background-color: white;
+    background-image: url("../static/assets/ppl-icon.png");
+    background-size: 50%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    box-shadow: -20px 15px 50px #00000015;
+}
+
+.user-infos
+{
+    font-size: 17px;
 }
