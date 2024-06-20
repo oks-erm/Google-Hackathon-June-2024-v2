@@ -13,8 +13,6 @@ import requests
 from dotenv import load_dotenv
 import os
 
-import requests
-
 def get_now():
     from datetime import datetime as dt
 
@@ -28,9 +26,7 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    # if 'index' not in session:
-    #     session['index'] = 0
-    return render_template('index.html', isAuthenticated=session.get("isAuthenticated", False))
+    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
@@ -40,7 +36,7 @@ def run():
     # def index():
     items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
     # return render_template('index.html', items=items)
-    return render_template('run.html', isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items)
+    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items)
 
 
 # this is not used as of now
@@ -71,11 +67,13 @@ def signup():
         flash('User created successfully', 'success')
         return redirect(url_for('index'))
 
-    return render_template('signup.html', isAuthenticated=session.get("isAuthenticated", False))
+    return render_template('signup.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get("isAuthenticated", False):
+        return redirect(url_for('index'))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -93,11 +91,19 @@ def login():
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
 
-    return render_template('login.html', isAuthenticated=session.get("isAuthenticated", False))
+    return render_template('login.html', isLoginPage=True, isAuthenticated=session.get("isAuthenticated", False))
+
+@app.route("/profile")
+def profile():
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
+    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
     response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
 
     if response.status_code == 200:
@@ -114,14 +120,16 @@ def report():
             for item in data["data"]
         ] if data["data"] else []
 
-        return render_template('report.html', isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
+        return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
     else:
-        return render_template('error.html', isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
+        return render_template('error.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
 
 
 
 @app.route('/save-report', methods=['POST'])
 def save_report():
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
     if request.method == 'POST':
        print(request.form)
 
