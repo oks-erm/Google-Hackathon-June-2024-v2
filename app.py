@@ -114,9 +114,9 @@ def report():
             for item in data["data"]
         ] if data["data"] else []
 
-        return render_template('report.html', report_data=report_data)
+        return render_template('report.html', isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
     else:
-        return render_template('error.html', error="Failed to retrieve data"), response.status_code
+        return render_template('error.html', isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
 
 
 
