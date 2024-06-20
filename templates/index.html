@@ -1,21 +1,31 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Index
+    Página Inicial
 {% endblock %}
 {% block content %}
 <div class="index">
-    <h1 class="intro-title">Index</h1>
+    <h1 class="intro-title">Bem-vindo!</h1>
     <p class="important intro-text">
-      Welcome to my awesome homepage.
+        Vamos ajudá-lo na decição de um local para criar novos pontos de contacto.<br>
+        Selecione a região e o periodo de previsão para começar.
     </p>
     <div class="regions-container">
         <select name="regions" class="regions">
             <option>Lisboa</option>
         </select>
+        <select name="years-lookahead" class="years-lookahead">
+            <option>1 ano</option>
+            <option>2 anos</option>
+            <option>3 anos</option>
+            <option>4 anos</option>
+            <option>5 anos</option>
+            <option>10 anos</option>
+        </select>
+
     </div>
     <form action="/run" method="GET">
-        <button class="index-button" type="submit">Miaw!</button>
+        <button class="index-button" type="submit">Iniciar</button>
     </form>
 </div>
 {% endblock %}
