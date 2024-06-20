@@ -98,11 +98,6 @@ def login():
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
-    if request.method == 'POST':
-        num_fields = int(request.form.get('num_fields', 10))
-    else:
-        num_fields = int(request.args.get('num_fields', 10))
-
     response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
 
     if response.status_code == 200:
@@ -116,10 +111,10 @@ def report():
                 "popyear": item["popyear"],
                 "iso3": item["iso3"]
             }
-            for item in data["data"][:num_fields]
-        ]
+            for item in data["data"]
+        ] if data["data"] else []
 
-        return render_template('report.html', report_data=report_data, num_fields = num_fields)
+        return render_template('report.html', report_data=report_data)
     else:
         return render_template('error.html', error="Failed to retrieve data"), response.status_code
 
