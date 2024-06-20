@@ -137,7 +137,7 @@ button, input[type="submit"]
     width: 120px;
 }
 
-input[type="text"]
+input[type="text"], input[type="password"]
 {
     font-size: 20px;
 }
@@ -160,17 +160,17 @@ input[type="text"]
     justify-content: center;
 }
 
-.item {
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background-color: #fafafa;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.item, .new-pin {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
+    padding: 5px;
+    margin: 5px 5%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .run-modal
@@ -189,9 +189,11 @@ input[type="text"]
 
 .entry-wrap
 {
-    padding-left: 0px;
+    margin: 0;
+    padding: 0 5px;
     max-height: 55vh;
     overflow-y: scroll;
+    height: 332.5px !important;
 }
 
 .entry-wrap::-webkit-scrollbar {
@@ -231,16 +233,8 @@ input[type="text"]
     scrollbar-width: none;  /* Firefox */
 }
 
-/* for the run.html page */
-.new-pin {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    align-items: center;
+.new-pin
+{
     padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background-color: #fafafa;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 5px;
 }

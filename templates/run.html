@@ -9,7 +9,8 @@
   <iframe
     width="600"
     height="450"
-    style="border:0"
+    class="ma-0 pa-0"
+    style="border:0;"
     loading="lazy"
     allowfullscreen
     referrerpolicy="no-referrer-when-downgrade"
@@ -74,22 +75,22 @@
         {% endfor %}
       </div>
     </div>
-    <button type="button" class="add" onclick="showEditPredictionPage()">
+    <button type="button" class="add d-flex flex-row justify-content-between" onclick="showEditPredictionPage()">
       Add new pins
     </button>
   </div>
 </div>
 
-<div id="edit-prediction-container" class="runs">
-  <div class="container">
+<div id="edit-prediction-container" class="container-fluid runs">
+  <div class="ma-0 pa-0">
     <div class="row ma-0 pa-0">
-      <div class="col ma-0 pa-0" style="padding-right: 5px;">
-        <div id="map" style="height: 450px;"></div>
+      <div class="col ma-0 pa-0">
+        <div id="map" style="width: 600px; height: 450px; border:0;"></div>
       </div>
 
       <div class="col run-model ma-0 pa-0" style="padding-right: 0px;">
         <div class="d-flex flex-row justify-content-between">
-          <h3 class="my-auto">
+          <h3 class="mx-auto">
             Add pins
           </h3>
         </div>
@@ -98,17 +99,15 @@
 
         <div class="d-flex flex-row justify-content-between">
           <div class="d-flex flex-row">
-            <button type="button" onclick="addNewDraggablePoint('fixed')">Add fixed point</button>
-            <button type="button" style="margin-left: 10px;" onclick="addNewDraggablePoint('mobile')">Add mobile point</button>
+            <button type="button" style="margin: 0 1px;" onclick="addNewDraggablePoint('fixed')">Add fixed point</button>
+            <button type="button" style="margin: 0 1px;" onclick="addNewDraggablePoint('mobile')">Add mobile point</button>
+            <button type="button" style="margin: 0 1px;" class="" onclick="showPredictionPage()">Go Back</button>
+            <button type="button" style="margin: 0 1px;" onclick="saveReport()">Save as report</button>
           </div>
-          <button type="button" class="" onclick="showPredictionPage()">Go Back</button>
         </div>
         </div>
       </div>
 
-      <div class="mx-20">
-        <button type="button" style="margin: 10px auto;" onclick="saveReport()">Save as report</button>
-      </div>
   </div>
 </div>
 
