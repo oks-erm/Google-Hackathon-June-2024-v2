@@ -9,6 +9,8 @@ from flask import (
     session,
     flash
 )
+import pandas as pd
+import numpy as np
 import requests
 from dotenv import load_dotenv
 import os
@@ -34,9 +36,21 @@ def run():
         return redirect(url_for('login'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     # def index():
+    original_df = pd.read_csv('./static/assets/model_frame.csv')
+    original_df.sort_values(by='Location')
+    predictions = create_dataframe_with_random_deviation(original_df)
+    print('+++++++++++++++++++')
+    print(original_df)
+    print('+++++++++++++++++++')
+    print(predictions)
+    loc1 = predictions['Location']
+    predictions.sort_values(by='Location')
+
+
+    data = predictions.to_dict(orient='records')
     items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
     # return render_template('index.html', items=items)
-    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items)
+    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items, data=data)
 
 
 # this is not used as of now
@@ -68,6 +82,27 @@ def signup():
         return redirect(url_for('index'))
 
     return render_template('signup.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
+
+
+def create_dataframe_with_random_deviation(original_data: pd.DataFrame) -> pd.DataFrame:
+    percentage_deviation_large = 0.05
+    percentage_deviation_small = 0.015
+
+    new_data = original_data.copy()
+
+    for column in ['Procuras', 'Tempo_medio_de_espera_diario', 'Desistencias', 'Atendimentos']:
+        new_data[column] = new_data[column] * (1 + np.random.uniform(-percentage_deviation_large, percentage_deviation_large, size=new_data.shape[0]))
+
+    new_data['necessity_metric'] = new_data['necessity_metric'] * (1 + np.random.uniform(-percentage_deviation_small, percentage_deviation_small, size=new_data.shape[0]))
+    return new_data
+
+
+@app.route('/predict', methods=['POST'])
+def predict():  
+    original_df = pd.read_csv('/static/assets/model_frame.csv')
+    predictions = create_dataframe_with_random_deviation(original_df)
+  
+    return jsonify(predictions)
 
 
 @app.route('/login', methods=['GET', 'POST'])
