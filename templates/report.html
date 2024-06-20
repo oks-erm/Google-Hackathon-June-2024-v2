@@ -1,145 +1,160 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Report
+Report
 {% endblock %}
 
 {% block content %}
-    <style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .report-container {
-            width: 60%;
-            padding: 10px;
-            border: 1px solid black;
-            margin: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .image-container {
-            width: 20%;
-            padding: 10px;
-        }
-        .image-container img {
-            width: 100%;
-            height: auto;
-        }
-        .report-item {
-            width: 75%;
-            padding-left: 20px;
-        }
-        .report-item div {
-            margin-bottom: 10px;
-        }
-        .buttons-container {
-            width: 100%;
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.report-container {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid black;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.image-container {
+    width: 20%;
+    padding: 10px;
+}
+.image-container img {
+    width: 100%;
+    height: auto;
+}
+.report-item {
+    width: 75%;
+    padding-left: 20px;
+}
+.report-item div {
+    margin-bottom: 10px;
+}
+.buttons-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+</style>
+
 </head>
 <body>
     <h1>Report</h1>
-
-    <div class="container">
-        {% for item in report_data %}
-        <div class="report-container">
-            <div class="image-container">
-                <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map">
-            </div>
-            <div class="report-item">
-                <div><strong>ID:</strong> {{ item.id }}</div>
-                <div><strong>Title:</strong> {{ item.title }}</div>
-                <div><strong>Population Year:</strong> {{ item.popyear }}</div>
-                <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
-            </div>
-            <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
+<div class="container">
+    {% for item in report_data %}
+    <div class="report-container">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" id="reportImage">
         </div>
-        {% endfor %}
+        <div class="report-item">
+            <div><strong>ID:</strong> {{ item.id }}</div>
+            <div><strong>Title:</strong> {{ item.title }}</div>
+            <div><strong>Population Year:</strong> {{ item.popyear }}</div>
+            <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
+        </div>
+        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
     </div>
+    {% endfor %}
+</div>
 
-    <div class="buttons-container">
-        <button onclick="downloadReport()">Download</button>
-        <button onclick="shareReport()">Share</button>
-    </div>
+<div class="buttons-container">
+    <button onclick="downloadReport()">Download</button>
+    <button onclick="shareReport()">Share</button>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var buttons = document.querySelectorAll('.report-btn');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var buttons = document.querySelectorAll('.report-btn');
 
-            buttons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const title = this.getAttribute('data-title');
-                    const popyear = this.getAttribute('data-popyear');
-                    const iso3 = this.getAttribute('data-iso3');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const title = this.getAttribute('data-title');
+                const popyear = this.getAttribute('data-popyear');
+                const iso3 = this.getAttribute('data-iso3');
 
-                    const reportData = {
-                        id: id,
-                        title: title,
-                        popyear: popyear,
-                        iso3: iso3
-                    };
+                const reportData = {
+                    id: id,
+                    title: title,
+                    popyear: popyear,
+                    iso3: iso3
+                };
 
-                    createAndDownloadPDF(reportData);
-                });
+                // Convert the image to a base64 string
+                const imgElement = document.getElementById('reportImage');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = imgElement.width;
+                canvas.height = imgElement.height;
+                ctx.drawImage(imgElement, 0, 0);
+
+                const imageData = canvas.toDataURL('image/png');
+                reportData.imageData = imageData;
+
+                createAndDownloadPDF(reportData);
             });
         });
+    });
 
-        function createAndDownloadPDF(reportData) {
-            const docDefinition = {
-                content: [
-                    { text: 'Report', style: 'header' },
-                    { text: `ID: ${reportData.id}`, style: 'subheader' },
-                    { text: `Title: ${reportData.title}`, style: 'subheader' },
-                    { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
-                    { text: `ISO3: ${reportData.iso3}`, style: 'subheader' }
-                ],
-                styles: {
-                    header: {
-                        fontSize: 22,
-                        bold: true,
-                        margin: [0, 0, 0, 10]
-                    },
-                    subheader: {
-                        fontSize: 16,
-                        bold: true,
-                        margin: [0, 10, 0, 5]
-                    },
-                    quote: {
-                        italics: true,
-                        alignment: 'right',
-                        margin: [0, 10, 0, 10]
-                    }
+    function createAndDownloadPDF(reportData) {
+        const docDefinition = {
+            content: [
+                { text: 'Report', style: 'header' },
+                { text: `ID: ${reportData.id}`, style: 'subheader' },
+                { text: `Title: ${reportData.title}`, style: 'subheader' },
+                { text: `Population Year: ${reportData.popyear}`, style: 'subheader' },
+                { text: `ISO3: ${reportData.iso3}`, style: 'subheader' },
+                {
+                    image: reportData.imageData,
+                    width: 150
                 }
-            };
-
-            pdfMake.createPdf(docDefinition).download('report.pdf');
-        }
-
-        function shareReport() {
-            const shareData = {
-                title: 'Report',
-                text: 'Check out this report!',
-                url: window.location.href
-            };
-            if (navigator.share) {
-                navigator.share(shareData).then(() => {
-                    console.log('Report shared successfully.');
-                }).catch((error) => {
-                    console.error('Error sharing report:', error);
-                });
-            } else {
-                alert('Share not supported on this browser.');
+            ],
+            styles: {
+                header: {
+                    fontSize: 22,
+                    bold: true,
+                    margin: [0, 0, 0, 10]
+                },
+                subheader: {
+                    fontSize: 16,
+                    bold: true,
+                    margin: [0, 10, 0, 5]
+                },
+                quote: {
+                    italics: true,
+                    alignment: 'right',
+                    margin: [0, 10, 0, 10]
+                }
             }
-        }
-    </script>
+        };
 
+        pdfMake.createPdf(docDefinition).download('report.pdf');
+    }
+
+    function shareReport() {
+        const shareData = {
+            title: 'Report',
+            text: 'Check out this report!',
+            url: window.location.href
+        };
+        if (navigator.share) {
+            navigator.share(shareData).then(() => {
+                console.log('Report shared successfully.');
+            }).catch((error) => {
+                console.error('Error sharing report:', error);
+            });
+        } else {
+            alert('Share not supported on this browser.');
+        }
+    }
+</script>
 {% endblock %}
