@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Index
+    Programa
 {% endblock %}
 {% block content %}
 
@@ -23,7 +23,7 @@
           <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Inspecting "some location"</h4>
+              <h4 class="modal-title">"Localização"</h4>
             </div>
             <!-- Modal Body -->
             <div class="modal-body">
@@ -33,34 +33,34 @@
                 </div>
                 <div class="d-flex flex-column justify-content-around">
                   <div>
-                    <h5>Metric 1</h5>
-                    <p>wtf is the value</p>
+                    <h5>Metrica 1</h5>
+                    <p>valores</p>
                   </div>
                   <div>
-                    <h5>Metric 2</h5>
-                    <p>wtf is the value</p>
+                    <h5>Metrica 2</h5>
+                    <p>valores</p>
                   </div>
                   <div>
-                    <h5>Metric 3</h5>
-                    <p>wtf is the value</p>
+                    <h5>Metrica 3</h5>
+                    <p>valores</p>
                   </div>
                   <div>
-                    <h5>Metric 4</h5>
-                    <p>wtf is the value</p>
+                    <h5>Metrica 4</h5>
+                    <p>valores</p>
                   </div>
                 </div>
               </div>
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <h3 class="mx-auto">
-      Predictions
+      Previsões
     </h3>
     <div class="entry-wrap">
       <div class="scrollable-box">
@@ -68,14 +68,14 @@
             <div class="item">{{ item }}
               <!-- Modal Button (Modal is the popup card) -->
               <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-                  Inspect
+                  Abrir
               </button>
             </div>
         {% endfor %}
       </div>
     </div>
     <button type="button" class="add" onclick="showEditPredictionPage()">
-      Add new pins
+      Adicionar Pontos
     </button>
   </div>
 </div>
@@ -90,7 +90,7 @@
       <div class="col run-model ma-0 pa-0" style="padding-right: 0px;">
         <div class="d-flex flex-row justify-content-between">
           <h3 class="my-auto">
-            Add pins
+            Adicionar Pontos
           </h3>
         </div>
 
@@ -98,16 +98,16 @@
 
         <div class="d-flex flex-row justify-content-between">
           <div class="d-flex flex-row">
-            <button type="button" onclick="addNewDraggablePoint('fixed')">Add fixed point</button>
-            <button type="button" style="margin-left: 10px;" onclick="addNewDraggablePoint('mobile')">Add mobile point</button>
+            <button type="button" onclick="addNewDraggablePoint('fixed')">Adicionar ponto fixo</button>
+            <button type="button" style="margin-left: 10px;" onclick="addNewDraggablePoint('mobile')">Adicionar ponto móvel</button>
           </div>
-          <button type="button" class="" onclick="showPredictionPage()">Go Back</button>
+          <button type="button" class="" onclick="showPredictionPage()">Voltar</button>
         </div>
         </div>
       </div>
 
       <div class="mx-20">
-        <button type="button" style="margin: 10px auto;" onclick="saveReport()">Save as report</button>
+        <button type="button" style="margin: 10px auto;" onclick="saveReport()">Guardar Relatório</button>
       </div>
   </div>
 </div>

@@ -26,14 +26,15 @@
         <div class="buttons">
             {% if isAuthenticated %}
             <form action="/report" method="GET">
-                <button type="submit">Reports</button>
+                <button type="submit">Relatórios</button>
             </form>
             <form action="/profile" method="GET">
                 <button type="submit" id="logged"></button>
             </form>
+            {% elif isLoginPage %}
             {% else %}
             <form action="/login" method="GET">
-                <button type="submit">Sign in</button>
+                <button type="submit">Iniciar Sessão</button>
             </form>
             {% endif %}
         </div>
