@@ -189,7 +189,7 @@ input[type="text"]
 
 .entry-wrap
 {
-    padding-left: 20px;
+    padding-left: 0px;
     max-height: 55vh;
     overflow-y: scroll;
 }
@@ -213,4 +213,34 @@ input[type="text"]
 {
     width: 40%;
     margin: 30px auto;
+}
+
+#add-new-pins {
+    margin: 10px 0;
+    padding: 10px 5px;
+    height: 350px !important;
+    overflow-y: scroll;
+}
+
+#add-new-pins::-webkit-scrollbar {
+    display: none;
+}
+
+#add-new-pins {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* for the run.html page */
+.new-pin {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
