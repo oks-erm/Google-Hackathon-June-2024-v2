@@ -13,16 +13,16 @@ Relatórios
 }
 .report-container {
     width: 60%;
-    padding: 10px;
-    border: 1px solid black;
-    margin: 5px;
+    padding: 20px 50px;
+    box-shadow: -20px 15px 60px #00000020;
+    margin: 15px 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 .image-container {
-    width: 20%;
-    padding: 10px;
+    width: 30%;
+    padding: 10px 10px 10px 0;
 }
 .image-container img {
     width: 100%;
@@ -44,6 +44,7 @@ Relatórios
 
 </head>
 <body>
+    <h2 class="text-center h1 pa-10 mx-5 my-5 report">Relatórios</h2>
 <div class="container">
     {% for item in report_data %}
     <div class="report-container">
@@ -56,16 +57,16 @@ Relatórios
             <div><strong>Population Year:</strong> {{ item.popyear }}</div>
             <div><strong>ISO3:</strong> {{ item.iso3 }}</div>
         </div>
-        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Download</button>
+        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Descarregar</button>
     </div>
     {% endfor %}
 </div>
-
+<!--
 <div class="buttons-container">
     <button onclick="downloadReport()">Download</button>
     <button onclick="shareReport()">Share</button>
 </div>
-
+-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
 
@@ -87,12 +88,10 @@ Relatórios
                     iso3: iso3
                 };
 
-                // Convert the image to a base64 string
                 const imgElement = document.getElementById('reportImage');
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                // Use naturalWidth and naturalHeight to get the original image dimensions
                 canvas.width = imgElement.naturalWidth;
                 canvas.height = imgElement.naturalHeight;
                 ctx.drawImage(imgElement, 0, 0);
@@ -124,12 +123,12 @@ Relatórios
             header: {
                 fontSize: 22,
                 bold: true,
-                margin: [0, 0, 0, 10]
+                margin: [0, 0, 0, 10],
+                alignment: 'center'
             },
             subheader: {
-                fontSize: 16,
-                bold: true,
-                margin: [0, 10, 0, 5]
+                fontSize: 14,
+                margin: [0, 10, 0, 10]
             },
             quote: {
                 italics: true,
@@ -141,7 +140,7 @@ Relatórios
 
     pdfMake.createPdf(docDefinition).download('report.pdf');
 }
-
+/*
     function shareReport() {
         const shareData = {
             title: 'Report',
@@ -158,5 +157,6 @@ Relatórios
             alert('Share not supported on this browser.');
         }
     }
+*/  
 </script>
 {% endblock %}
