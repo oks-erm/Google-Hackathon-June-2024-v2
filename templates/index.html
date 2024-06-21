@@ -4,17 +4,17 @@
     Página Inicial
 {% endblock %}
 {% block content %}
-<div class="index">
-    <h1 class="intro-title">Bem-vindo!</h1>
-    <p class="important intro-text">
-        Vamos ajudá-lo na decisão de um local para criar novos pontos de contacto.<br>
+<div>
+    <h1 class="d-flex flex-column align-items-center justify-content-between intro-title p-0">Bem-vindo!</h1>
+    <p class="important d-flex flex-column align-items-center justify-content-between intro-text text-center fs-3">
+        Vamos ajudá-lo a decidir onde criar novos pontos de contacto.<br>
         Selecione a região e o periodo de previsão para começar.
     </p>
-    <div class="regions-container">
-        <select name="regions" class="regions">
+    <div class="d-flex flex-column align-items-center justify-content-between p-0 pt-1 pb-3">
+        <select name="regions" class="regions py-2">
             <option>Lisboa</option>
         </select>
-        <select name="years-lookahead" class="years-lookahead">
+        <select name="years-lookahead" class="years-lookahead m-2 py-2">
             <option>1 ano</option>
             <option>2 anos</option>
             <option>3 anos</option>
@@ -24,8 +24,8 @@
         </select>
 
     </div>
-    <form action="/run" method="GET">
-        <button class="index-button" type="submit">Iniciar</button>
+    <form class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
+        <button class="index-button shadow fs-3" type="submit">Iniciar</button>
     </form>
 </div>
 {% endblock %}

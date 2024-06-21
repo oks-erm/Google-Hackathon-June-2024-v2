@@ -6,17 +6,17 @@
 {% block content %}
 
 <div class="container">
-    <div class="login-wrap">
+    <div class="login-wrap shadow">
         <h1 class="text-center h1">Perfil</h1>
-        <div class="row ma-0 pa-0 mx-5 d-flex align-items-center" style="padding-right: 0px;">
+        <div class="row mx-5 d-flex align-items-center">
             <div class="col my-3">
                 <img class="profile-pic" src="../static/assets/ppl-icon.png">
             </div>
-            <div class="col ma-0 pa-0" style="padding-left: -30px;">
-                <p class="user-infos">Nome de utilizador: {{ user }} </p>
-                <p class="user-infos">Número de Relatórios Obtidos: 12 </p>
+            <div class="col">
+                <p class="fs-5">Nome de Utilizador: {{ user }} </p>
+                <p class="fs-5">Nr Relatórios Obtidos: 12 </p>
                 <form action="/logout" method="GET">
-                    <button type="submit">Sair</button>
+                    <button class="shadow" type="submit">Sair</button>
                 </form>
             </div>
         </div>
