@@ -9,14 +9,13 @@
   <iframe
     width="600"
     height="450"
-    class="ma-0 pa-0"
-    style="border:0;"
+    class="ma-0 pa-0 border-0 d-flex flex-column"
     loading="lazy"
     allowfullscreen
     referrerpolicy="no-referrer-when-downgrade"
     src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
   </iframe>
-  <div class="run-modal">
+  <div class="w-50 d-flex flex-column">
     <div>
       <!-- The Modal -->
       <div class="modal fade" id="myModal">
@@ -65,7 +64,7 @@
       Previsões
     </h3>
     <div class="entry-wrap">
-      <div class="scrollable-box">
+      <div class="d-flex flex-column justify-content-center rounded p-2">
         <div class="item">
           {{ data[0]['Location'] }}
               <!-- Modal Button (Modal is the popup card) -->
@@ -94,24 +93,24 @@
   <div class="ma-0 pa-0">
     <div class="row ma-0 pa-0">
       <div class="col ma-0 pa-0">
-        <div id="map" style="width: 600px; height: 450px; border:0;"></div>
+        <div id="map" class="border-0"></div>
       </div>
 
-      <div class="col run-model ma-0 pa-0" style="padding-right: 0px;">
+      <div class="col run-model pr-0">
         <div class="d-flex flex-row justify-content-between">
           <h3 class="mx-auto">
             Adicionar pontos
           </h3>
         </div>
 
-        <div id="add-new-pins"></div>
+        <div id="add-new-pins" class="mx-0 my-1 p-1"></div>
 
         <div class="d-flex flex-row justify-content-between">
           <div class="d-flex flex-row">
-            <button type="button" style="margin: 0 1px;" onclick="addNewDraggablePoint('Fixo')">Adicionar ponto fixo</button>
-            <button type="button" style="margin: 0 1px;" onclick="addNewDraggablePoint('Móvel')">Adicionar ponto móvel</button>
-            <button type="button" style="margin: 0 1px;" class="" onclick="showPredictionPage()">Voltar</button>
-            <button type="button" style="margin: 0 1px;" onclick="saveReport()">Guardar</button>
+            <button type="button" class="mx-1" onclick="addNewDraggablePoint('Fixo')">Adicionar ponto fixo</button>
+            <button type="button" class="mx-1" onclick="addNewDraggablePoint('Móvel')">Adicionar ponto móvel</button>
+            <button type="button" class="mx-1" class="" onclick="showPredictionPage()">Voltar</button>
+            <button type="button" class="mx-1" onclick="saveReport()">Guardar</button>
           </div>
         </div>
         </div>
