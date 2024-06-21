@@ -18,29 +18,29 @@
     </title>
     {% endblock %}
 </head>
-<body class="container-fluid">
-    <div class="panel">
-        <a href="/">
+<body class="container-fluid w-100 m-0 p-0">
+    <div class="p-4 d-flex align-items-center justify-content-between">
+        <a href="/" class="flex-row">
             <img id="logo" src="../static/assets/logo.png">
         </a>
-        <div class="buttons">
+        <div class="flex-row d-flex shadow">
             {% if isAuthenticated %}
             <form action="/report" method="GET">
-                <button type="submit">Relatórios</button>
+                <button class="shadow mr-1" type="submit">Relatórios</button>
             </form>
             <form action="/profile" method="GET">
-                <button type="submit" id="logged"></button>
+                <button class="shadow mr-1" type="submit" id="logged"></button>
             </form>
             {% elif isLoginPage %}
             {% else %}
             <form action="/login" method="GET">
-                <button type="submit">Iniciar Sessão</button>
+                <button class="shadow" type="submit">Iniciar Sessão</button>
             </form>
             {% endif %}
         </div>
     </div>
 
-    <div id="content" class="pa-5 mx-5 my-5">
+    <div id="content" class="pa-5 mx-5 my-5 fs-6">
         {% block content %}{% endblock %}
     </div>
 </body>
