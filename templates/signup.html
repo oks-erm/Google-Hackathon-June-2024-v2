@@ -4,17 +4,17 @@
     Criar Conta
 {% endblock %}
 {% block content %}
-    <h2 class="header">Signup</h2>
+    <h2 class="header text-center fs-4">Signup</h2>
     <form action="/signup" method="post">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <input class="fs-5" type="text" id="username" name="username" required><br><br>
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+        <input class="fs-5" type="password" id="password" name="password" required><br><br>
 
-        <input type="submit" value="Signup">
+        <input class="shadow" type="submit" value="Signup">
     </form>
 {% endblock %}
