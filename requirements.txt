@@ -12,10 +12,16 @@ itsdangerous==2.2.0
 Jinja2==3.1.4
 load-dotenv==0.1.0
 MarkupSafe==2.1.5
+numpy==2.0.0
+pandas==2.2.2
 psycopg2-binary==2.9.9
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+pytz==2024.1
 requests==2.32.3
+six==1.16.0
 SQLAlchemy==2.0.31
 typing_extensions==4.12.2
+tzdata==2024.1
 urllib3==2.2.2
 Werkzeug==3.0.3
