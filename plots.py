@@ -13,6 +13,7 @@ def querry_bq():
     df = client.query(query).to_dataframe()
     return df
 
+
 def plot_atendimentos_per_month(df):
     ## Historical atendimentos per month line graph ## 
     # Make sure 'Data_e...' field is in datetime format
@@ -32,14 +33,33 @@ def plot_atendimentos_per_month(df):
     # print(df_grouped)
 
     # Create Plotly Graph
-    fig = px.line(df_grouped, x='Meses', y='Atendimentos', title=f'Atendimentos Over Time for {location}')
+    fig = px.line(df_grouped, x='Meses', y='Atendimentos')
     fig.update_layout(
-        title=f'Atendimentos ao longo dos meses em {location}',
         xaxis_title='Mês',
-        yaxis_title='Atendimentos'
+        yaxis_title='Atendimentos',
+        
+		plot_bgcolor='white',
+		xaxis=dict(
+			showline=True,
+			showgrid=True,
+			showticklabels=True,
+			linecolor='black',
+			linewidth=2,
+			ticks='outside',
+			tickfont=dict(family='Arial', size=12, color='black')
+		),
+		yaxis=dict(
+			showline=True,
+			showgrid=True,
+			showticklabels=True,
+			linecolor='black',
+			linewidth=2,
+			ticks='outside',
+			tickfont=dict(family='Arial', size=12, color='black')
+		)
     )
     fig.update_traces(
-        line=dict(color='royalblue', width=4, dash='dash')
+        line=dict(color='royalblue', width=4)
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
@@ -52,7 +72,3 @@ def make_plots():
         
 	]
     return plot_list
-    
-    
-    
-
