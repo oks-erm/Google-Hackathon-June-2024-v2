@@ -1,7 +1,7 @@
 # Google-Hackathon-June-2024
 
-## How to deploy the project on Google Cloud:
 ---
+## How to deploy the project on Google Cloud:
 1. Install Google Cloud CLI for your OS: https://cloud.google.com/sdk/docs/install
     (You can check if it's installed by running `gcloud --version` in the terminal.)
 2. Update your environment with requirements from the `requirements.txt` file.
@@ -12,7 +12,7 @@
     3. Choose the project you want to deploy the app to.
 5. Run `deploy.sh` script.
 
-### How to stop the server:
 ---
+### How to stop the server:
 1. Check the name of the active service: `gcloud app services list`.
 2. Stop the service: `gcloud app services stop SERVICE_NAME`.
