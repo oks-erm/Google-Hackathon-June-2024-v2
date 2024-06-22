@@ -10,19 +10,28 @@
         Vamos ajudá-lo a decidir onde criar novos pontos de contacto.<br>
         Selecione a região e o periodo de previsão para começar.
     </p>
-    <div class="d-flex flex-column align-items-center justify-content-between p-0 pt-1 pb-3">
-        <select name="regions" class="regions py-2">
-            <option>Lisboa</option>
-        </select>
-        <select name="years-lookahead" class="years-lookahead m-2 py-2">
-            <option>1 ano</option>
-            <option>2 anos</option>
-            <option>3 anos</option>
-            <option>4 anos</option>
-            <option>5 anos</option>
-            <option>10 anos</option>
-        </select>
-
+    <div class="p-0 pt-1 pb-3 mt-4 mb-2 row mx-auto btn-cont">
+        <div class="dropdown-center mx-auto col-sm-8">
+            <button class="brder dropdown-toggle text-dark py-2 bg-white w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Lisboa
+            </button>
+            <ul class="dropdown-menu w-100">
+              <li class="dropdown-item">Lisboa</li>
+            </ul>
+        </div>
+        <div class="dropdown-center col mx-auto col-sm-4">
+            <button class="brder dropdown-toggle text-dark py-2 bg-white w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Previsão
+            </button>
+            <ul class="dropdown-menu w-100">
+                <li class="dropdown-item">1 ano</li>
+                <li class="dropdown-item">2 anos</li>
+                <li class="dropdown-item">3 anos</li>
+                <li class="dropdown-item">4 anos</li>
+                <li class="dropdown-item">5 anos</li>
+                <li class="dropdown-item">10 anos</li>
+            </ul>
+        </div>
     </div>
     <form class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
         <button class="index-button shadow fs-3" type="submit">Iniciar</button>
