@@ -13,6 +13,9 @@ SERVICE_NAME="sublime-lyceum-426907-r9"
 REGION="europe-west1"
 ENV_VARS=$(grep -v '^#' .env | xargs | sed 's/ /,/g')
 
+# update requirements
+pip install -r requirements.txt > /dev/null 2>&1
+
 # deploy command
 gcloud run deploy $SERVICE_NAME \
     --source .                  \
