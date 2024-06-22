@@ -191,3 +191,14 @@ button, input[type="submit"]
     width: 30%;
 }
 
+.location {
+    margin: 15px 5px;
+}
+
+.necessity_metric{
+    margin: 15px 5px;
+}
+
+.current_stress{   
+    margin: 15px 5px;
+}

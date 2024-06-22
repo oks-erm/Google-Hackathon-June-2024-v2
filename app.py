@@ -36,15 +36,14 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not session.get("isAuthenticated", False):
-    #    return redirect(url_for('login'))
+    if not session.get("isAuthenticated", False):
+       return redirect(url_for('login'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     
     # Original data handling
     original_df = pd.read_csv('./static/assets/model_frame.csv')
     original_df.sort_values(by='Location')
     predictions = create_dataframe_with_random_deviation(original_df)
-    # loc1 = predictions['Location']
     predictions.sort_values(by='Location')
     data = predictions.to_dict(orient='records')
     items = [f'Item {i}' for i in range(1, 3)]
@@ -62,7 +61,7 @@ def run():
     df = client.query(query).to_dataframe(bqstorage_client=client)
     print('blyat2')
 
-    # Print on terminal
+    # Print BigQuery data on terminal
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', 1000)
