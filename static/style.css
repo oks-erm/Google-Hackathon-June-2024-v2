@@ -72,6 +72,12 @@ button, input[type="submit"]
     width: 36%;
 }
 
+.brder
+{
+    border-radius: 5px;
+    border: 2px solid darkblue;
+}
+
 
 /* login.html */
 .login-wrap
