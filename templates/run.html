@@ -27,9 +27,10 @@
             </div>
             <!-- Modal Body -->
             <div class="modal-body">
-              <div class="d-flex flex-row justify-content-around">
+              <div class="d-flex flex-column justify-content-around">
                 <div>
-                  <img src="https://static.javatpoint.com/ds/images/line-graph2.png" alt="visual" width="400" height="400">
+                  <!--BigQuerry Graph-->
+                  {{ graph_html[0] | safe }}
                 </div>
                 <div class="d-flex flex-column justify-content-around">
                   <div>
