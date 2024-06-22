@@ -178,7 +178,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-     document.getElementById("edit-prediction-container").style.visibility = "hidden";
+     document.getElementById("edit-prediction-container").style.display = "none";
   });
 
   function showEditPredictionPage() {
@@ -186,9 +186,7 @@
     let predictionContainer = document.getElementById("prediction-container");
     let editPredictionContainer = document.getElementById("edit-prediction-container");
 
-    predictionContainer.style.visibility = "hidden";
     predictionContainer.style.display = "none";
-    editPredictionContainer.style.visibility = "visible";
     editPredictionContainer.style.display = "flex";
   }
 
@@ -196,10 +194,7 @@
     let predictionContainer = document.getElementById("prediction-container");
     let editPredictionContainer = document.getElementById("edit-prediction-container");
 
-    predictionContainer.style.visibility = "visible";
     predictionContainer.style.display = "flex";
-
-    editPredictionContainer.style.visibility = "hidden";
     editPredictionContainer.style.display = "none";
   }
 

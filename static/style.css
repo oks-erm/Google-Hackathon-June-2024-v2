@@ -64,24 +64,22 @@ button, input[type="submit"]
 
 .intro-text
 {
-    color: grey;
+    color: rgb(90, 90, 90);
 }
 
-.regions
+.btn-cont
 {
-    padding-left: 12%;
-    padding-right: 12%;
+    width: 36%;
 }
 
-.years-lookahead
+.brder
 {
-    padding-left: 3%;
-    padding-right: 3%;
+    border-radius: 5px;
+    border: 2px solid darkblue;
 }
 
 
 /* login.html */
-
 .login-wrap
 {
     margin: 0 20%;
@@ -90,7 +88,6 @@ button, input[type="submit"]
 
 
 /* run.html */
-
 .item, .new-pin {
     display: flex;
     flex-flow: row;
