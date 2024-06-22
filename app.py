@@ -14,9 +14,10 @@ import numpy as np
 import requests
 from dotenv import load_dotenv
 import os
-
-from google.cloud import bigquery #, bigquery_storage
+from google.cloud import bigquery # , bigquery_storage
 import plotly.express as px
+
+from plots import make_plots
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 
@@ -36,8 +37,8 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    if not session.get("isAuthenticated", False):
-       return redirect(url_for('login'))
+    # if not session.get("isAuthenticated", False):
+    #    return redirect(url_for('login'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     
     # Original data handling
@@ -48,29 +49,7 @@ def run():
     data = predictions.to_dict(orient='records')
     items = [f'Item {i}' for i in range(1, 3)]
 
-    # Query data from BigQuery
-    client = bigquery.Client()
-    # bqstorage_client = bigquery_storage.BigQueryReadClient()
-    query = """
-        SELECT * FROM `sublime-lyceum-426907-r9.ama.merged`
-        LIMIT 1200
-    """
-
-    print('bblyarts')
-    # df = client.query(query).to_dataframe()
-    df = client.query(query).to_dataframe(bqstorage_client=client)
-    print('blyat2')
-
-    # Print BigQuery data on terminal
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', 1000)
-    print(df)
-
-    # Visualize data using Plotly
-    fig = px.bar(df, x='Year', y='Procuras', title='Visualization')
-    # fig = px.
-    graph_html = fig.to_html(full_html=False)
+    plots = make_plots()
 
     return render_template(
         'run.html', 
@@ -79,7 +58,7 @@ def run():
         google_map_api_key=google_map_api_key, 
         items=items, 
         data=data, 
-        graph_html=graph_html
+        graph_html=plots
     )
 
 # this is not used as of now

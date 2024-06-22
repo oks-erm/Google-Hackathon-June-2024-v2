@@ -27,10 +27,14 @@
             </div>
             <!-- Modal Body -->
             <div class="modal-body">
-              <div class="d-flex flex-row justify-content-around">
+              <div class="d-flex flex-column justify-content-around">
                 <div>
                   <!--BigQuerry Graph-->
-                  {{ graph_html | safe }}
+                  {{ graph_html[0] | safe }}
+                </div>
+                <div>
+                  <!--BigQuerry Graph-->
+                  {{ graph_html[0] | safe }}
                 </div>
                 <div class="d-flex flex-column justify-content-around">
                   <div>
