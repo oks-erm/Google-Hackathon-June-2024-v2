@@ -66,20 +66,19 @@
     <div class="entry-wrap">
       <div class="d-flex flex-column justify-content-center rounded p-2">
         <div class="item">
-          {{ data[0]['Location'] }}
+          <div class="location">
+            {{ data[0]['Location'] }}
+          </div>
               <!-- Modal Button (Modal is the popup card) -->
-              <span>Necessity metric {{data[0]['necessity_metric']}}</span>
-              <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-                  Abrir
-              </button>
-        </div>
-        <div class="item">
-          {{ data[1]['Location'] }}
-              <!-- Modal Button (Modal is the popup card) -->
-               <span>Necessity metric {{data[1]['necessity_metric']}}</span>
-              <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-                  Abrir
-              </button>
+          <div class="necessity_metric">
+            <span>Necessity metric {{data[0]['necessity_metric']}}</span>
+          </div>
+          <div class="current_stress">
+            <span> 120 </span>
+          </div>
+          <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+              Abrir
+          </button>
         </div>
       </div>
     </div>
