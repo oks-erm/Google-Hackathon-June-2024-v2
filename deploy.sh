@@ -9,15 +9,13 @@ else
 fi
 
 # variables
-SERVICE_NAME="google-hackathon-june-2024"
-PROJECT_ID="sublime-lyceum-426907-r9"
+SERVICE_NAME="sublime-lyceum-426907-r9"
 REGION="europe-west1"
 ENV_VARS=$(grep -v '^#' .env | xargs | sed 's/ /,/g')
 
 # deploy command
 gcloud run deploy $SERVICE_NAME \
     --source .                  \
-    --project $PROJECT_ID       \
     --region $REGION            \
     --set-env-vars $ENV_VARS    \
     --allow-unauthenticated
