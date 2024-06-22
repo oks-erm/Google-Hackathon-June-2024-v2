@@ -35,19 +35,16 @@
                 <div class="d-flex flex-column justify-content-around">
                   <div>
                     <h5>Procuras</h5>
-                    <p>{{data[1]['Procuras']}}</p>
                   </div>
                   <div>
                     <h5>Desistencias</h5>
-                    <p>{{data[1]['Desistencias']}}</p>
                   </div>
                   <div>
-                    <h5>Tempo medio de espera diario</h5>
-                    <p>{{data[1]['Tempo_medio_de_espera_diario']}}</p>
+                    <h5>Tempo medio de espera diario
+                    </h5>
                   </div>
                   <div>
                     <h5>Necessity Metric</h5>
-                    <p>{{data[1]['necessity_metric']}}</p>
                   </div>
                 </div>
               </div>
@@ -65,21 +62,23 @@
     </h3>
     <div class="entry-wrap">
       <div class="d-flex flex-column justify-content-center rounded p-2">
-        <div class="item">
-          <div class="location">
-            {{ data[0]['Location'] }}
+        {% for a in cards_data%}
+          <div class="item">
+            <div class="location">
+              {{ a['Designacao'] }}
+            </div>
+                <!-- Modal Button (Modal is the popup card) -->
+            <div class="necessity_metric">
+              <span>Necessity metric {{ a['necessity_metric'] }}</span>
+            </div>
+            <div class="current_stress">
+              <span> Stress Level {{a['stress_value']}} </span>
+            </div>
+            <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+                Abrir
+            </button>
           </div>
-              <!-- Modal Button (Modal is the popup card) -->
-          <div class="necessity_metric">
-            <span>Necessity metric {{data[0]['necessity_metric']}}</span>
-          </div>
-          <div class="current_stress">
-            <span> 120 </span>
-          </div>
-          <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-              Abrir
-          </button>
-        </div>
+          {% endfor %}
       </div>
     </div>
     <button type="button" class="add d-flex flex-row justify-content-center" onclick="showEditPredictionPage()">

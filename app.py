@@ -7,17 +7,16 @@ from flask import (
     redirect,
     url_for,
     session,
-    flash
+    flash,
+    jsonify
 )
 import pandas as pd
 import numpy as np
 import requests
-from dotenv import load_dotenv
+import json
 import os
-from google.cloud import bigquery # , bigquery_storage
-import plotly.express as px
 
-from plots import make_plots
+from plots import make_plots, querry_bq
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 
@@ -37,29 +36,71 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not session.get("isAuthenticated", False):
-    #    return redirect(url_for('login'))
-    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    if not session.get("isAuthenticated", False):
+        return redirect(url_for('login'))
     
-    # Original data handling
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+
+    plots = make_plots()
+    df_historic_data = querry_bq()
+
+    # filter the dataframe
+
+    filtered_df_2024 = df_historic_data[df_historic_data['Year'] == 2024]
+    filtered_df_2024 = filtered_df_2024.sort_values(by="Designacao")
+    columns_to_drop = ["Latitude", "Longitude", "Year", "Month", "Day", "Localidade_Postal", "Freguesia", "Codigo_do_Ponto_de_Atendimento", "Population_Density", "Codigo_Freguesia", "Data"]
+    filtered_df_2024 = filtered_df_2024.drop(columns=columns_to_drop)
+    # print(filtered_df_2024.head(100))
+
+    # group the rows by designacao, averaging the other elements
+
+    df_grouped = filtered_df_2024.groupby('Designacao').agg({"Procuras": 'mean',
+        "Atendimentos": 'mean',
+        "Desistencias": 'mean',
+        "Tempo_medio_de_espera_diario": 'mean',
+        "Population": 'mean',
+        }).reset_index()
+
+    # Calculate the stress values
+    
+    stress_value = [ int((a['Procuras'] * a['Desistencias'] * a['Tempo_medio_de_espera_diario'])
+                         / (a['Atendimentos'] * a ['Population'])) 
+                for a in json.loads(df_grouped.to_json(orient='records'))]
+
+    # Dispose of unecessary data
+
+    columns_to_drop = ["Procuras", "Atendimentos", "Desistencias", "Tempo_medio_de_espera_diario", "Population"]
+    df_grouped = df_grouped.drop(columns=columns_to_drop)
+    df_grouped['stress_value'] = stress_value
+
+    # {'Designacao': {'0': 'Loja de Cidadão Laranjeiras', '1': 'Loja de Cidadão Saldanha'}, 'stress_value': {'0': 28, '1': 43}}
+
     original_df = pd.read_csv('./static/assets/model_frame.csv')
     original_df.sort_values(by='Location')
     predictions = create_dataframe_with_random_deviation(original_df)
-    predictions.sort_values(by='Location')
-    data = predictions.to_dict(orient='records')
-    items = [f'Item {i}' for i in range(1, 3)]
+    loc1 = predictions['Location']
+    to_merge_to_cards_table = predictions.sort_values(by='Location')
+    columns_to_drop = ["Year", "Procuras","Tempo_medio_de_espera_diario", "Atendimentos" ,"Desistencias"]
+    to_merge_to_cards_table = to_merge_to_cards_table.drop(columns=columns_to_drop)
+    to_merge_to_cards_table = to_merge_to_cards_table.groupby('Location').agg({"necessity_metric": 'mean'}).reset_index()
+    # print(to_merge_to_cards_table.head(3))
+    
+    
+    cards_table = []
+    js = json.loads(df_grouped.to_json())
+    js2 = json.loads(to_merge_to_cards_table.to_json())
+    # print(js)
+    for index in js['Designacao'].keys():
+        cards_table.append({
+            'Designacao': js['Designacao'][index],
+            'stress_value': js['stress_value'][index],
+            'necessity_metric': js2['necessity_metric'][index]
+        })
 
-    plots = make_plots()
+    items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
+    # return render_template('index.html', items=items)
+    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items, graph_html=plots, cards_data=cards_table)
 
-    return render_template(
-        'run.html', 
-        isLoginPage=False, 
-        isAuthenticated=session.get("isAuthenticated", False), 
-        google_map_api_key=google_map_api_key, 
-        items=items, 
-        data=data, 
-        graph_html=plots
-    )
 
 # this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])
