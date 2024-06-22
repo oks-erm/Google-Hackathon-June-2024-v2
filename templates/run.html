@@ -29,7 +29,8 @@
             <div class="modal-body">
               <div class="d-flex flex-row justify-content-around">
                 <div>
-                  <img src="https://static.javatpoint.com/ds/images/line-graph2.png" alt="visual" width="400" height="400">
+                  <!--BigQuerry Graph-->
+                  {{ graph_html | safe }}
                 </div>
                 <div class="d-flex flex-column justify-content-around">
                   <div>
@@ -41,8 +42,7 @@
                     <p>{{data[1]['Desistencias']}}</p>
                   </div>
                   <div>
-                    <h5>Tempo medio de espera diario
-                    </h5>
+                    <h5>Tempo medio de espera diario</h5>
                     <p>{{data[1]['Tempo_medio_de_espera_diario']}}</p>
                   </div>
                   <div>
@@ -67,19 +67,19 @@
       <div class="d-flex flex-column justify-content-center rounded p-2">
         <div class="item">
           {{ data[0]['Location'] }}
-              <!-- Modal Button (Modal is the popup card) -->
-              <span>Necessity metric {{data[0]['necessity_metric']}}</span>
-              <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-                  Abrir
-              </button>
+          <!-- Modal Button (Modal is the popup card) -->
+          <span>Necessity metric {{data[0]['necessity_metric']}}</span>
+          <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+              Abrir
+          </button>
         </div>
         <div class="item">
           {{ data[1]['Location'] }}
-              <!-- Modal Button (Modal is the popup card) -->
-               <span>Necessity metric {{data[1]['necessity_metric']}}</span>
-              <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
-                  Abrir
-              </button>
+          <!-- Modal Button (Modal is the popup card) -->
+          <span>Necessity metric {{data[1]['necessity_metric']}}</span>
+          <button type="button" class="btn btn-primary" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+              Abrir
+          </button>
         </div>
       </div>
     </div>

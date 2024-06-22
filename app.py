@@ -15,6 +15,11 @@ import requests
 from dotenv import load_dotenv
 import os
 
+from google.cloud import bigquery #, bigquery_storage
+import plotly.express as px
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
+
 def get_now():
     from datetime import datetime as dt
 
@@ -25,33 +30,58 @@ def hash_password(password):
 
     return sha256((password + "tiny pinch of salt").encode("utf-8")).hexdigest()
 
-
 @app.route("/")
 def index():
     return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    if not session.get("isAuthenticated", False):
-        return redirect(url_for('login'))
+    # if not session.get("isAuthenticated", False):
+    #    return redirect(url_for('login'))
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    # def index():
+    
+    # Original data handling
     original_df = pd.read_csv('./static/assets/model_frame.csv')
     original_df.sort_values(by='Location')
     predictions = create_dataframe_with_random_deviation(original_df)
-    print('+++++++++++++++++++')
-    print(original_df)
-    print('+++++++++++++++++++')
-    print(predictions)
-    loc1 = predictions['Location']
+    # loc1 = predictions['Location']
     predictions.sort_values(by='Location')
-
-
     data = predictions.to_dict(orient='records')
-    items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
-    # return render_template('index.html', items=items)
-    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items, data=data)
+    items = [f'Item {i}' for i in range(1, 3)]
 
+    # Query data from BigQuery
+    client = bigquery.Client()
+    # bqstorage_client = bigquery_storage.BigQueryReadClient()
+    query = """
+        SELECT * FROM `sublime-lyceum-426907-r9.ama.merged`
+        LIMIT 1200
+    """
+
+    print('bblyarts')
+    # df = client.query(query).to_dataframe()
+    df = client.query(query).to_dataframe(bqstorage_client=client)
+    print('blyat2')
+
+    # Print on terminal
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 1000)
+    print(df)
+
+    # Visualize data using Plotly
+    fig = px.bar(df, x='Year', y='Procuras', title='Visualization')
+    # fig = px.
+    graph_html = fig.to_html(full_html=False)
+
+    return render_template(
+        'run.html', 
+        isLoginPage=False, 
+        isAuthenticated=session.get("isAuthenticated", False), 
+        google_map_api_key=google_map_api_key, 
+        items=items, 
+        data=data, 
+        graph_html=graph_html
+    )
 
 # this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])
