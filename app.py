@@ -13,7 +13,16 @@ import pandas as pd
 import numpy as np
 import requests
 from dotenv import load_dotenv
+from faker import Faker
+from google.cloud import bigquery, bigquery_storage
+import json
 import os
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'sublime-lyceum-426907-r9-353181f6f35f.json'
+
+# Create a BigQuery client
+client = bigquery.Client()
+
 
 def get_now():
     from datetime import datetime as dt
@@ -34,23 +43,82 @@ def index():
 def run():
     if not session.get("isAuthenticated", False):
         return redirect(url_for('login'))
-    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    # def index():
+
+    # Query data from BigQuery
+    query = """
+    SELECT * FROM sublime-lyceum-426907-r9.ama.merged
+    LIMIT 1200
+    """
+    client = bigquery.Client()
+    bqstorage_client = bigquery_storage.BigQueryReadClient()
+    df_historic_data = client.query(query).to_dataframe(bqstorage_client)
+
+    # filter the dataframe
+
+    filtered_df_2024 = df_historic_data[df_historic_data['Year'] == 2024]
+    filtered_df_2024 = filtered_df_2024.sort_values(by="Designacao")
+    columns_to_drop = ["Latitude", "Longitude", "Year", "Month", "Day", "Localidade_Postal", "Freguesia", "Codigo_do_Ponto_de_Atendimento", "Population_Density", "Codigo_Freguesia", "Data"]
+    filtered_df_2024 = filtered_df_2024.drop(columns=columns_to_drop)
+    print(filtered_df_2024.head(100))
+
+    # group the rows by designacao, averaging the other elements
+
+    df_grouped = filtered_df_2024.groupby('Designacao').agg({"Procuras": 'mean',
+        "Atendimentos": 'mean',
+        "Desistencias": 'mean',
+        "Tempo_medio_de_espera_diario": 'mean',
+        "Population": 'mean',
+        }).reset_index()
+    
+    print(df_grouped.head(4))
+
+    # Calculate the stress values
+    
+    stress_value = [ int((a['Procuras'] * a['Desistencias'] * a['Tempo_medio_de_espera_diario'])
+                         / (a['Atendimentos'] * a ['Population'])) 
+                for a in json.loads(df_grouped.to_json(orient='records'))]
+        
+    print(stress_value)
+
+    # Dispose of unecessary data
+
+    columns_to_drop = ["Procuras", "Atendimentos", "Desistencias", "Tempo_medio_de_espera_diario", "Population"]
+    df_grouped = df_grouped.drop(columns=columns_to_drop)
+    df_grouped['stress_value'] = stress_value
+    
+    print(df_grouped.head(4))
+
+    # {'Designacao': {'0': 'Loja de Cidadão Laranjeiras', '1': 'Loja de Cidadão Saldanha'}, 'stress_value': {'0': 28, '1': 43}}
+
     original_df = pd.read_csv('./static/assets/model_frame.csv')
     original_df.sort_values(by='Location')
     predictions = create_dataframe_with_random_deviation(original_df)
-    print('+++++++++++++++++++')
-    print(original_df)
-    print('+++++++++++++++++++')
-    print(predictions)
     loc1 = predictions['Location']
-    predictions.sort_values(by='Location')
+    to_merge_to_cards_table = predictions.sort_values(by='Location')
+    columns_to_drop = ["Year", "Procuras","Tempo_medio_de_espera_diario", "Atendimentos" ,"Desistencias"]
+    to_merge_to_cards_table = to_merge_to_cards_table.drop(columns=columns_to_drop)
+    to_merge_to_cards_table = to_merge_to_cards_table.groupby('Location').agg({"necessity_metric": 'mean'}).reset_index()
+    print(to_merge_to_cards_table.head(3))
+    
+    
+    cards_table = []
+    js = json.loads(df_grouped.to_json())
+    js2 = json.loads(to_merge_to_cards_table.to_json())
+    print(js)
+    for index in js['Designacao'].keys():
+        cards_table.append({
+            'Designacao': js['Designacao'][index],
+            'stress_value': js['stress_value'][index],
+            'necessity_metric': js2['necessity_metric'][index]
+        })
 
+    print(cards_table)
 
-    data = predictions.to_dict(orient='records')
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+
     items = [f'Item {i}' for i in range(1, 3)]  # Example list of items
     # return render_template('index.html', items=items)
-    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items, data=data)
+    return render_template('run.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), google_map_api_key=google_map_api_key, items=items, cards_data=cards_table)
 
 
 # this is not used as of now
@@ -181,3 +249,6 @@ def save_report():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
