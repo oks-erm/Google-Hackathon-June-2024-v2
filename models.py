@@ -1,16 +1,5 @@
 from config import db
 
-class User(db.Model):
-    __tablename__ = 'cunts'
-    id = db.Column(db.BigInteger, primary_key=True)
-    name = db.Column(db.Text, unique=False, nullable=True)
-    created_at = db.Column(db.TIMESTAMP, unique=False, nullable=False)
-    cuntness = db.Column(db.BigInteger, unique=True, nullable=True)
-
-    def __repr__(self):
-        return f'<User: {self.name}, ID: {self.id}, Created at: {self.created_at}, Cuntness: {self.cuntness}>'
-
-
 class Login(db.Model):
     __tablename__ = 'logins'
     id = db.Column(db.BigInteger, primary_key=True)
