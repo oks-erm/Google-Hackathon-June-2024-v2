@@ -4,19 +4,19 @@
     Página Inicial
 {% endblock %}
 {% block content %}
-<div>
-    <h1 class="d-flex flex-column align-items-center justify-content-between intro-title p-0">Bem-vindo!</h1>
-    <p class="important d-flex flex-column align-items-center justify-content-between intro-text text-center fs-3">
-        Vamos ajudá-lo a decidir onde criar novos pontos de contacto.<br>
-        Selecione a região e o periodo de previsão para começar.
+<div class="w-75 m-auto">
+    <h1 class="d-flex flex-column align-items-center justify-content-between text-center intro-title p-0">Citizen Connect</h1>
+    <p class="important d-flex flex-column align-items-center justify-content-between intro-text px-4 text-center">
+        Defina o próximo ponto de atendimento ao cidadão... com AI!<br>
+        Selecione a região e periodo de previsão para começar
     </p>
-    <div class="p-0 pt-1 pb-3 mt-4 mb-2 row mx-auto btn-cont">
-        <div class="dropdown-center mx-auto col-sm-8">
+    <div class="p-0 pt-1 pb-3 mt-4 mb-2 w-50 row mx-auto btn-cont">
+        <div class="dropdown-center mx-auto col-sm-8 offset-sm-2">
             <button class="brder dropdown-toggle text-dark py-2 bg-white w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Lisboa
+            Lisboa
             </button>
             <ul class="dropdown-menu w-100">
-              <li class="dropdown-item">Lisboa</li>
+            <li class="dropdown-item">Lisboa</li>
             </ul>
         </div>
         <div class="dropdown-center col mx-auto col-sm-4">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <form class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
-        <button class="index-button shadow fs-3" type="submit">Iniciar</button>
+        <button class="index-button shadow fs-3 rounded" type="submit">Iniciar</button>
     </form>
 </div>
 {% endblock %}
