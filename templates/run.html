@@ -5,18 +5,20 @@
 {% endblock %}
 {% block content %}
 
-<div id="prediction-container" class="container-fluid runs w-100 m-auto mt-4">
-  <iframe
-    width="600"
-    height="450"
-    class="ma-0 pa-0 border-0 d-flex flex-column w-50 mx-auto"
-    loading="lazy"
-    allowfullscreen
-    referrerpolicy="no-referrer-when-downgrade"
-    src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
-  </iframe>
-  <div class="w-50 d-flex flex-column mx-auto">
-    <div>
+<div id="prediction-container" class="runs w-100 m-auto">
+  <div class="w-100 m-auto p-0">
+    <div class="w-100 row m-auto p-0">
+      <div class="w-50 col p-0">
+        <iframe
+          width="600"
+          height="450"
+          loading="lazy"
+          style="display: block; margin: auto"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
+        </iframe>
+      </div>
       <!-- The Modal -->
       <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -56,13 +58,12 @@
           </div>
         </div>
       </div>
-    </div>
-    <h3 class="mx-auto">
-      Previsões
-    </h3>
-    <div class="entry-wrap">
-      <div class="d-flex flex-column justify-content-center rounded p-2">
-        {% for a in cards_data%}
+      <div class="w-50 m-auto col p-0">
+        <h3 class="p-0 m-0 text-center">
+          Adicionar pontos
+        </h3>
+        <div class="entries mx-auto my-1 px-5 py-1 w-100">
+          {% for a in cards_data%}
           <div class="item">
             <div class="location">
               {{ a['Designacao'] }}
@@ -79,11 +80,14 @@
             </button>
           </div>
           {% endfor %}
+        </div>
+        <div class="w-100">
+          <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
+            <button type="button" class="rounded py-2 mx-1"  onclick="showEditPredictionPage()">Adicionar pontos</button>
+          </div>
+        </div>
       </div>
     </div>
-    <button type="button" class="add rounded d-flex flex-row justify-content-center py-2" onclick="showEditPredictionPage()">
-      Adicionar Pontos
-    </button>
   </div>
 </div>
 
@@ -94,7 +98,7 @@
         <div id="map" class="border-0 m-auto" style="width: 600px"></div>
       </div>
 
-      <div class="w-50 m-auto col run-model p-0">
+      <div class="w-50 m-auto col p-0">
         <h3 class="p-0 m-0 text-center">
           Adicionar pontos
         </h3>
