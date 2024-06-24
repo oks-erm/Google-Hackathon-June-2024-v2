@@ -133,62 +133,23 @@
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
 <script>
-  /* map stuff */
-  let map;
-
-  async function addNewDraggablePoint(type) {
-    // create a new pin
-    let newPin = document.createElement("div");
-    newPin.className = "new-pin";
-    newPin.innerText = type;
-
-    let newPinesContainer = document.getElementById("add-new-pins");
-    newPinesContainer.appendChild(newPin);
-
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    const randomNess = Math.random() * 0.001;
-    const draggableMarker = new AdvancedMarkerElement({
-      map,
-      position: { lat: 38.73067129535301, lng: -9.129937518620784 + randomNess },
-      gmpDraggable: true,
-      title: type,
-    });
-
-    draggableMarker.addListener("dragend", (event) => {
-      const position = draggableMarker.position;
-
-      infoWindow.close();
-      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
-      infoWindow.open(draggableMarker.map, draggableMarker);
-    });
-  }
-
-  async function initMap() {
-    // Request needed libraries.
-    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    map = new Map(document.getElementById("map"), {
-      center: { lat: 38.73067129535301, lng: -9.129937518620784 },
-      zoom: 16,
-      mapId: "4504f8b37365c3d0",
-    });
-    const infoWindow = new InfoWindow();
-    const draggableMarker = new AdvancedMarkerElement({
-      map,
-      position: { lat: 38.73067129535301, lng: -9.129937518620784 },
-      gmpDraggable: true,
-      title: "This marker is draggable.",
-    });
-
-    draggableMarker.addListener("dragend", (event) => {
-      const position = draggableMarker.position;
-
-      infoWindow.close();
-      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
-      infoWindow.open(draggableMarker.map, draggableMarker);
-    });
+  function saveReport() {
+    // do a post request to save the report
+    console.log("saveReport", points);
+    // send the data to the server
+    fetch('/save-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        points: points,
+        // add more needed data here
+      }),
+    })
   }
 </script>
 
@@ -198,7 +159,6 @@
   });
 
   function showEditPredictionPage() {
-    console.log("showEditPredictionPage");
     let predictionContainer = document.getElementById("prediction-container");
     let editPredictionContainer = document.getElementById("edit-prediction-container");
 
@@ -212,11 +172,6 @@
 
     predictionContainer.style.display = "flex";
     editPredictionContainer.style.display = "none";
-  }
-
-  function saveReport() {
-    // do a post request to save the report
-    console.log("saveReport");
   }
 </script>
 

@@ -43,7 +43,7 @@ def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
-    
+
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
     for location in available_locations:
@@ -179,6 +179,9 @@ def predict():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    session["isAuthenticated"] = True
+    return redirect(url_for('index'))
+
     if session.get("isAuthenticated", False):
         session['url'] = url_for('login')
         return redirect(url_for('index'))
@@ -208,6 +211,20 @@ def logout():
     session["isAuthenticated"] = False
     return redirect(url_for('index'))
 
+@app.route('/save-report', methods=['POST'])
+def save_report():
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('report')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # from the request, get the body and convert it to json
+        body = request.get_json()
+        print(body)
+        # save the data to DB
+
+    return redirect(url_for('index'))
+
 
 @app.route("/profile")
 def profile():
@@ -223,6 +240,8 @@ def report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
         return redirect(url_for('login'))
+
+    # get the data from the DB
     response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
 
     if response.status_code == 200:
@@ -243,14 +262,6 @@ def report():
     else:
         return render_template('error.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
 
-
-@app.route('/save-report', methods=['POST'])
-def save_report():
-    if not session.get("isAuthenticated", False):
-        session['url'] = url_for('report')
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        print(request.form)
 
 
 if __name__ == '__main__':
