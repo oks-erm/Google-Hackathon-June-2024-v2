@@ -26,28 +26,47 @@
               <h4 class="modal-title">"Localização"</h4>
             </div>
             <!-- Modal Body -->
-            <div class="modal-body">
-              <div class="d-flex flex-column justify-content-around">
-                <div>
-                  <!--BigQuerry Graph-->
-                  {{ graph_html[0] | safe }}
-                </div>
-                <div class="d-flex flex-column justify-content-around">
-                  <div>
-                    <h5>Procuras</h5>
-                  </div>
-                  <div>
-                    <h5>Desistencias</h5>
-                  </div>
-                  <div>
-                    <h5>Tempo medio de espera diario
-                    </h5>
-                  </div>
-                  <div>
-                    <h5>Necessity Metric</h5>
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="predicted-data-tab" data-bs-toggle="tab" href="#predicted-data" role="tab" aria-controls="predicted-data" aria-selected="true">Previsões</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="historic-data-tab" data-bs-toggle="tab" href="#historic-data" role="tab" aria-controls="historic-data" aria-selected="false">Dados históricos</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">info</a>
+              </li>
+            </ul>
+            <!-- Tab content -->
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="predicted-data" role="tabpanel" aria-labelledby="home-tab">
+                <div class="modal-body">
+                  <div class="d-flex flex-column justify-content-around">
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[0][0] | safe }}
+                    </div>
+                    <div class="d-flex flex-column justify-content-around">
+                      <div>
+                        <h5>Procuras</h5>
+                      </div>
+                      <div>
+                        <h5>Desistencias</h5>
+                      </div>
+                      <div>
+                        <h5>Tempo medio de espera diario
+                        </h5>
+                      </div>
+                      <div>
+                        <h5>Necessity Metric</h5>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div class="tab-pane fade" id="historic-data" role="tabpanel" aria-labelledby="historic-data-tab">Profile content...</div>
+              <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">Contact content...</div>
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
