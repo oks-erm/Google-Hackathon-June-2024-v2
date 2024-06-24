@@ -40,9 +40,9 @@ def index():
 
 @app.route('/run', methods=['GET', 'POST'])
 def run():
-    # if not session.get("isAuthenticated", False):
-    #     session['url'] = url_for('run')
-    #     return redirect(url_for('login'))
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('run')
+        return redirect(url_for('login'))
     
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
