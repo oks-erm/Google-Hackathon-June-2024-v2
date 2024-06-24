@@ -8,7 +8,7 @@ Relatórios
     <h2 class="text-center h1 pa-10 mx-5 my-5 report">Relatórios</h2>
 <div class="d-flex flex-column align-items-center">
     {% for item in report_data %}
-    <div class="report-container d-flex align-items-center justify-content-between">
+    <div class="rounded report-container d-flex align-items-center justify-content-between">
         <div class="image-container p-1">
             <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" class="w-100 h-auto" id="reportImage">
         </div>
@@ -18,7 +18,7 @@ Relatórios
             <div class="p-1"><strong>Population Year:</strong> {{ item.popyear }}</div>
             <div class="p-1"><strong>ISO3:</strong> {{ item.iso3 }}</div>
         </div>
-        <button class="report-btn" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Descarregar</button>
+        <button class="rounded report-btn p-2 fs-6" data-id="{{ item.id }}" data-title="{{ item.title }}" data-popyear="{{ item.popyear }}" data-iso3="{{ item.iso3 }}">Descarregar</button>
     </div>
     {% endfor %}
 </div>

@@ -24,18 +24,18 @@
         <a href="/" class="flex-row">
             <img id="logo" src="../static/assets/logo.png">
         </a>
-        <div class="flex-row d-flex shadow">
+        <div class="flex-row d-flex">
             {% if isAuthenticated %}
             <form action="/report" method="GET">
-                <button class="shadow mr-1" type="submit">Relatórios</button>
+                <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit">Relatórios</button>
             </form>
             <form action="/profile" method="GET">
-                <button class="shadow mr-1" type="submit" id="logged"></button>
+                <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit" id="logged"></button>
             </form>
             {% elif isLoginPage %}
             {% else %}
             <form action="/login" method="GET">
-                <button class="shadow" type="submit">Iniciar Sessão</button>
+                <button class="rounded shadow p-2" type="submit">Iniciar Sessão</button>
             </form>
             {% endif %}
         </div>
