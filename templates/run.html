@@ -18,7 +18,7 @@
   <div class="w-50 d-flex flex-column mx-auto">
     <div>
       <!-- The Modal -->
-      <div class="modal fade" id="myModal">
+      <div class="modal fade" id="modal0">
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <!-- Modal Header -->
@@ -40,12 +40,28 @@
             </ul>
             <!-- Tab content -->
             <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="predicted-data" role="tabpanel" aria-labelledby="home-tab">
+              <div class="tab-pane fade show active" id="predicted-data" role="tabpanel" aria-labelledby="predicted-data-tab">
                 <div class="modal-body">
                   <div class="d-flex flex-column justify-content-around">
                     <div>
                       <!--BigQuerry Graph-->
                       {{ graph_html[0][0] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[0][1] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[0][2] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[0][3] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[0][4] | safe }}
                     </div>
                     <div class="d-flex flex-column justify-content-around">
                       <div>
@@ -65,7 +81,33 @@
                   </div>
                 </div>
               </div>
-              <div class="tab-pane fade" id="historic-data" role="tabpanel" aria-labelledby="historic-data-tab">Profile content...</div>
+              <div class="tab-pane fade" id="historic-data" role="tabpanel" aria-labelledby="historic-data-tab">
+                <div class="tab-pane fade show active" id="predicted-data" role="tabpanel" aria-labelledby="historic-data-tab">
+                  <div class="modal-body">
+                    <div class="d-flex flex-column justify-content-around">
+                      <div>
+                        <!--BigQuerry Graph-->
+                        {{ graph_html[0][1] | safe }}
+                      </div>
+                      <div class="d-flex flex-column justify-content-around">
+                        <div>
+                          <h5>Procuras</h5>
+                        </div>
+                        <div>
+                          <h5>Desistencias</h5>
+                        </div>
+                        <div>
+                          <h5>Tempo medio de espera diario
+                          </h5>
+                        </div>
+                        <div>
+                          <h5>Necessity Metric</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">Contact content...</div>
             </div>
             <!-- Modal Footer -->
@@ -75,6 +117,106 @@
           </div>
         </div>
       </div>
+      <div class="modal fade" id="modal1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">"Localização"</h4>
+            </div>
+            <!-- Modal Body -->
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="predicted-data-tab1" data-bs-toggle="tab" href="#predicted-data1" role="tab" aria-controls="predicted-data1" aria-selected="true">Previsões</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="historic-data-tab1" data-bs-toggle="tab" href="#historic-data1" role="tab" aria-controls="historic-data1" aria-selected="false">Dados históricos</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="info-tab1" data-bs-toggle="tab" href="#info1" role="tab" aria-controls="info1" aria-selected="false">info</a>
+              </li>
+            </ul>
+            <!-- Tab content -->
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="predicted-data1" role="tabpanel" aria-labelledby="predicted-data-tab">
+                <div class="modal-body">
+                  <div class="d-flex flex-column justify-content-around">
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[1][0] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[1][1] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[1][2] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[1][3] | safe }}
+                    </div>
+                    <div>
+                      <!--BigQuerry Graph-->
+                      {{ graph_html[1][4] | safe }}
+                    </div>
+                    <div class="d-flex flex-column justify-content-around">
+                      <div>
+                        <h5>Procuras</h5>
+                      </div>
+                      <div>
+                        <h5>Desistencias</h5>
+                      </div>
+                      <div>
+                        <h5>Tempo medio de espera diario
+                        </h5>
+                      </div>
+                      <div>
+                        <h5>Necessity Metric</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="historic-data1" role="tabpanel" aria-labelledby="historic-data-tab1">
+                <div class="tab-pane fade show active" id="predicted-data1" role="tabpanel" aria-labelledby="predicted-data-tab1">
+                  <div class="modal-body">
+                    <div class="d-flex flex-column justify-content-around">
+                      <div>
+                        <!--BigQuerry Graph-->
+                        {{ graph_html[0][1] | safe }}
+                      </div>
+                      <div class="d-flex flex-column justify-content-around">
+                        <div>
+                          <h5>Procuras</h5>
+                        </div>
+                        <div>
+                          <h5>Desistencias</h5>
+                        </div>
+                        <div>
+                          <h5>Tempo medio de espera diario
+                          </h5>
+                        </div>
+                        <div>
+                          <h5>Necessity Metric</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="info1" role="tabpanel" aria-labelledby="info-tab1">Contact content...</div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <h3 class="mx-auto">
       Previsões
@@ -93,7 +235,7 @@
             <div class="current_stress">
               <span> Stress Level {{a['stress_value']}} </span>
             </div>
-            <button type="button" class="btn btn-primary rounded" data-id="{{item}}" data-toggle="modal" data-target="#myModal">
+            <button type="button" class="btn btn-primary rounded" data-id="{{a.index}}" data-toggle="modal" data-target="#modal{{a.index}}">
                 Abrir
             </button>
           </div>
