@@ -5,16 +5,16 @@
 {% endblock %}
 {% block content %}
 
-<div class="container">
+<div class="w-50 m-auto">
     <div class="rounded login-wrap shadow">
         <h1 class="text-center h1">Perfil</h1>
-        <div class="row mx-5 d-flex align-items-center">
-            <div class="col my-3">
-                <img class="profile-pic" src="../static/assets/ppl-icon.png">
+        <div class="d-flex flex-row row justify-content-between">
+            <div class="w-50 m-0 p-0">
+                <img class="profile-pic h-75 my-auto" src="../static/assets/ppl-icon.png">
             </div>
-            <div class="col">
-                <p class="fs-5">Nome de Utilizador: {{ user }} </p>
-                <p class="fs-5">Nr Relatórios Obtidos: 12 </p>
+            <div class="w-50 m-0 p-0">
+                <p class="w-100 fs-5">Nome de Utilizador: {{ user }} </p>
+                <p class="w-100 fs-5">Nr Relatórios Obtidos: 12 </p>
                 <form action="/logout" method="GET">
                     <button class="rounded shadow p-2 px-3 fs-5" type="submit">Sair</button>
                 </form>

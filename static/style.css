@@ -84,10 +84,7 @@ button, input[type="submit"]
     padding: 5% 20%;
 }
 
-.login
-{
-    min-width: 350px;
-}
+
 
 
 /* run.html */
@@ -158,7 +155,6 @@ button, input[type="submit"]
 .new-pin
 {
     padding: 10px;
-    margin: 5px;
 }
 
 #map
