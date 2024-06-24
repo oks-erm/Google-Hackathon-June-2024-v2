@@ -19,8 +19,8 @@
     </title>
     {% endblock %}
 </head>
-<body class="container-fluid w-100 m-0 p-0">
-    <div class="p-4 d-flex align-items-center justify-content-between">
+<body class="m-0 p-0 d-flex flex-column" style="background-color: #f8f8f8;">
+    <div class="w-100 p-4 d-flex align-items-center justify-content-between" style="position: absolute">
         <a href="/" class="flex-row">
             <img id="logo" src="../static/assets/logo.png">
         </a>
@@ -35,13 +35,13 @@
             {% elif isLoginPage %}
             {% else %}
             <form action="/login" method="GET">
-                <button class="rounded shadow p-2" type="submit">Iniciar Sessão</button>
+                <button class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
             </form>
             {% endif %}
         </div>
     </div>
 
-    <div id="content" class="pa-5 mx-5 my-5 fs-6">
+    <div id="content" class="align-items-center justify-content-center my-auto fs-6">
         {% block content %}{% endblock %}
     </div>
 </body>
