@@ -102,6 +102,7 @@ def run():
     # print(js)
     for index in js['Designacao'].keys():
         cards_table.append({
+            'index': index,
             'Designacao': js['Designacao'][index],
             'stress_value': js['stress_value'][index],
             'necessity_metric': js2['necessity_metric'][index]
