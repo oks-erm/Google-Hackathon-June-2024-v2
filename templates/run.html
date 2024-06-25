@@ -14,6 +14,7 @@
           height="450"
           loading="lazy"
           style="display: block; margin: auto"
+          class="float-end"
           allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"
           src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
@@ -232,15 +233,19 @@
           <!-- Entries for each location -->
           {% for card in cards_data%}
           <div class="item">
-            <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
-            <div class="px-1 fs-6">
-              {{ card['designacao'] }}
+            <div class="d-flex flex-row">
+              <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
             </div>
-            <div class="px-1 fs-6">
-              <span>Índice de Necessidade {{ a['necessity_metric'] }}</span>
+            <div class="row w-75 m-auto pl-2">
+              <div class="col fs-6">
+                {{ card['designacao'] }}
+              </div>
+              <div class="col fs-6">
+                <span>Índice de Necessidade: {{ card['necessity_metric'] }}</span>
+              </div>
             </div>
             <!-- Modal Button  -->
-            <button type="button" class="btn btn-primary rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
+            <button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
                 Detalhes
             </button>
           </div>
