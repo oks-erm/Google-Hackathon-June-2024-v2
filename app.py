@@ -69,7 +69,6 @@ def create_cards_table():
     return cards_table
 
 
-
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
@@ -78,8 +77,11 @@ def run():
     
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
+    data_analysis = []
     for location in available_locations:
-        plots.append(make_plots(location))
+        p, msg = make_plots(location)
+        plots.append(p)
+        data_analysis.append(msg)
     cards_table = create_cards_table()
 
     return render_template(
@@ -88,6 +90,7 @@ def run():
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
         graph_html=plots,
+        data_analysis=data_analysis,
         cards_data=cards_table
     )
 

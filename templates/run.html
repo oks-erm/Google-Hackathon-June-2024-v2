@@ -68,17 +68,10 @@
                     </div>
                     <div class="d-flex flex-column justify-content-around">
                       <div>
-                        <h5>Procuras</h5>
-                      </div>
-                      <div>
-                        <h5>Desistencias</h5>
-                      </div>
-                      <div>
-                        <h5>Tempo medio de espera diario
-                        </h5>
-                      </div>
-                      <div>
-                        <h5>Necessity Metric</h5>
+                        <h3>Análise dos dados</h3>
+                        <div>
+                          {{ data_analysis[0] | safe }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -166,18 +159,9 @@
                       {{ graph_html[1][4] | safe }}
                     </div>
                     <div class="d-flex flex-column justify-content-around">
+                      <h3>Análise dos dados</h3>
                       <div>
-                        <h5>Procuras</h5>
-                      </div>
-                      <div>
-                        <h5>Desistencias</h5>
-                      </div>
-                      <div>
-                        <h5>Tempo medio de espera diario
-                        </h5>
-                      </div>
-                      <div>
-                        <h5>Necessity Metric</h5>
+                        {{ data_analysis[1] | safe }}
                       </div>
                     </div>
                   </div>
