@@ -4,25 +4,13 @@
     Autenticação
 {% endblock %}
 {% block content %}
-<div class="container d-flex flex-column align-items-center">
-    <div class="login-wrap shadow w-50 text-center">
-        <h2 class="text-center h1">Autenticação</h2>
-        <form action="/login" method="post" class="form-horizontal text-center">
-            <div class="d-flex flex-row align-items-baseline justify-content-center">
-                <div class="p-1 mt-3 w-75">
-                    <input type="text" class="form-control fs-5" id="username" name="username" required placeholder="Nome de utilizador">
-                </div>
-            </div>
-            <div class="d-flex flex-row align-items-baseline justify-content-center">
-                <div class="p-1 mt-3 w-75">
-                    <input type="password" class="form-control fs-5" id="password" name="password" required placeholder="Palavra-passe">
-                </div>
-            </div>
-            <div class="d-flex flex-row align-items-baseline justify-content-center">        
-                <div class="p-1 mt-3 fs-5">
-                    <input class="shadow" type="submit" value="Iniciar Sessão" class="fs-4">
-                </div>            
-            </div>
+<div class="w-50 m-auto">
+    <div class="rounded shadow p-5">
+        <h2 class="text-center fs-1">Autenticação</h2>
+        <form action="/login" method="post" class="text-center p-1 important">
+            <input type="text" class="form-control px-1 py-2 mt-3 px-5 fs-5" id="username" name="username" required placeholder="Nome de utilizador">
+            <input type="password" class="form-control px-1 py-2 mb-3 mt-3 px-5 fs-5" id="password" name="password" required placeholder="Palavra-passe">
+            <input id="login_auth" type="submit" class="rounded shadow p-2 mt-3 fs-5" value="Iniciar Sessão">
         </form>
     </div>
 </div>

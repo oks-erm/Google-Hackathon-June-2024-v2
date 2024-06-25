@@ -1,27 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 /* base.html */
+.base
+{
+    width: 100%;
+    height: 100vh;
+    background-color: #f8f8f8;
+}
+
+*
+{
+    font-family: "Lexend", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
 #logo
 {
     width: 120px;
 }
 
-.container-fluid
-{
-    background-color: #f8f8f8;
-    font-family: "Roboto", sans-serif;
-}
-
 button, input[type="submit"]
 {
     background-color: darkblue;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
     color : #f8f8f8;
     border: none;
-    padding: 10px 15px;
+    padding: 2.5% 5%;
 }
 
 .shadow
@@ -32,13 +37,19 @@ button, input[type="submit"]
 #logged
 {
 
-    background-color: white;
-    background-image: url("../static/assets/ppl-icon.png");
+    background-color: darkblue;
+    background-image: url("../static/assets/ppl-icon-white.png");
     background-size: 50%;
     background-position: center center;
     background-repeat: no-repeat;
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.bord
+{
+    border-top: 2px solid darkblue;
 }
 
 
@@ -57,14 +68,14 @@ button, input[type="submit"]
 
 .intro-title
 {
-    font-size: 66px;
-    font-family: "Archivo Black", sans-serif;
-    font-style: normal;
+    font-size: min(7.5vw, 54px);
+    font-weight: 400;
 }
 
 .intro-text
 {
-    color: rgb(90, 90, 90);
+    font-size: min(4vw, 24px);
+    color: #888888
 }
 
 .btn-cont
@@ -74,18 +85,16 @@ button, input[type="submit"]
 
 .brder
 {
-    border-radius: 5px;
-    border: 2px solid darkblue;
+    border-radius: 6px;
+    border: 2px solid #e5e5e5;
 }
 
 
 /* login.html */
 .login-wrap
 {
-    margin: 0 20%;
-    padding: 5% 0;
+    padding: 5% 20%;
 }
-
 
 /* run.html */
 .item, .new-pin {
@@ -93,7 +102,7 @@ button, input[type="submit"]
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 5px 15px;
     margin: 5px 5%;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -101,29 +110,24 @@ button, input[type="submit"]
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.title
+{
+    padding: 0 5px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.title-cont
+{
+    margin: 0 5%;
+}
+
 .item>button, .add
 {
     background-color: darkblue;
     border: none;
     border-radius: 0;
-}
-
-.entry-wrap
-{
-    margin: 0;
-    padding: 0 5px;
-    max-height: 55vh;
-    overflow-y: scroll;
-    height: 332.5px !important;
-}
-
-.entry-wrap::-webkit-scrollbar {
-    display: none;
-}
-
-.entry-wrap {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
 
 .runs
@@ -138,16 +142,16 @@ button, input[type="submit"]
     margin: 30px auto;
 }
 
-#add-new-pins {
+#add-new-pins, .entries {
     height: 350px !important;
     overflow-y: scroll;
 }
 
-#add-new-pins::-webkit-scrollbar {
+#add-new-pins::-webkit-scrollbar, .entries::-webkit-scrollbar {
     display: none;
 }
 
-#add-new-pins {
+#add-new-pins, .entries {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -155,7 +159,6 @@ button, input[type="submit"]
 .new-pin
 {
     padding: 10px;
-    margin: 5px;
 }
 
 #map
@@ -164,13 +167,20 @@ button, input[type="submit"]
     height: 450px;
 }
 
+.color-mark
+{
+    min-width: 12.5px;
+    min-height: 12.5px;
+    background-color: rgb(199, 0, 0);
+}
+
 /* profile.html */
 .profile-pic
 {
     padding: 50px;
     border-radius: 50%;
     background-color: white;
-    background-image: url("../static/assets/ppl-icon.png");
+    background-image: url("../static/assets/ppl-icon-blue.png");
     background-size: 50%;
     background-position: center center;
     background-repeat: no-repeat;
@@ -188,14 +198,30 @@ button, input[type="submit"]
     width: 30%;
 }
 
-.location {
-    margin: 15px 5px;
+
+#loader {
+    margin: auto;
+    margin-top: 200px;
 }
 
-.necessity_metric{
-    margin: 15px 5px;
+#login_button {
+    font-size: 1.05rem !important;
+    padding: 0.5rem 1.7rem !important
 }
 
-.current_stress{   
-    margin: 15px 5px;
+#login_auth {
+    padding: 0.6rem 2.4rem ! important;
+}
+
+#report_button {
+    padding: 0.5rem 2.4rem !important;
+    font-size: 1.05rem !important;
+}
+
+#add_button {
+    padding: 12px 40px !important;
+}
+
+#map_wrapper {
+    display: flex;
 }
