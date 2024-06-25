@@ -244,27 +244,19 @@ def report():
         session['url'] = url_for('report')
         return redirect(url_for('login'))
 
-    # get the data from the DB
-    response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
+    reports = Report.query.all()
+    
 
-    if response.status_code == 200:
-        data = response.json()
+    report_data = []
+    for report in reports:
+        user = Login.query.filter_by(id=report.user).first()
+        report_data.append({
+            'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
+            'report': report.report,
+            'user': user.login
+        })
 
-        # Select specific fields from the response
-        report_data = [
-            {
-                "id": item["id"],
-                "title": item["title"],
-                "popyear": item["popyear"],
-                "iso3": item["iso3"]
-            }
-            for item in data["data"]
-        ] if data["data"] else []
-
-        return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
-    else:
-        return render_template('error.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
-
+    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
 
 
 if __name__ == '__main__':
