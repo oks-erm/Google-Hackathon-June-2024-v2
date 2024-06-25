@@ -221,7 +221,7 @@
       </div>
       <div class="w-50 m-auto col p-0">
         <h3 class="p-0 m-0 text-center">
-          Previsões
+          Adicionar pontos
         </h3>
         <div class="entries m-auto my-1 px-3 py-1 w-100">
           <div class="item w-100 title mx-auto py-0 w-100">
@@ -233,14 +233,19 @@
           <!-- Entries for each location -->
           {% for card in cards_data%}
           <div class="item">
-            <div class="location">
-              {{ card['designacao'] }}
+            <div class="d-flex flex-row">
+              <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
             </div>
-            <div class="necessity_metric">
-              <span>Índice de Necessidade {{ card['necessity_metric'] }}%</span>
+            <div class="row w-75 m-auto pl-2">
+              <div class="col fs-6">
+                {{ card['designacao'] }}
+              </div>
+              <div class="col fs-6">
+                <span>Índice de Necessidade: {{ card['necessity_metric'] }}</span>
+              </div>
             </div>
             <!-- Modal Button  -->
-            <button type="button" class="btn btn-primary rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
+            <button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
                 Detalhes
             </button>
           </div>
@@ -259,8 +264,10 @@
 <div id="edit-prediction-container" class="runs w-100 m-auto">
   <div class="w-100 m-auto p-0">
     <div class="w-100 row m-auto p-0">
+
       <div id="map_wrapper" class="w-50 p-0">
         <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
+
       </div>
 
       <div class="w-50 m-auto col p-0">
