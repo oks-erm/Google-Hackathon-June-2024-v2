@@ -29,7 +29,7 @@
         <div class="flex-row d-flex">
             {% if isAuthenticated %}
             <form action="/report" method="GET">
-                <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit">Relatórios</button>
+                <button id="report_button" class="shadow rounded shadow mx-1 fs-5 p-2" type="submit">Relatórios</button>
             </form>
             <form action="/profile" method="GET">
                 <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit" id="logged"></button>
@@ -37,7 +37,7 @@
             {% elif isLoginPage %}
             {% else %}
             <form action="/login" method="GET">
-                <button class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
+                <button id="login_button" class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
             </form>
             {% endif %}
         </div>
