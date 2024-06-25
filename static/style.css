@@ -198,3 +198,8 @@ button, input[type="submit"]
 .current_stress{   
     margin: 15px 5px;
 }
+
+#loader {
+    margin: auto;
+    margin-top: 200px;
+}
