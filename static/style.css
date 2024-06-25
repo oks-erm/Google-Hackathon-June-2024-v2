@@ -105,6 +105,19 @@ button, input[type="submit"]
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.title
+{
+    padding: 0 5px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.title-cont
+{
+    margin: 0 5%;
+}
+
 .item>button, .add
 {
     background-color: darkblue;
