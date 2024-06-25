@@ -19,7 +19,7 @@ import os
 from plots import make_plots, querry_bq
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
-
+available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
 def get_now():
     from datetime import datetime as dt
@@ -41,12 +41,14 @@ def index():
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
+        session['url'] = url_for('run')
         return redirect(url_for('login'))
-
+    
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-
-    plots = make_plots()
-    df_historic_data = querry_bq()
+    plots = []
+    for location in available_locations:
+        plots.append(make_plots(location))
+    df_historic_data = querry_bq('sublime-lyceum-426907-r9', 'ama', 'merged')
 
     # filter the dataframe
 
@@ -100,6 +102,7 @@ def run():
     # print(js)
     for index in js['Designacao'].keys():
         cards_table.append({
+            'index': index,
             'Designacao': js['Designacao'][index],
             'stress_value': js['stress_value'][index],
             'necessity_metric': js2['necessity_metric'][index]
@@ -144,6 +147,7 @@ def signup():
         db.session.commit()
 
         flash('User created successfully', 'success')
+        session['url'] = url_for('signup')
         return redirect(url_for('index'))
 
     return render_template('signup.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
@@ -177,6 +181,7 @@ def predict():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if session.get("isAuthenticated", False):
+        session['url'] = url_for('login')
         return redirect(url_for('index'))
     if request.method == 'POST':
         username = request.form['username']
@@ -191,7 +196,7 @@ def login():
             session["isAuthenticated"] = True
             session['username'] = username
             flash('Login successful', 'success')
-            return redirect(url_for('index'))
+            return redirect(session.get('url', url_for('index')))
         else:
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
@@ -208,15 +213,16 @@ def logout():
 @app.route("/profile")
 def profile():
     if not session.get("isAuthenticated", False):
+        session['url'] = url_for('profile')
         return redirect(url_for('login'))
     user = session.get("username")
-    print(user)
     return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
 
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
     if not session.get("isAuthenticated", False):
+        session['url'] = url_for('report')
         return redirect(url_for('login'))
     response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
 
@@ -242,6 +248,7 @@ def report():
 @app.route('/save-report', methods=['POST'])
 def save_report():
     if not session.get("isAuthenticated", False):
+        session['url'] = url_for('report')
         return redirect(url_for('login'))
     if request.method == 'POST':
         print(request.form)
