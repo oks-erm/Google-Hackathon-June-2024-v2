@@ -33,6 +33,9 @@ def querry_bq(project, dataset, table):
     df = client.query(query).to_dataframe()
     return df
 
+DF_HISTORICAL = querry_bq(project_id, dataset_id, 'merged')
+DF_PREDICTED = querry_bq(project_id, dataset_id, 'aggregated_data_with_necessity')
+
 # Atendimentos Per Month
 def df_atendimentos_per_month_historical(df_historical, location):
     df_historical['Type'] = 'Historical'
@@ -383,8 +386,8 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
 # def plot_(df):
 
 def make_plots(location):
-    df_historical = querry_bq(project_id, dataset_id, 'merged')
-    df_predicted = querry_bq(project_id, dataset_id, 'aggregated_data_with_necessity')
+    df_historical = DF_HISTORICAL
+    df_predicted = DF_PREDICTED
     plot_list = [
         plot_atendimentos_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_waiting_time_per_month(location, df_historical=df_historical, df_predicted=df_predicted),

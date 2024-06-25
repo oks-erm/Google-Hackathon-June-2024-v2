@@ -230,22 +230,18 @@
               <h6 class="py-0 text-right">2024-2027</h6>
             </div>
           </div>
-          {% for a in cards_data%}
+          <!-- Entries for each location -->
+          {% for card in cards_data%}
           <div class="item">
             <div class="location">
-              {{ a['Designacao'] }}
+              {{ card['designacao'] }}
             </div>
-                <!-- Modal Button (Modal is the popup card) -->
             <div class="necessity_metric">
-              <span>Índice de Necessidade {{ a['necessity_metric'] }}</span>
+              <span>Índice de Necessidade {{ card['necessity_metric'] }}%</span>
             </div>
-            <!--
-            <div class="current_stress">
-              <span> Stress Level {{a['stress_value']}} </span>
-            </div>
-            -->
-            <button type="button" class="btn btn-primary rounded" data-id="{{a.index}}" data-toggle="modal" data-target="#modal{{a.index}}">
-                Abrir
+            <!-- Modal Button  -->
+            <button type="button" class="btn btn-primary rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
+                Detalhes
             </button>
           </div>
           {% endfor %}
