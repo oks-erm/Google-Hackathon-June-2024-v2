@@ -19,29 +19,28 @@
     </title>
     {% endblock %}
 </head>
-<body class="m-0 p-0 d-flex flex-column" style="background-color: #f8f8f8;">
-
-    <!-- Nav Bar-->
-    <div class="w-100 p-4 d-flex align-items-center justify-content-between" style="position: absolute">
-        <a href="/" class="flex-row">
-            <img id="logo" src="../static/assets/logo.png">
-        </a>
-        <div class="flex-row d-flex">
-            {% if isAuthenticated %}
-            <form action="/report" method="GET">
-                <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit">Relatórios</button>
-            </form>
-            <form action="/profile" method="GET">
-                <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit" id="logged"></button>
-            </form>
-            {% elif isLoginPage %}
-            {% else %}
-            <form action="/login" method="GET">
-                <button class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
-            </form>
-            {% endif %}
+<body>
+    <div class="base m-0 p-0 d-flex flex-column" style="background-color: #f8f8f8;">
+        <div class="w-100 p-4 d-flex align-items-center justify-content-between" style="position: absolute">
+            <a href="/" class="flex-row">
+                <img id="logo" src="../static/assets/logo.png">
+            </a>
+            <div class="flex-row d-flex">
+                {% if isAuthenticated %}
+                <form action="/report" method="GET">
+                    <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit">Relatórios</button>
+                </form>
+                <form action="/profile" method="GET">
+                    <button class="shadow rounded shadow mx-1 fs-5 p-2" type="submit" id="logged"></button>
+                </form>
+                {% elif isLoginPage %}
+                {% else %}
+                <form action="/login" method="GET">
+                    <button class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
+                </form>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
     <!-- Loader -->
     <div id="loader" class="spinner-border" role="status">
