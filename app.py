@@ -179,8 +179,8 @@ def predict():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session["isAuthenticated"] = True
-    return redirect(url_for('index'))
+    # session["isAuthenticated"] = True
+    # return redirect(url_for('index'))
 
     if session.get("isAuthenticated", False):
         session['url'] = url_for('login')
@@ -218,12 +218,15 @@ def save_report():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        # from the request, get the body and convert it to json
+        created_at = get_now()
         body = request.get_json()
-        print(body)
-        # save the data to DB
+        user = session['user_id']
+        
+        report = Report(created_at=created_at, report=json.dumps(body), user=user)
+        db.session.add(report)
+        db.session.commit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('report'))
 
 
 @app.route("/profile")

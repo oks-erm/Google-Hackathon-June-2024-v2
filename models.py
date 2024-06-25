@@ -1,4 +1,7 @@
 from config import db
+from datetime import datetime as dt
+from sqlalchemy.dialects.postgresql import JSON, TIMESTAMP
+from datetime import datetime
 
 class Login(db.Model):
     __tablename__ = 'logins'
@@ -13,11 +16,8 @@ class Login(db.Model):
 
 class Report(db.Model):
     __tablename__ = 'reports'
+    
     id = db.Column(db.BigInteger, primary_key=True)
-    created_at = db.Column(db.TIMESTAMP, unique=False, nullable=False)
-    report = db.Column(db.Text, unique=False, nullable=False)
-    user_id = db.Column(db.BigInteger, db.ForeignKey('logins.id'), nullable=False)
-    user = db.relationship('Login', backref=db.backref('reports', lazy=True))
-
-    def __repr__(self):
-        return f'<ID: {self.id}, Created at: {self.created_at}, Report: {self.report}, User ID: {self.user_id}>'
+    created_at = db.Column(db.TIMESTAMP, default=datetime.now())
+    report = db.Column(db.Text, nullable=False)
+    user = db.Column(db.BigInteger, nullable=False)
