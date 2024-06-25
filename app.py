@@ -38,7 +38,8 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
+    user = session.get("username")
+    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
 
 
 def create_cards_table():
@@ -91,7 +92,8 @@ def run():
         google_map_api_key=google_map_api_key,
         graph_html=plots,
         data_analysis=data_analysis,
-        cards_data=cards_table
+        cards_data=cards_table,
+        user = session.get("username")
     )
 
 
