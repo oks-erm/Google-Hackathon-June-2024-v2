@@ -21,7 +21,7 @@ from plots import make_plots, querry_bq
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
-def get_now():
+def get_current_time():
     from datetime import datetime as dt
 
     return dt.now().isoformat()
@@ -128,7 +128,7 @@ def signup():
         login = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        created_at = get_now()
+        created_at = get_current_time()
 
         # Hash the password
         hashed_password = hash_password(password)
