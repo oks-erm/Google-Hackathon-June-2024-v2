@@ -40,6 +40,11 @@ button, input[type="submit"]
     height: 45px;
 }
 
+.bord
+{
+    border-top: 2px solid darkblue;
+}
+
 
 /* signup.html */
 .header {
@@ -86,7 +91,6 @@ button, input[type="submit"]
 
 
 
-
 /* run.html */
 .item, .new-pin {
     display: flex;
@@ -108,24 +112,6 @@ button, input[type="submit"]
     border-radius: 0;
 }
 
-.entry-wrap
-{
-    margin: 0;
-    padding: 0 5px;
-    max-height: 55vh;
-    overflow-y: scroll;
-    height: 332.5px !important;
-}
-
-.entry-wrap::-webkit-scrollbar {
-    display: none;
-}
-
-.entry-wrap {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
 .runs
 {
     display: flex;
@@ -138,16 +124,16 @@ button, input[type="submit"]
     margin: 30px auto;
 }
 
-#add-new-pins {
+#add-new-pins, .entries {
     height: 350px !important;
     overflow-y: scroll;
 }
 
-#add-new-pins::-webkit-scrollbar {
+#add-new-pins::-webkit-scrollbar, .entries::-webkit-scrollbar {
     display: none;
 }
 
-#add-new-pins {
+#add-new-pins, .entries {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -162,6 +148,7 @@ button, input[type="submit"]
     width: 600px;
     height: 450px;
 }
+
 
 /* profile.html */
 .profile-pic
