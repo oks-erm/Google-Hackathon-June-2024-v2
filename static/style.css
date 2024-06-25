@@ -1,14 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 /* base.html */
-html, body
+.base
+{
+    width: 100%;
+    height: 100vh;
+    background-color: #f8f8f8;
+}
+
+*
 {
     font-family: "Lexend", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
-    width: 100%;
-    height: 100vh;
 }
 
 #logo
@@ -31,13 +36,12 @@ button, input[type="submit"]
 #logged
 {
 
-    background-color: white;
-    background-image: url("../static/assets/ppl-icon.png");
+    background-color: darkblue;
+    background-image: url("../static/assets/ppl-icon-white.png");
     background-size: 50%;
     background-position: center center;
     background-repeat: no-repeat;
-    width: 45px;
-    height: 45px;
+    cursor: pointer;
 }
 
 .bord
@@ -162,6 +166,12 @@ button, input[type="submit"]
     height: 450px;
 }
 
+.color-mark
+{
+    min-width: 12.5px;
+    min-height: 12.5px;
+    background-color: rgb(199, 0, 0);
+}
 
 /* profile.html */
 .profile-pic
@@ -169,7 +179,7 @@ button, input[type="submit"]
     padding: 50px;
     border-radius: 50%;
     background-color: white;
-    background-image: url("../static/assets/ppl-icon.png");
+    background-image: url("../static/assets/ppl-icon-blue.png");
     background-size: 50%;
     background-position: center center;
     background-repeat: no-repeat;
@@ -187,17 +197,6 @@ button, input[type="submit"]
     width: 30%;
 }
 
-.location {
-    margin: 15px 5px;
-}
-
-.necessity_metric{
-    margin: 15px 5px;
-}
-
-.current_stress{   
-    margin: 15px 5px;
-}
 
 #loader {
     margin: auto;
