@@ -12,7 +12,6 @@ from flask import (
 )
 import pandas as pd
 import numpy as np
-import requests
 import json
 import os
 import warnings
@@ -21,7 +20,6 @@ warnings.filterwarnings("ignore")
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 
-from cards import build_table_for_cards
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
@@ -57,15 +55,19 @@ def create_cards_table():
         'Tempo_medio_de_espera_diario': 'mean',
         'Necessity_Metric': 'mean'
     }).reset_index()
-    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].astype(int)
+    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].round(2)
     idx = df_predicted.groupby('Designacao')['Necessity_Metric'].idxmax()
     max_necessity_metric_entries = df_predicted.loc[idx]
+    print(max_necessity_metric_entries)
+    max_necessity_metric_entries = max_necessity_metric_entries.reset_index(drop=True)
+    max_necessity_metric_entries['Index'] = max_necessity_metric_entries.index
     max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
     cards_table = []
     js = json.loads(max_necessity_metric_entries.to_json())
     i = 0
     for item in js['Designacao'].keys():
         cards_table.append({
+            'index_before_sorting': js['Index'][item],
             'index': i,
             'designacao': js['Designacao'][item],
             'necessity_metric': js['Necessity_Metric'][item]
@@ -88,11 +90,15 @@ def run():
     print("--------------------------------------------------------")
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    plots = []
+    plots_merged = []
+    plots_historic = []
+    data_by_year = []
     data_analysis = []
     for location in available_locations:
-        p, msg = make_plots(location)
-        plots.append(p)
+        pm, ph, dby, msg = make_plots(location)
+        plots_merged.append(pm)
+        plots_historic.append(ph)
+        data_by_year.append(dby)
         data_analysis.append(msg)
 
     cards_table = create_cards_table()
@@ -102,7 +108,9 @@ def run():
         isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
-        graph_html=plots,
+        graph_html_merged=plots_merged,
+        graph_html_historic=plots_historic,
+        data_by_year=data_by_year,
         data_analysis=data_analysis,
         cards_data=cards_table,
         user = session.get("username")

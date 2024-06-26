@@ -39,20 +39,33 @@ Programa
               <div class="tab-pane fade show active" id="predicted-data{{card.index}}" role="tabpanel" aria-labelledby="predicted-data-tab{{card.index}}">
                 <div class="modal-body">
                   <div class="d-flex flex-column justify-content-around">
+                    <!-- index = year index | card.index = card index starting at the top one | card.index_before_sorting = index based on location list (app.py)-->
+                    {% for index in data_by_year[card.index]['Index'] %}
+                    <div class="metrics-year">
+                      Ano {{data_by_year[card.index]['Ano'][index]}}
+                    </div>
+                    <div class="metrics-row">
+                      <span>Procuras {{ data_by_year[card.index_before_sorting]['Procuras'][index] }}</span>
+                      <span>Atendimentos {{ data_by_year[card.index_before_sorting]['Atendimentos'][index] }}</span>
+                      <span>Desistencias {{ data_by_year[card.index_before_sorting]['Desistencias'][index] }}</span>
+                      <span>Tempo medio de espera diário {{ data_by_year[card.index_before_sorting]['Tempo_medio_de_espera_diario'][index] }}</span>
+                      <span>Necessidade {{ data_by_year[card.index_before_sorting]['Necessity_Metric'][index] }}</span>
+                    </div>
+                    {% endfor %}
                     <div>
-                      {{ graph_html[card.index][0] | safe }}
+                      {{ graph_html_merged[card.index][0] | safe }}
                     </div>
                     <div>
-                      {{ graph_html[card.index][1] | safe }}
+                      {{ graph_html_merged[card.index][1] | safe }}
                     </div>
                     <div>
-                      {{ graph_html[card.index][2] | safe }}
+                      {{ graph_html_merged[card.index][2] | safe }}
                     </div>
                     <div>
-                      {{ graph_html[card.index][3] | safe }}
+                      {{ graph_html_merged[card.index][3] | safe }}
                     </div>
                     <div>
-                      {{ graph_html[card.index][4] | safe }}
+                      {{ graph_html_merged[card.index][4] | safe }}
                     </div>
                     <div class="d-flex flex-column justify-content-around">
                       <div>
@@ -71,7 +84,19 @@ Programa
                     <div class="d-flex flex-column justify-content-around">
                       <div class="d-flex flex-column justify-content-around">
                         <div>
-
+                          {{ graph_html_historic[card.index][0] | safe }}
+                        </div>
+                        <div>
+                          {{ graph_html_historic[card.index][1] | safe }}
+                        </div>
+                        <div>
+                          {{ graph_html_historic[card.index][2] | safe }}
+                        </div>
+                        <div>
+                          {{ graph_html_historic[card.index][3] | safe }}
+                        </div>
+                        <div>
+                          {{ graph_html_historic[card.index][4] | safe }}
                         </div>
                       </div>
                     </div>
@@ -96,7 +121,6 @@ Programa
           <div class="sort item w-100 title mx-auto py-0 w-100">
             <div class="w-100 title-cont py-0 d-flex flex-row align-items-center justify-content-between">
               <h6 class="py-0 text-left">Lisboa</h6>
-              <h6 class="py-0 text-left">Ordem: Decrescente, Necessidade</h6>
               <h6 class="py-0 text-right">2024-2027</h6>
             </div>
           </div>
