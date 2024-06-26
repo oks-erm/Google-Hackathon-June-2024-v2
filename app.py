@@ -24,8 +24,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-35318
 from cards import build_table_for_cards
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
-CURRENT_AI_MSG = ""
-
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
 def get_current_time():
@@ -82,23 +80,24 @@ def run():
         session['url'] = url_for('run')
         return redirect(url_for('login'))
 
-    # Period for prediction
-    period = request.args.get('period')
-    length_of_prediction = period.split()[0]
-    print("--------------------------------------------------------")
-    print(f"YEARS: {length_of_prediction}")
-    print("--------------------------------------------------------")
+    # # Period for prediction
+    # period = request.args.get('period')
+    # length_of_prediction = period.split()[0]
+    # print("--------------------------------------------------------")
+    # print(f"YEARS: {length_of_prediction}")
+    # print("--------------------------------------------------------")
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
-    data_analysis = []
-    for location in available_locations:
+    data_analysis = {}
+    for location in available_locations :
         p, msg = make_plots(location)
         plots.append(p)
-        CURRENT_AI_MSG = msg
-        data_analysis.append(msg)
+        data_analysis[location] = msg
 
     cards_table = create_cards_table()
+    session['cards_table'] = json.dumps(cards_table)
+    session['data_analysis'] = json.dumps(data_analysis)
 
     return render_template(
         'run.html',
@@ -219,21 +218,57 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/save-report', methods=['POST'])
+@app.route('/save-report', methods=['POST'])
 def save_report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        body = request.get_json()
-        body['cardsTable'] = create_cards_table()
-        body['msg'] = CURRENT_AI_MSG
-        
-        report = Report(created_at=datetime.now(), report=json.dumps(body), user=session.get("user_id"))
-        db.session.add(report)
-        db.session.commit()
+        try:
+            # location = 'Loja de Cidadão Saldanha'
+            location = 'Loja de Cidadão Laranjeiras'
 
-    return jsonify({'status': 'success'})
+            body = request.get_json()
+            
+            # Retrieve and deserialize the stored JSON strings from the session
+            cards_table = json.loads(session.get('cards_table', '[]'))
+            data_analysis = json.loads(session.get('data_analysis', '{}'))
+            
+            # Filter cards_table for the specific location
+            filtered_cards_table = [
+                card for card in cards_table if card.get('designacao') == location
+            ]
+
+            # Filter data_analysis for the specific location
+            filtered_data_analysis = {
+                loc: msg for loc, msg in data_analysis.items() if loc == location
+            }
+
+            # Update body with the filtered data
+            body['cards_table'] = filtered_cards_table
+            body['AI_insight'] = filtered_data_analysis
+
+            # Serialize AI_insight to a JSON string
+            ai_insight_json = json.dumps(filtered_data_analysis)
+
+            # Create the Report object
+            report = Report(
+                created_at=datetime.now(),
+                report=json.dumps(body),
+                user=session.get("user_id"),
+                cards_table=json.dumps(filtered_cards_table),
+                AI_insight=ai_insight_json
+            )
+            
+            db.session.add(report)
+            db.session.commit()
+
+            return jsonify({'status': 'success'})
+        
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 @app.route("/profile")
