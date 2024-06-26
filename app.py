@@ -38,8 +38,10 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    user = session.get("username")
-    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('index.html', 
+                           isLoginPage=False,
+                           isAuthenticated=session.get("isAuthenticated", False),
+                           user=session.get("username"))
 
 
 def create_cards_table():
@@ -70,17 +72,19 @@ def create_cards_table():
     return cards_table
 
 
-
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
-
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
+    data_analysis = []
     for location in available_locations:
-        plots.append(make_plots(location))
+        p, msg = make_plots(location)
+        plots.append(p)
+        data_analysis.append(msg)
+
     cards_table = create_cards_table()
 
     return render_template(
@@ -89,6 +93,7 @@ def run():
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
         graph_html=plots,
+        data_analysis=data_analysis,
         cards_data=cards_table,
         user = session.get("username")
     )
@@ -209,8 +214,7 @@ def profile():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('profile')
         return redirect(url_for('login'))
-    user = session.get("username")
-    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
 
 
 @app.route('/report', methods=['GET', 'POST'])
