@@ -19,10 +19,10 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
+
 from plots import make_plots, querry_bq
 from cards import build_table_for_cards
-
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
@@ -86,12 +86,8 @@ def run():
         plots.append(make_plots(location))
     cards_table = create_cards_table()
 
-    plots = make_plots()
-    df_historic_data = querry_bq()
+    cards_table = build_table_for_cards(DF_HISTORICAL)
 
-    cards_table = build_table_for_cards(df_historic_data)
-        
-    print(cards_table)
     return render_template(
         'run.html',
         isLoginPage=False,
