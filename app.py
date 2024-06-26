@@ -285,7 +285,7 @@ def report():
     #     session['url'] = url_for('report')
     #     return redirect(url_for('login'))
 
-    reports = Report.query.all()
+    reports = Report.query.all()[::-1]
 
     report_data = []
     for report in reports:
@@ -296,7 +296,7 @@ def report():
             'user': user.login,
             'cards_table': report.cards_table,
             'AI_insight': report.AI_insight
-        })
+    })
 
     return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data, user=session.get("username"))
 
