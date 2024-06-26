@@ -70,13 +70,19 @@ def create_cards_table():
     return cards_table
 
 
-
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
     
+    # Period for prediction
+    period = request.args.get('period')
+    length_of_prediction = period.split()[0]
+    print("--------------------------------------------------------")
+    print(f"YEARS: {length_of_prediction}")
+    print("--------------------------------------------------------")
+ 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
     for location in available_locations:

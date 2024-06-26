@@ -36,20 +36,19 @@
                 </form>
                 {% elif isLoginPage %}
                 {% else %}
-                <form action="/login" method="GET">
+                <!-- <form action="/login" method="GET">
                     <button class="auth_login rounded shadow" type="submit">Iniciar Sessão</button>
-                </form>
+                </form> -->
                 {% endif %}
             </div>
 
         </div>
 
         <!-- Loader -->
-        <!-- <div id="loader" class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div> -->
         <div id="loader" role="status">
             <span class="spinner-grow text-success" role="status">
+            </span>
+            <span class="spinner-grow text-warning" role="status">
             </span>
             <span class="spinner-grow text-danger" role="status">
             </span>
