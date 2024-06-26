@@ -111,7 +111,7 @@ def run():
         data_by_year=data_by_year,
         data_analysis=data_analysis,
         cards_data=cards_table,
-        user = session.get("username")
+        user=session.get("username")
     )
 
 @app.route('/edit', methods=['GET'])
@@ -126,7 +126,7 @@ def edit():
         isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=os.getenv('GOOGLE_MAP_API_KEY'),
-        user = session.get("username")
+        user=session.get("username")
     )
 
 
@@ -264,7 +264,13 @@ def report():
             'user': user.login
         })
 
-    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
+    return render_template(
+        'report.html',
+        isLoginPage=False,
+        isAuthenticated=session.get("isAuthenticated", False),
+        report_data=report_data,
+        user=session.get("username")
+    )
 
 
 if __name__ == '__main__':
