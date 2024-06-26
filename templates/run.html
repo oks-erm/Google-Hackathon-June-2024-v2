@@ -115,7 +115,7 @@
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-dark px-3" data-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>
@@ -221,31 +221,39 @@
       </div>
       <div class="w-50 m-auto col p-0">
         <h3 class="p-0 m-0 text-center">
-          Adicionar pontos
+        Previsões
         </h3>
         <div class="entries m-auto my-1 px-3 py-1 w-100">
-          <div class="item w-100 title mx-auto py-0 w-100">
+          <div class="sort item w-100 title mx-auto py-0 w-100">
             <div class="w-100 title-cont py-0 d-flex flex-row align-items-center justify-content-between">
               <h6 class="py-0 text-left">Lisboa</h6>
               <h6 class="py-0 text-right">2024-2027</h6>
             </div>
           </div>
+          <!-- Sort field -->
+          <div class="sort text-center my-2">
+            <label for="sortField">Sort by: </label>
+            <select id="sortField" onchange="sortCards()">
+              <option value="necessity_metric">Necessity Metric</option>
+              <option value="designacao">Designation</option>
+            </select>
+          </div>
           <!-- Entries for each location -->
           {% for card in cards_data%}
-          <div class="item">
+          <div class="item py-3">
             <div class="d-flex flex-row">
               <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
             </div>
             <div class="row w-75 m-auto pl-2">
-              <div class="col fs-6">
-                {{ card['designacao'] }}
+              <div class="col-7">
+                <span>{{ card['designacao'] }}</span>
               </div>
-              <div class="col fs-6">
-                <span>Índice de Necessidade: {{ card['necessity_metric'] }}</span>
+              <div class="col-5">
+                <span>Necessidade: {{ card['necessity_metric'] }}%</span>
               </div>
             </div>
             <!-- Modal Button  -->
-            <button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
+            <button type="button" class="btn btn-primary rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal{{card.index}}">
                 Detalhes
             </button>
           </div>
@@ -274,15 +282,15 @@
         <h3 class="p-0 m-0 text-center">
           Adicionar pontos
         </h3>
-          <div class="d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Adicionar ponto fixo</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Adicionar ponto móvel</button>
+          <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Ponto fixo</button>
+            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Ponto móvel</button>
           </div>
 
         <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
 
         <div class="w-100">
-          <div class="d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+          <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
             <button type="button" class="rounded py-2 mx-1" class="" onclick="showPredictionPage()">Voltar</button>
             <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
           </div>
