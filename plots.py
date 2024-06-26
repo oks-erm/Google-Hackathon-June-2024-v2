@@ -40,14 +40,14 @@ def respond_gpt(df_historical, df_predicted) -> str:
             messages=[
                 {
                     "role": "system",
-                    "content": "Você é um analista de dados experiente. A sua função é fornecer insights de grandes dataframes de forma coesa e coerente. Responda em um parágrafo destacando as tendências mais importantes e dando recomendações sobre a interpretação dos dados"
+                    "content": "Você é um analista de dados experiente. Sua função é fornecer insights de dataframes de forma coesa e coerente. Responder em alguns breves 'pontos' destacando as tendências mais importantes e dando recomendações sobre a interpretação dos dados. Não diga coisas genéricas. Não utilize nomes de colunas de uma tabela de dados em inglês. Produza a resposta de uma forma que possa ser exibida na página html com um layout adequado usando <ul> e <li> ."
                 },
                 {
                     "role": "user",
                     "content": f"Aqui está um conjunto de dados projetados: {df_predicted}, {df_predicted}, incluindo a métrica de necessidade que derivámos para ajudar o utilizador a entender estes dados. Os dados estão relacionados com atendimentos e tempos de espera de vários escritórios de uma entidade governamental e as suas recomendações têm como objetivo ajudar a abrir mais pontos de contacto, se necessário. Forneça insights e recomendações com base nesses dados. A resposta deve ser específica e direta evite frases genéricas. Responda em português de Portugal"
                 }
             ],
-            max_tokens=500,
+            max_tokens=600,
             temperature=0.4,
         )
         response = (response.choices[0].message.content)

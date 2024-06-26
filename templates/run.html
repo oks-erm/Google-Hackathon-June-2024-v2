@@ -15,7 +15,7 @@ Programa
       {% for card in cards_data %}
       <!-- Modal -->
       <div class="modal fade" id="modal-{{card.index}}">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="custom-modal modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -35,8 +35,7 @@ Programa
                   aria-selected="false">Dados históricos</a>
               </li>
               <li class="nav-item" role="presentation">
-                <a class="nav-link" id="info-tab{{card.index}}" data-bs-toggle="tab" href="#info{{card.index}}"
-                  role="tab" aria-controls="info{{card.index}}" aria-selected="false">info</a>
+                <a class="nav-link" id="info-tab{{card.index}}" data-bs-toggle="tab" href="#info{{card.index}}" role="tab" aria-controls="info{{card.index}}" aria-selected="false">Info</a>
               </li>
             </ul>
             <!-- Tab content -->
@@ -45,6 +44,22 @@ Programa
                 aria-labelledby="predicted-data-tab{{card.index}}">
                 <div class="modal-body">
                   <div class="d-flex flex-column justify-content-around">
+
+                    <div class="graph_box">
+                      <div>
+                        {{ graph_html[card.index][0] | safe }}
+                      </div>
+                      <div>
+                        {{ graph_html[card.index][1] | safe }}
+                      </div>
+                    </div>
+                    <div class="graph_box">
+                      <div>
+                        {{ graph_html[card.index][2] | safe }}
+                      </div>
+                      <div>
+                        {{ graph_html[card.index][3] | safe }}
+                      </div>
                     <!-- index = year index | card.index = card index starting at the top one | card.index_before_sorting = index based on location list (app.py)-->
                     {% for index in data_by_year[card.index]['Index'] %}
                     <div class="metrics-year">
@@ -69,6 +84,7 @@ Programa
                     </div>
                     <div>
                       {{ graph_html_merged[card.index][3] | safe }}
+
                     </div>
                     <div>
                       {{ graph_html_merged[card.index][4] | safe }}
@@ -76,7 +92,7 @@ Programa
                     <div class="d-flex flex-column justify-content-around">
                       <div>
                         <h3>IA Insights</h3>
-                        <div>
+                        <div id="ai-insight">
                           {{ data_analysis[0] | safe }}
                         </div>
                       </div>
@@ -111,8 +127,46 @@ Programa
                   </div>
                 </div>
               </div>
-              <div class="tab-pane fade" id="info{{card.index}}" role="tabpanel"
-                aria-labelledby="info-tab{{card.index}}">Contact content...</div>
+
+              <div class="tab-pane fade" id="info{{card.index}}" role="tabpanel" aria-labelledby="info-tab{{card.index}}">
+                <div class="modal-body">
+                  <div class="d-flex flex-column justify-content-around">
+                    <h3>Informações das Métricas</h3>
+                    <ul>
+                        <li><strong>Procuras:</strong> Indica o número de pessoas que procuraram atendimento no serviço durante o mês. Este
+                        dado é fundamental para entender a demanda pelo serviço.</li>
+                      <li><strong>Atendimentos:</strong> Refere-se ao número de pessoas que efetivamente receberam atendimento no serviço
+                        durante o mês. Este ponto de dado ajuda a avaliar a capacidade de resposta do serviço à demanda.</li>
+                      <li><strong>Desistências:</strong> Representa o número de pessoas que desistiram de esperar pelo atendimento e não
+                        foram atendidas. Este dado é crucial para medir a eficácia do serviço em reter e atender aos seus utentes.</li>
+                      <li><strong>Tempo médio de espera diário:</strong> Indica o tempo médio que as pessoas esperaram diariamente para
+                        serem atendidas. Este ponto de dado é vital para avaliar a eficiência do serviço e o impacto sobre os utentes.
+                      </li>
+                      <li><strong>Necessidade:</strong>
+                        <ul>
+                          <li>A métrica de Necessidade é derivada considerando o limite de tempo de espera definido e os fatores de
+                            crescimento e densidade populacional. Ela é calculada para identificar a urgência e a necessidade de melhorar
+                            os serviços oferecidos.</li></br>
+                          <li><strong>Como é derivada:</strong></li></br>
+                            <ul>
+                              <li><strong>Limite de tempo de Espera:</strong> Define o tempo máximo aceitável que uma pessoa pode esperar
+                                antes que a situação seja considerada crítica.</li>
+                              <li><strong>Crescimento Populacional:</strong> Refere-se ao aumento da população na área servida, o que pode
+                                aumentar a demanda pelos serviços.</li>
+                              <li><strong>Densidade Populacional:</strong> Reflete o número de pessoas numa área específica, influenciando
+                                diretamente a procura pelos serviços.</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+ 
+
+              </div>
+
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
