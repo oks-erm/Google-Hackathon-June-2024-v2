@@ -1,4 +1,7 @@
 from config import db
+from datetime import datetime as dt
+from sqlalchemy.dialects.postgresql import JSON, TIMESTAMP
+from datetime import datetime
 
 class Login(db.Model):
     __tablename__ = 'logins'
@@ -10,3 +13,11 @@ class Login(db.Model):
 
     def __repr__(self):
         return f'<ID: {self.id}, Created at: {self.created_at}, Login: {self.login} ,Password: {self.password}, Email: {self.email}>'
+
+class Report(db.Model):
+    __tablename__ = 'reports'
+    
+    id = db.Column(db.BigInteger, primary_key=True)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.now())
+    report = db.Column(db.Text, nullable=False)
+    user = db.Column(db.BigInteger, nullable=False)
