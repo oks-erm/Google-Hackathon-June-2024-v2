@@ -192,7 +192,7 @@ def save_report():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        created_at = get_now()
+        created_at = datetime.now()
         body = request.get_json()
         user = session['user_id']
         
