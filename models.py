@@ -21,3 +21,4 @@ class Report(db.Model):
     created_at = db.Column(db.TIMESTAMP, default=datetime.now())
     report = db.Column(db.Text, nullable=False)
     user = db.Column(db.BigInteger, nullable=False)
+    cards_table = db.Column(db.Text, nullable=False)

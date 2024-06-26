@@ -192,11 +192,12 @@ def save_report():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        created_at = datetime.now()
         body = request.get_json()
-        user = session['user_id']
+
+        # cards_table = create_cards_table()
+        # print(cards_table)
         
-        report = Report(created_at=created_at, report=json.dumps(body), user=user)
+        report = Report(created_at=datetime.now(), report=json.dumps(body), user=session.get("user_id"))
         db.session.add(report)
         db.session.commit()
 
@@ -230,7 +231,7 @@ def report():
             'user': user.login
         })
 
-    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
+    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data, user=session.get("username"))
 
 
 if __name__ == '__main__':
