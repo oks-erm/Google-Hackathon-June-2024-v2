@@ -134,12 +134,13 @@
             <button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal-{{card.index}}">
                 Detalhes
             </button>
+            <input class="mx-3" type="radio" name="advance" onclick="enableAddPoints()">
           </div>
           {% endfor %}
         </div>
         <div class="w-100">
           <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-            <button id="add_button" type="button" class="rounded py-2 mx-1"  onclick="showEditPredictionPage()">Adicionar pontos</button>
+            <button id="add_button" type="button" class="bg-secondary rounded py-2 mx-1" disabled onclick="showEditPredictionPage()">Adicionar pontos</button>
           </div>
         </div>
       </div>
@@ -176,7 +177,7 @@
       </div>
     </div>
   </div>
-</div>
+</div>btn-secondary
 
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
@@ -195,6 +196,13 @@
         // add more needed data here
       }),
     })
+  }
+  function enableAddPoints() {
+    if (document.getElementById("add_button").disabled = true)
+    {
+      document.getElementById("add_button").disabled = false;
+      document.getElementById("add_button").classList.remove("bg-secondary");
+    }
   }
 </script>
 
