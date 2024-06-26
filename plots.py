@@ -1,15 +1,21 @@
 from models import *
 import pandas as pd
 from google.cloud import bigquery as bq
-# import bigquery_storage as bq_storage
+from google.oauth2 import service_account
 import plotly.express as px
 import plotly.graph_objects as go
+from openai import OpenAI
+from dotenv import load_dotenv
+from config import creds_dict
 
-# BigQuerry parameters
+# Load environment variables
+load_dotenv()
+
+# BigQuery parameters
 project_id = 'sublime-lyceum-426907-r9'
 dataset_id = 'ama'
 
-# # Plotly graph design
+# Plotly graph design
 plot_bgcolor = 'white'
 xy_font_family = "Roboto"
 xy_font_color = "black"
@@ -24,8 +30,34 @@ line2_width = line1_width
 boundary_color = 'black'
 
 
+credentials = service_account.Credentials.from_service_account_info(creds_dict)
+
+client = OpenAI()
+def respond_gpt(df_historical, df_predicted) -> str:
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Você é um analista de dados experiente. A sua função é fornecer insights de grandes dataframes de forma coesa e coerente. Responda em um parágrafo destacando as tendências mais importantes e dando recomendações sobre a interpretação dos dados"
+                },
+                {
+                    "role": "user",
+                    "content": f"Aqui está um conjunto de dados projetados: {df_predicted}, {df_predicted}, incluindo a métrica de necessidade que derivámos para ajudar o utilizador a entender estes dados. Os dados estão relacionados com atendimentos e tempos de espera de vários escritórios de uma entidade governamental e as suas recomendações têm como objetivo ajudar a abrir mais pontos de contacto, se necessário. Forneça insights e recomendações com base nesses dados. A resposta deve ser específica e direta evite frases genéricas. Responda em português de Portugal"
+                }
+            ],
+            max_tokens=500,
+            temperature=0.4,
+        )
+        response = (response.choices[0].message.content)
+        return response
+    except Exception as e:
+        return f"Error: {e}"
+
+
 def querry_bq(project, dataset, table):
-    client = bq.Client()
+    client = bq.Client(credentials=credentials, project=project)
     query = f"""
         SELECT * FROM `{project}.{dataset}.{table}`
         LIMIT 1200
@@ -37,33 +69,10 @@ DF_HISTORICAL = querry_bq(project_id, dataset_id, 'merged')
 DF_PREDICTED = querry_bq(project_id, dataset_id, 'aggregated_data_with_necessity')
 
 # Atendimentos Per Month
-def df_atendimentos_per_month_historical(df_historical, location):
-    df_historical['Type'] = 'Historical'
-    df_historical['Data'] = pd.to_datetime(df_historical['Data'])
-    df_historical = df_historical[df_historical['Designacao'] == location]
-    df_historical['Meses'] = df_historical['Data'].dt.to_period('M')
-    df_historical = df_historical.groupby('Meses').agg({'Atendimentos': 'sum'}).reset_index()
-    # Convert Meses back to a datetime object for Plotly
-    df_historical['Meses'] = df_historical['Meses'].dt.to_timestamp()
-    return df_historical
-
-
-def df_atendimentos_per_month_predicted(df_predicted, location):
-    df_predicted['Type'] = 'Predicted'
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted = df_predicted[df_predicted['Designacao'] == location]
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
-    df_predicted = df_predicted.groupby('Meses').agg({'Atendimentos': 'sum'}).reset_index()
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
-    return df_predicted
-
-
 def plot_atendimentos_per_month(location, df_historical = None, df_predicted = None):
     fig = go.Figure()
 
     if df_historical is not None:
-        df_historical = df_atendimentos_per_month_historical(df_historical, location)
-
         fig.add_trace(go.Scatter(
             x=df_historical['Meses'], 
             y=df_historical['Atendimentos'], 
@@ -72,8 +81,6 @@ def plot_atendimentos_per_month(location, df_historical = None, df_predicted = N
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
-        df_predicted = df_atendimentos_per_month_predicted(df_predicted, location)
-
         fig.add_trace(go.Scatter(
             x=df_predicted['Meses'], 
             y=df_predicted['Atendimentos'], 
@@ -89,70 +96,40 @@ def plot_atendimentos_per_month(location, df_historical = None, df_predicted = N
         )
         fig.add_vline(x=boundary, line_width=line1_width, line_dash="dash", line_color=boundary_color)
 
-    # # Print BigQuery data on terminal
-    # pd.set_option('display.max_rows', None)
-    # pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 1000)
-    # print(df_historical)
-    # print(df_predicted)
-
     fig.update_layout(
         xaxis_title='Mês',
         yaxis_title='Atendimentos',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
 
 # Waiting Time Per Month
-def df_waiting_time_per_month_historical(df_historical, location):
-    df_historical['Type'] = 'Historical'
-    df_historical['Data'] = pd.to_datetime(df_historical['Data'])
-    df_historical = df_historical[df_historical['Designacao'] == location]
-    df_historical['Meses'] = df_historical['Data'].dt.to_period('M')
-    df_historical = df_historical.groupby('Meses').agg({'Tempo_medio_de_espera_diario': 'mean'}).reset_index()
-    # Convert Meses back to a datetime object for Plotly
-    df_historical['Meses'] = df_historical['Meses'].dt.to_timestamp()
-    return df_historical
-
-
-def df_waiting_time_per_month_predicted(df_predicted, location):
-    df_predicted['Type'] = 'Predicted'
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted = df_predicted[df_predicted['Designacao'] == location]
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
-    df_predicted = df_predicted.groupby('Meses').agg({'Tempo_medio_de_espera_diario': 'mean'}).reset_index()
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
-    return df_predicted
-
-
 def plot_waiting_time_per_month(location, df_historical = None, df_predicted = None):
 
     fig = go.Figure()
 
     if df_historical is not None:
-        df_historical = df_waiting_time_per_month_historical(df_historical, location)
-
         fig.add_trace(go.Scatter(
             x=df_historical['Meses'], 
             y=df_historical['Tempo_medio_de_espera_diario'], 
@@ -161,8 +138,6 @@ def plot_waiting_time_per_month(location, df_historical = None, df_predicted = N
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
-        df_predicted = df_waiting_time_per_month_predicted(df_predicted, location)
-
         fig.add_trace(go.Scatter(
             x=df_predicted['Meses'], 
             y=df_predicted['Tempo_medio_de_espera_diario'], 
@@ -178,69 +153,40 @@ def plot_waiting_time_per_month(location, df_historical = None, df_predicted = N
         )
         fig.add_vline(x=boundary, line_width=line1_width, line_dash="dash", line_color=boundary_color)
 
-    # # Print BigQuery data on terminal
-    # pd.set_option('display.max_rows', None)
-    # pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 1000)
-    # print(df_historical)
-    # print(df_predicted)
-
     fig.update_layout(
         xaxis_title='Mês',
         yaxis_title='Tempo médio de espera',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
 
 # Procuras Per Month
-def df_procuras_per_month_historical(df_historical, location):
-    df_historical['Type'] = 'Historical'
-    df_historical['Data'] = pd.to_datetime(df_historical['Data'])
-    df_historical = df_historical[df_historical['Designacao'] == location]
-    df_historical['Meses'] = df_historical['Data'].dt.to_period('M')
-    df_historical = df_historical.groupby('Meses').agg({'Procuras': 'sum'}).reset_index()
-    # Convert Meses back to a datetime object for Plotly
-    df_historical['Meses'] = df_historical['Meses'].dt.to_timestamp()
-    return df_historical
-
-
-def df_procuras_per_month_predicted(df_predicted, location):
-    df_predicted['Type'] = 'Predicted'
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted = df_predicted[df_predicted['Designacao'] == location]
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
-    df_predicted = df_predicted.groupby('Meses').agg({'Procuras': 'sum'}).reset_index()
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
-    return df_predicted
-
-
 def plot_procuras_per_month(location, df_historical = None, df_predicted = None):
 
     fig = go.Figure()
 
     if df_historical is not None:
-        df_historical = df_procuras_per_month_historical(df_historical, location)
 
         fig.add_trace(go.Scatter(
             x=df_historical['Meses'], 
@@ -250,7 +196,6 @@ def plot_procuras_per_month(location, df_historical = None, df_predicted = None)
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
-        df_predicted = df_procuras_per_month_predicted(df_predicted, location)
 
         fig.add_trace(go.Scatter(
             x=df_predicted['Meses'], 
@@ -272,58 +217,35 @@ def plot_procuras_per_month(location, df_historical = None, df_predicted = None)
         yaxis_title='Procuras',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
 
 # Desistencias Per Month
-def df_desistencias_per_month_historical(df_historical, location):
-    df_historical['Type'] = 'Historical'
-    df_historical['Data'] = pd.to_datetime(df_historical['Data'])
-    df_historical = df_historical[df_historical['Designacao'] == location]
-    df_historical['Meses'] = df_historical['Data'].dt.to_period('M')
-    df_historical = df_historical.groupby('Meses').agg({'Desistencias': 'sum'}).reset_index()
-    # Convert Meses back to a datetime object for Plotly
-    df_historical['Meses'] = df_historical['Meses'].dt.to_timestamp()
-    return df_historical
-
-
-def df_desistencias_per_month_predicted(df_predicted, location):
-    df_predicted['Type'] = 'Predicted'
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted = df_predicted[df_predicted['Designacao'] == location]
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
-    df_predicted = df_predicted.groupby('Meses').agg({'Desistencias': 'sum'}).reset_index()
-    df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
-    return df_predicted
-
-
 def plot_desistencias_per_month(location, df_historical = None, df_predicted = None):
 
     fig = go.Figure()
 
     if df_historical is not None:
-        df_historical = df_desistencias_per_month_historical(df_historical, location)
-
         fig.add_trace(go.Scatter(
             x=df_historical['Meses'], 
             y=df_historical['Desistencias'], 
@@ -332,8 +254,6 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
-        df_predicted = df_desistencias_per_month_predicted(df_predicted, location)
-
         fig.add_trace(go.Scatter(
             x=df_predicted['Meses'], 
             y=df_predicted['Desistencias'], 
@@ -354,25 +274,25 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
         yaxis_title='Desistencias',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
@@ -385,13 +305,44 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
 # def plot_desistencias_per_month(df):
 # def plot_(df):
 
+def filter_historical_data(df_historical, location):
+    df_historical['Type'] = 'Historical'
+    df_historical['Data'] = pd.to_datetime(df_historical['Data'])
+    df_historical = df_historical[df_historical['Designacao'] == location]
+    df_historical['Meses'] = df_historical['Data'].dt.to_period('M')
+    df_historical = df_historical.groupby('Meses').agg({'Procuras': 'sum',
+        'Atendimentos': 'sum',
+        'Desistencias': 'sum',
+        'Tempo_medio_de_espera_diario': 'mean'}).reset_index()
+    df_historical['Meses'] = df_historical['Meses'].dt.to_timestamp()
+    return df_historical
+
+
+def filter_predicted_data(df_predicted, location):
+    df_predicted['Type'] = 'Predicted'
+    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
+    df_predicted = df_predicted[df_predicted['Designacao'] == location]
+    df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
+    df_predicted = df_predicted.groupby('Meses').agg({'Procuras': 'sum',
+        'Atendimentos': 'sum',
+        'Desistencias': 'sum',
+        'Tempo_medio_de_espera_diario': 'mean',
+        'Necessity_Metric': 'mean'}).reset_index()
+    df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
+    return df_predicted
+
 def make_plots(location):
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
+
+    df_historical = filter_historical_data(df_historical, location)
+    df_predicted = filter_predicted_data(df_predicted, location)
     plot_list = [
         plot_atendimentos_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_waiting_time_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_procuras_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
-        plot_desistencias_per_month(location, df_historical=df_historical, df_predicted=df_predicted)
+        plot_desistencias_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
 	]
-    return plot_list
+    response = respond_gpt(df_historical.to_string(), df_predicted.to_string())
+
+    return plot_list, response
