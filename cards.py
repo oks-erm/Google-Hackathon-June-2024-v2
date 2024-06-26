@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 def build_table_for_cards(df_historic_data):
-    
+
     #### Historic data #####
 
     # filter the dataframe
@@ -11,7 +11,7 @@ def build_table_for_cards(df_historic_data):
     columns_to_drop = ["Latitude", "Longitude", "Year", "Month", "Day", "Localidade_Postal",
                        "Freguesia", "Codigo_do_Ponto_de_Atendimento", "Population_Density", "Codigo_Freguesia", "Data"]
     filtered_df_2024 = filtered_df_2024.drop(columns=columns_to_drop)
-   
+
     # group the rows by designacao, averaging the other elements
     df_grouped = filtered_df_2024.groupby('Designacao').agg({"Procuras": 'mean',
                                                              "Atendimentos": 'mean',
@@ -42,16 +42,17 @@ def build_table_for_cards(df_historic_data):
     original_df.reset_index(drop=True, inplace=True)
 
     #### Merge data from both tables #####
-    
+
     df_grouped = df_grouped.sort_values(by='Designacao')
     original_df = original_df.sort_values(by='Location')
+
     cards_table = []
     js = json.loads(df_grouped.to_json())
     js2 = json.loads(original_df.to_json())
-    # print(js)
     for index in js['Designacao'].keys():
         cards_table.append({
-            'Designacao': js['Designacao'][index],
+            'index': index,
+            'designacao': js['Designacao'][index],
             'stress_value': js['stress_value'][index],
             'necessity_metric': js2['necessity_metric'][index]
         })
