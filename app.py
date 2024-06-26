@@ -281,9 +281,9 @@ def profile():
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
-    if not session.get("isAuthenticated", False):
-        session['url'] = url_for('report')
-        return redirect(url_for('login'))
+    # if not session.get("isAuthenticated", False):
+    #     session['url'] = url_for('report')
+    #     return redirect(url_for('login'))
 
     reports = Report.query.all()
 
@@ -293,7 +293,9 @@ def report():
         report_data.append({
             'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
             'report': report.report,
-            'user': user.login
+            'user': user.login,
+            'cards_table': report.cards_table,
+            'AI_insight': report.AI_insight
         })
 
     return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data, user=session.get("username"))
