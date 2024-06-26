@@ -83,9 +83,18 @@ Edit Prediction
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                points: points,
-                // add more needed data here
+                points: points.map((point) => {
+                    return {
+                        lat: point.cordinates.lat,
+                        lng: point.cordinates.lng,
+                        title: point.title,
+                        type: point.type
+                    }
+                }),
             }),
+        }).then(() => {
+            console.log('Report saved successfully');
+            window.location.href = '/report';
         })
     }
 </script>

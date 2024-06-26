@@ -230,7 +230,7 @@ def save_report():
         db.session.add(report)
         db.session.commit()
 
-    return redirect(url_for('report'))
+    return jsonify({'status': 'success'})
 
 
 @app.route("/profile")
@@ -248,7 +248,6 @@ def report():
         return redirect(url_for('login'))
 
     reports = Report.query.all()
-
 
     report_data = []
     for report in reports:
