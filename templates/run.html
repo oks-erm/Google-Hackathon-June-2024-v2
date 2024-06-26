@@ -1,24 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Programa
+Programa
 {% endblock %}
 {% block content %}
 
-<div id="prediction-container" class="runs w-100 m-auto">
+<div class="runs w-100 m-auto">
   <div class="w-100 m-auto p-0">
     <div class="w-100 row m-auto p-0">
-      <div class="w-50 col p-0">
-        <iframe
-          width="600"
-          height="450"
-          loading="lazy"
-          style="display: block; margin: auto"
-          class="float-end"
-          allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
-        </iframe>
+
+      <div id="map_wrapper" class="w-50 p-0">
+        <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
       </div>
       {% for card in cards_data %}
       <!-- Modal -->
@@ -144,7 +136,7 @@
           {% for card in cards_data%}
           <div class="item py-3">
             <div class="d-flex flex-row">
-              <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
+              <div class="d-block p-0 mx-3 rounded-circle color-mark indicator" data-necessity="{{ card['necessity_metric'] }}"></div>
             </div>
             <div class="row w-75 m-auto pl-2">
               <div class="col-7">
@@ -158,43 +150,14 @@
             <button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal" data-target="#modal-{{card.index}}">
                 Detalhes
             </button>
+            <input class="mx-3" type="radio" name="advance" onclick="enableAddPoints()">
           </div>
           {% endfor %}
         </div>
         <div class="w-100">
           <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-            <button id="add_button" type="button" class="rounded py-2 mx-1"  onclick="showEditPredictionPage()">Adicionar pontos</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="edit-prediction-container" class="runs w-100 m-auto">
-  <div class="w-100 m-auto p-0">
-    <div class="w-100 row m-auto p-0">
-
-      <div id="map_wrapper" class="w-50 p-0">
-        <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
-
-      </div>
-
-      <div class="w-50 m-auto col p-0">
-        <h3 class="p-0 m-0 text-center">
-          Adicionar pontos
-        </h3>
-          <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Ponto fixo</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Ponto móvel</button>
-          </div>
-
-        <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
-
-        <div class="w-100">
-          <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" class="" onclick="showPredictionPage()">Voltar</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
+            <button id="add_button" type="button" class="rounded py-2 mx-1" onclick="pushToEditPage()">Adicionar
+              pontos</button>
           </div>
         </div>
       </div>
@@ -203,45 +166,57 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
-<script>
-  function saveReport() {
-    // do a post request to save the report
-    console.log("saveReport", points);
-    // send the data to the server
-    fetch('/save-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        points: points,
-        // add more needed data here
-      }),
-    })
-  }
-</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-     document.getElementById("edit-prediction-container").style.display = "none";
+  document.addEventListener('DOMContentLoaded', (event) => {
+    addExistingPoints();
   });
 
-  function showEditPredictionPage() {
-    let predictionContainer = document.getElementById("prediction-container");
-    let editPredictionContainer = document.getElementById("edit-prediction-container");
+  function addExistingPoints() {
+    const cords = [
+      {
+        lat: 38.73137703560319,
+        lng: -9.144382789532516,
+        title: 'Loja de Cidadão do Saldanha'
+      },
+      {
+        lat: 38.750402670143856,
+        lng: -9.17123563186069,
+        title: 'Loja de Cidadão das Laranjeiras'
+      }
+    ];
 
-    predictionContainer.style.display = "none";
-    editPredictionContainer.style.display = "flex";
+    cords.forEach(cord => {
+      addNewNonDraggabePoint({ lat: cord.lat, lng: cord.lng }, cord.title, true);
+    });
   }
 
-  function showPredictionPage() {
-    let predictionContainer = document.getElementById("prediction-container");
-    let editPredictionContainer = document.getElementById("edit-prediction-container");
-
-    predictionContainer.style.display = "flex";
-    editPredictionContainer.style.display = "none";
+  function colorize(vars, elem) {
+    let num = parseInt(vars);
+    if (num <= 33)
+      elem.style.backgroundColor = "green";
+    else if (num <= 66)
+    {
+      elem.style.backgroundColor = "yellow";
+    }
+    else
+      elem.style.backgroundColor = "rgb(199, 0, 0)";
   }
+
+  pushToEditPage = () => {
+    const selectedLocation = _.head(exisingPoints);
+    const url = `/edit?lat=${selectedLocation.cordinates.lat}&lng=${selectedLocation.cordinates.lng}&title=${selectedLocation.title}`;
+    window.location.href = url;
+  }
+
+  window.onload = function() {
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach(function(element) {
+      const necessityMetric = element.getAttribute('data-necessity');
+      colorize(necessityMetric, element);
+    })
+  };
 </script>
 
 {% endblock %}

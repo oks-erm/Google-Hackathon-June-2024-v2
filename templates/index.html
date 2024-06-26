@@ -8,32 +8,94 @@
     <h1 class="d-flex flex-column align-items-center justify-content-between text-center intro-title p-0">Citizen Connect</h1>
     <p class="important d-flex flex-column align-items-center justify-content-between intro-text px-4 text-center">
         Defina o próximo ponto de atendimento ao cidadão com IA!<br>
-        Selecione a região e periodo de previsão para começar
+        Selecione a região e periodo de previsão para começar.
     </p>
-    <div class="p-0 pb-2 mt-4 mb-2 w-50 row mx-auto btn-cont">
-        <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6 offset-sm-2">
-            <button class="brder dropdown-toggle text-dark py-2 bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Lisboa
-            </button>
-            <ul class="dropdown-menu w-100">
-            <li class="dropdown-item">Lisboa</li>
-            </ul>
-        </div>
-        <div class="dropdown_wrap dropdown-center col mx-auto col-sm-6">
-            <button class="brder dropdown-toggle text-dark py-2 bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Periodo
-            </button>
-            <ul class="dropdown-menu w-100">
-                <li class="dropdown-item">1 ano</li>
-                <li class="dropdown-item">2 anos</li>
-                <li class="dropdown-item">3 anos</li>
-                <li class="dropdown-item">4 anos</li>
-                <li class="dropdown-item">5 anos</li>
-            </ul>
-        </div>
+
+    <div id="auth-form" class="m-auto" {% if isAuthenticated %} style="display: none;"{% endif %}>
+        <h4 class="auth_text"> Autenticação </h4>
+        <form action="/login" method="post" class="text-center p-1 important">
+            <input type="text" class="form-control mt-2 px-5" id="username" name="username" required
+                placeholder="Nome de utilizador">
+            <input type="password" class="form-control mb-2 mt-2 px-5" id="password" name="password" required
+                placeholder="Palavra-passe">
+            <input type="submit" class="auth_login rounded shadow mt-2" value="Iniciar Sessão">
+        </form>
     </div>
-    <form class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
-        <button id="start_button" class="btn index-button shadow fs-3 rounded" type="submit">Iniciar</button>
-    </form>
+
+    <div id="input-fields" {% if not isAuthenticated %} style="display: none;"{% endif %}>
+        <div class="p-0 pb-2 mt-4 mb-2 w-50 row mx-auto btn-cont">
+            <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6 offset-sm-2">
+                <button id="locationDropdown" class="brder dropdown-toggle text-dark py-2 bg-white" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Lisboa
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="locationDropdown">
+                    <li class="dropdown-item">Lisboa</li>
+                </ul>
+            </div>
+            <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6">
+                <button id="periodDropdown" class="brder dropdown-toggle text-dark py-2 bg-white" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Periodo
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="periodDropdown">
+                    <li class="dropdown-item">1 ano</li>
+                    <li class="dropdown-item">2 anos</li>
+                    <li class="dropdown-item">3 anos</li>
+                    <li class="dropdown-item">4 anos</li>
+                    <li class="dropdown-item">5 anos</li>
+                </ul>
+            </div>
+        </div>
+        <form id="mainForm" class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
+            <input type="hidden" id="locationInput" name="location" value="Lisboa">
+            <input type="hidden" id="periodInput" name="period">
+            <button id="start_button" class="btn index-button shadow fs-3 rounded" type="submit">Iniciar</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const locationDropdownButton = document.getElementById('locationDropdown');
+        const periodDropdownButton = document.getElementById('periodDropdown');
+        const periodDropdownItems = periodDropdownButton.nextElementSibling.querySelectorAll('.dropdown-item');
+        const locationInput = document.getElementById('locationInput');
+        const periodInput = document.getElementById('periodInput');
+        const mainForm = document.getElementById('mainForm');
+
+        // Event listener for location dropdown
+        document.querySelector('#locationDropdown + .dropdown-menu .dropdown-item').addEventListener('click', (e) => {
+            const selectedValue = e.target.textContent.trim();
+            locationDropdownButton.textContent = selectedValue;
+            locationInput.value = selectedValue;
+        });
+
+        // Event listener for period dropdown items
+        periodDropdownItems.forEach(item => {
+            item.addEventListener('click', async () => {
+                const selectedValue = item.textContent.trim();
+                periodDropdownButton.textContent = selectedValue;
+                periodInput.value = selectedValue;
+                console.log(periodInput.value);
+            });
+        });
+
+        // Submit form
+        mainForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+
+            const locationValue = locationInput.value;
+            const periodValue = periodInput.value;
+
+            if (!locationValue || !periodValue) {
+                alert('Please select both location and period.');
+                return;
+            }
+            mainForm.action = `/run?location=${encodeURIComponent(locationValue)}&period=${encodeURIComponent(periodValue)}`;
+            mainForm.submit();
+        });
+    });
+
+</script>
 {% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Prediction
+{% endblock %}
+
+{% block content %}
+<div id="edit-prediction-container" class="runs w-100 m-auto">
+    <div class="w-100 m-auto p-0">
+        <div class="w-100 row m-auto p-0">
+
+            <div id="map_wrapper" class="w-50 p-0">
+                <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
+            </div>
+
+            <div class="w-50 m-auto col p-0">
+                <h3 class="p-0 m-0 text-center">
+                    Adicionar pontos
+                </h3>
+                <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Fixo')">Ponto
+                        fixo</button>
+                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Móvel')">Ponto
+                        móvel</button>
+                </div>
+
+                <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
+
+                <div class="w-100">
+                    <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+                        <button type="button" class="rounded py-2 mx-1" class=""
+                            onclick="pushToRunPage()">Voltar</button>
+                        <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initEditMap"></script>
+
+<script>
+    let selectedLocation = null;
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        selectedLocation = {
+            lat: parseFloat(getQueryParam('lat')),
+            lng: parseFloat(getQueryParam('lng')),
+            title: getQueryParam('title')
+        }
+
+        // push the location as non draggable
+        if (selectedLocation) {
+            addNewNonDraggabePoint({
+                lat: selectedLocation.lat,
+                lng: selectedLocation.lng
+            }, selectedLocation.title, true)
+        }
+    });
+
+    pushToRunPage = () => {
+        if (!selectedLocation) {
+            window.location.href = '/run';
+            return;
+        }
+
+        window.location.href = `/run?lat=${selectedLocation.lat}&lng=${selectedLocation.lng}`;
+    }
+
+    function saveReport() {
+        // send the data to the server
+        fetch('/save-report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                points: points.map((point) => {
+                    return {
+                        lat: point.cordinates.lat,
+                        lng: point.cordinates.lng,
+                        title: point.title,
+                        type: point.type
+                    }
+                }),
+            }),
+        }).then(() => {
+            console.log('Report saved successfully');
+            window.location.href = '/report';
+        })
+    }
+</script>
+
+{% endblock %}

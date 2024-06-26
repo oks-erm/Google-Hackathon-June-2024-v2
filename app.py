@@ -12,7 +12,6 @@ from flask import (
 )
 import pandas as pd
 import numpy as np
-import requests
 import json
 import os
 import warnings
@@ -20,6 +19,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
+
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
@@ -38,7 +38,7 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    return render_template('index.html', 
+    return render_template('index.html',
                            isLoginPage=False,
                            isAuthenticated=session.get("isAuthenticated", False),
                            user=session.get("username"))
@@ -81,6 +81,14 @@ def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
+
+    # Period for prediction
+    period = request.args.get('period')
+    length_of_prediction = period.split()[0]
+    print("--------------------------------------------------------")
+    print(f"YEARS: {length_of_prediction}")
+    print("--------------------------------------------------------")
+
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots_merged = []
     plots_historic = []
@@ -105,6 +113,21 @@ def run():
         data_by_year=data_by_year,
         data_analysis=data_analysis,
         cards_data=cards_table,
+        user = session.get("username")
+    )
+
+@app.route('/edit', methods=['GET'])
+def edit():
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('run')
+        return redirect(url_for('login'))
+
+    # get the same data as the run page
+    return render_template(
+        'edit.html',
+        isLoginPage=False,
+        isAuthenticated=session.get("isAuthenticated", False),
+        google_map_api_key=os.getenv('GOOGLE_MAP_API_KEY'),
         user = session.get("username")
     )
 
@@ -210,12 +233,12 @@ def save_report():
         created_at = datetime.now()
         body = request.get_json()
         user = session['user_id']
-        
+
         report = Report(created_at=created_at, report=json.dumps(body), user=user)
         db.session.add(report)
         db.session.commit()
 
-    return redirect(url_for('report'))
+    return jsonify({'status': 'success'})
 
 
 @app.route("/profile")
@@ -233,7 +256,6 @@ def report():
         return redirect(url_for('login'))
 
     reports = Report.query.all()
-    
 
     report_data = []
     for report in reports:

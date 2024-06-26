@@ -35,6 +35,7 @@
 }
 
 h1, h2, h3 {
+    background-color: var(--offwhite)
     font-family: "Lexend", sans-serif;
 }
 
@@ -53,7 +54,7 @@ button, input[type="submit"]
     background-color:var(--blue) !important;
     color : var(--bluesmoke) !important;
     border: none;
-    /* padding: 2.5% 5%; */
+    padding: 5px 10px;
 }
 
 .shadow
@@ -142,7 +143,6 @@ footer div {
 .item, .new-pin {
     display: flex;
     flex-flow: row;
-    justify-content: space-between;
     align-items: center;
     padding: 5px 15px;
     margin: 5px 5%;
@@ -151,6 +151,19 @@ footer div {
     background-color: var(--bluesmoke);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.pin-text {
+    padding: 0px;
+    margin: 0px;
+    margin-left: 10px;
+}
+
+.delete-point {
+    margin-left: auto;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
 
 .title
 {
@@ -186,7 +199,7 @@ footer div {
 }
 
 #add-new-pins, .entries {
-    height: 350px !important;
+    height: 250px !important;
     overflow-y: scroll;
 }
 
@@ -212,9 +225,10 @@ footer div {
 
 .color-mark
 {
-    min-width: 12.5px;
-    min-height: 12.5px;
+    min-width: 15px;
+    min-height: 15px;
     background-color: rgb(199, 0, 0);
+    border: 1px solid #4f5562;
 }
 
 /* profile.html */
@@ -251,18 +265,23 @@ footer div {
     font-size: 1.05rem !important;
     padding: 0.4rem 1.7rem !important
 }
-
+run
 #start_button {
     font-size: 21px !important;
     padding: 0.5rem 7rem;
 }
 
-#start_button:hover, 
-.auth_login:hover, 
-#report_button:hover, 
-#add_button:hover, 
+.bgr
+{
+    background-color: var(--offwhite)
+}
+
+#start_button:hover,
+.auth_login:hover,
+#report_button:hover,
+#add_button:hover,
 #login_button:hover,
-.item>button:hover 
+.item>button:hover
 {
     background-color: #1871ff !important;
 }
@@ -298,4 +317,41 @@ footer div {
 {
     background-color: var(--offwhite) !important;
     color: inherit !important;
+}
+
+.btn-cont {
+    display: flex;
+    justify-content: space-around;
+}
+
+.dropdown_wrap {
+    position: relative;
+}
+
+.auth_text {
+    text-align: center;
+    margin-bottom: -5px;
+    font-size: larger;
+    color: var(--dark);
+}
+
+#auth-form {
+    padding-top: 40px;
+    max-width: 40vw;
+    width: 355px;
+}
+
+#auth-form input {
+    margin-bottom: 0px;
+    padding: 9px 20px !important;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+#auth-form h4 {
+    padding-bottom: 5px;
+}
+
+#auth-form>form>input.auth_login.rounded.shadow.mt-2 {
+    opacity: 1;
 }
