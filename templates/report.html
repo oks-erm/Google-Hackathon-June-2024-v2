@@ -39,10 +39,6 @@ Relatórios
             const AI = this.getAttribute('data-AI');
             const metric = this.getAttribute('data-metric');
             const email = this.getAttribute('data-email');
-            // const report = JSON.parse(this.getAttribute('data-report'));
-            // const user = this.getAttribute('data-user');
-            // const AI_insights = JSON.parse(this.getAttribute('data-AI_insights'));
-            // const metrics = JSON.parse(this.getAttribute('data-metrics'));
 
             const reportData = {
                 created_at: created_at,
@@ -71,40 +67,66 @@ Relatórios
 function createAndDownloadPDF(reportData) {
     const docDefinition = {
         content: [
-            { text: 'Report', style: 'header' },
+            {
+                columns: [
+                    { text: `${reportData.location}`, style: 'subheader', width: 'auto', alignment: 'right' },
+                    { width: '*', text: '' },
+                    { text: 'RAJH PHUYAL, PUT YOUR SHIT TIME HERE', style: 'subheader', width: 'auto' }
+                ]
+            },
+            { text: 'Link A', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
+            { text: 'Link B', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
+            { text: 'Link C', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
             {
                 image: reportData.imageData,
                 width: 300,
                 alignment: 'center',
-                margin: [0, 10, 0, 20]
+                margin: [0, 20, 0, 20]
             },
-            { text: 'Link A', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'subheader', color: 'blue' },
-            { text: 'Link B', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'subheader', color: 'blue' },
-            { text: 'Link C', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'subheader', color: 'blue' },
-            
-            { text: 'Time: RAJH PHUYAL, PUT YOUR SHIT HERE', style: 'subheader' },
-            { text: `Location: ${reportData.location}`, style: 'subheader' },
-            { text: `AI Insights: ${reportData.AI_insights}`, style: 'subheader' },
-            { text: `Metric: ${reportData.metric}`, style: 'subheader' },
-            { text: `Created by: ${reportData.email}`, style: 'subheader'},
-            { text: `Created at: ${reportData.created_at}`, style: 'subheader' }
+            { text: `AI Insights: ${reportData.AI_insights}`, style: 'subheader', alignment: 'left' },
+            { text: `Necessity Metric: ${reportData.metric}`, style: 'subheader', alignment: 'center' },
+            {
+                canvas: [
+                    { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }
+                ],
+                margin: [0, 20, 0, 20]
+            },
+            {
+                columns: [
+                    { width: '*', text: '' },
+                    {
+                        stack: [
+                            { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
+                            { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' }
+                        ],
+                        width: 'auto'
+                    },
+                    { width: '*', text: '' }
+                ]
+            }
         ],
         styles: {
             header: {
                 fontSize: 22,
                 bold: true,
-                margin: [0, 0, 0, 10],
-                alignment: 'center'
+                margin: [0, 0, 0, 10]
             },
             subheader: {
                 fontSize: 14,
                 margin: [0, 10, 0, 10]
+            },
+            link: {
+                fontSize: 14,
+                color: 'blue',
+                decoration: 'underline',
+                margin: [10, 0, 10, 0]
             }
         }
     };
 
     pdfMake.createPdf(docDefinition).download('report.pdf');
 }
+
 
 </script>
 {% endblock %}
