@@ -35,6 +35,7 @@
 }
 
 h1, h2, h3 {
+    background-color: var(--offwhite)
     font-family: "Lexend", sans-serif;
 }
 
@@ -224,9 +225,10 @@ footer div {
 
 .color-mark
 {
-    min-width: 12.5px;
-    min-height: 12.5px;
+    min-width: 15px;
+    min-height: 15px;
     background-color: rgb(199, 0, 0);
+    border: 1px solid #4f5562;
 }
 
 /* profile.html */
@@ -263,16 +265,20 @@ footer div {
     font-size: 1.05rem !important;
     padding: 0.4rem 1.7rem !important
 }
-
+run
 #start_button {
     font-size: 21px !important;
     padding: 0.5rem 7rem;
 }
 
+.bgr
+{
+    background-color: var(--offwhite)
+}
+
 #start_button:hover,
 .auth_login:hover,
 #report_button:hover,
-#add_button:hover,
 #login_button:hover,
 .item>button:hover
 {
@@ -288,10 +294,31 @@ footer div {
     font-size: 1.05rem !important;
 }
 
-#add_button {
+.add_button_class {
     padding: 12px 40px !important;
 }
 
+.add_button_class:hover {
+    background-color: #1871ff !important;
+}
+
+.disabled-btn {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.disabled-btn:hover {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.specific-location {
+    cursor: pointer;
+}
+
+.selected-location {
+    outline: 2px solid #1871ff !important;
+}
 #map_wrapper {
     display: flex;
 }
