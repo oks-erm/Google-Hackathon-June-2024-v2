@@ -17,7 +17,11 @@ Relatórios
             <div class="p-1"><strong>Created at:</strong> {{ item.created_at }}</div>
             <div class="p-1"><strong>Created by:</strong> {{ item.user }}</div>
         </div>
-        <button class="rounded report-btn p-2 fs-6" data-title="{{ item.created_at }}" data-iso3="{{ item.user }}">Descarregar</button>
+        <button class="rounded report-btn p-2 fs-6" data-created_at="{{ item.created_at }}" 
+                                                    data-location="{{ item.cards_table[0]['designacao'] }}"
+                                                    data-AI="{{ item.AI_insight }}" 
+                                                    data-metric="{{ item.cards_table[0]['necessity_metric'] }}" 
+                                                    data-email="{{ item.email }}" ">Descarregar</button>
     </div>
     {% endfor %}
 </div>
@@ -31,17 +35,21 @@ Relatórios
     buttons.forEach(function(button) {
         button.addEventListener('click', function() {
             const created_at = this.getAttribute('data-created_at');
-            const report = JSON.parse(this.getAttribute('data-report'));
-            const user = this.getAttribute('data-user');
-            const AI_insights = JSON.parse(this.getAttribute('data-AI_insights'));
-            const metrics = JSON.parse(this.getAttribute('data-metrics'));
+            const location = this.getAttribute('data-location');
+            const AI = this.getAttribute('data-AI');
+            const metric = this.getAttribute('data-metric');
+            const email = this.getAttribute('data-email');
+            // const report = JSON.parse(this.getAttribute('data-report'));
+            // const user = this.getAttribute('data-user');
+            // const AI_insights = JSON.parse(this.getAttribute('data-AI_insights'));
+            // const metrics = JSON.parse(this.getAttribute('data-metrics'));
 
             const reportData = {
                 created_at: created_at,
-                user: user,
-                report: report,
-                AI_insights: AI_insights,
-                metrics: metrics,
+                location: location,
+                AI_insights: AI,
+                metric: metric,
+                email: email,
             };
 
             const imgElement = document.getElementById('reportImage');
@@ -70,12 +78,12 @@ function createAndDownloadPDF(reportData) {
                 alignment: 'center',
                 margin: [0, 10, 0, 20]
             },
-            { text: `Created At: ${reportData.created_at}`, style: 'subheader' },
-            { text: `User: ${reportData.user}`, style: 'subheader' },
-            { text: 'AI Insights', style: 'subheader' },
-            { text: reportData.AI_insights, style: 'subheader'},
-            { text: 'Metrics', style: 'subheader' },
-            // { ul: Object.entries(reportData.metrics).map(([key, value]) => `${key}: ${value}`) },
+            { text: 'Time: RAJH PHUYAL, PUT YOUR SHIT HERE', style: 'subheader' },
+            { text: `Location: ${reportData.location}`, style: 'subheader' },
+            { text: `AI Insights: ${reportData.AI_insights}`, style: 'subheader' },
+            { text: `Metric: ${reportData.metric}`, style: 'subheader' },
+            { text: `Created by: ${reportData.email}`, style: 'subheader'},
+            { text: `Created at: ${reportData.created_at}`, style: 'subheader' }
         ],
         styles: {
             header: {

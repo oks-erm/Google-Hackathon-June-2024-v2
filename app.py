@@ -294,6 +294,7 @@ def report():
             'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
             'report': report.report,
             'user': user.login,
+            'email': user.email,
             'cards_table': report.cards_table,
             'AI_insight': report.AI_insight
     })
