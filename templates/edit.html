@@ -17,17 +17,17 @@ Edit Prediction
                 <h3 class="p-0 m-0 text-center">
                     Adicionar pontos
                 </h3>
-                <div class="d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Fixo')">Adicionar
-                        ponto fixo</button>
-                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Móvel')">Adicionar
-                        ponto móvel</button>
+                <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Fixo')">Ponto
+                        fixo</button>
+                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Móvel')">Ponto
+                        móvel</button>
                 </div>
 
                 <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
 
                 <div class="w-100">
-                    <div class="d-flex py-3 mb-4 flex-row d-flex flex-row justify-content-center mx-auto">
+                    <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
                         <button type="button" class="rounded py-2 mx-1" class=""
                             onclick="pushToRunPage()">Voltar</button>
                         <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
@@ -68,7 +68,7 @@ Edit Prediction
 
     pushToRunPage = () => {
         if (!selectedLocation) {
-            window.location.href  = '/run';
+            window.location.href = '/run';
             return;
         }
 
