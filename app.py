@@ -93,6 +93,28 @@ def run():
         user = session.get("username")
     )
 
+@app.route('/edit', methods=['GET'])
+def edit():
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('run')
+        return redirect(url_for('login'))
+
+    plots = []
+    for location in available_locations:
+        plots.append(make_plots(location))
+    cards_table = create_cards_table()
+
+    # get the same data as the run page
+    return render_template(
+        'edit.html',
+        isLoginPage=False,
+        isAuthenticated=session.get("isAuthenticated", False),
+        google_map_api_key=os.getenv('GOOGLE_MAP_API_KEY'),
+        graph_html=plots,
+        cards_data=cards_table,
+        user = session.get("username")
+    )
+
 
 # this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])

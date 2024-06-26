@@ -100,7 +100,6 @@ button, input[type="submit"]
 .item, .new-pin {
     display: flex;
     flex-flow: row;
-    justify-content: space-between;
     align-items: center;
     padding: 5px 15px;
     margin: 5px 5%;
@@ -109,6 +108,19 @@ button, input[type="submit"]
     background-color: #fafafa;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.pin-text {
+    padding: 0px;
+    margin: 0px;
+    margin-left: 10px;
+}
+
+.delete-point {
+    margin-left: auto;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
 
 .title
 {
