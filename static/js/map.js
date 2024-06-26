@@ -100,7 +100,7 @@ async function addNewDraggablePoint(selectedLocation, type) {
                     lat: e.latLng.lat(),
                     lng: e.latLng.lng(),
                 };
-                map.setCenter(point.cordinates);
+                // map.setCenter(point.cordinates);
             }
             return point;
         });
@@ -130,6 +130,10 @@ async function addNewNonDraggabePoint(cord, title, center = false) {
     });
 
     const infoWindow = new InfoWindow();
+    infoWindow.close();
+    infoWindow.setContent(title);
+    infoWindow.open(marker.map, marker);
+
     marker.addListener("click", () => {
         infoWindow.close();
         infoWindow.setContent(title);

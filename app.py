@@ -21,7 +21,6 @@ warnings.filterwarnings("ignore")
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 
-from plots import make_plots, querry_bq
 from cards import build_table_for_cards
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
@@ -45,35 +44,6 @@ def index():
     return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
 
 
-def create_cards_table():
-    df_predicted = DF_PREDICTED
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted['Ano'] = df_predicted['Meses'].dt.year
-    df_predicted = df_predicted.groupby(['Designacao', 'Ano']).agg({
-        'Procuras': 'sum',
-        'Atendimentos': 'sum',
-        'Desistencias': 'sum',
-        'Tempo_medio_de_espera_diario': 'mean',
-        'Necessity_Metric': 'mean'
-    }).reset_index()
-    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].astype(int)
-    idx = df_predicted.groupby('Designacao')['Necessity_Metric'].idxmax()
-    max_necessity_metric_entries = df_predicted.loc[idx]
-    max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
-    cards_table = []
-    js = json.loads(max_necessity_metric_entries.to_json())
-    i = 0
-    for item in js['Designacao'].keys():
-        cards_table.append({
-            'index': i,
-            'designacao': js['Designacao'][item],
-            'necessity_metric': js['Necessity_Metric'][item]
-        })
-        i += 1
-    return cards_table
-
-
-
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
@@ -84,7 +54,6 @@ def run():
     plots = []
     for location in available_locations:
         plots.append(make_plots(location))
-    cards_table = create_cards_table()
 
     cards_table = build_table_for_cards(DF_HISTORICAL)
 
@@ -107,7 +76,8 @@ def edit():
     plots = []
     for location in available_locations:
         plots.append(make_plots(location))
-    cards_table = create_cards_table()
+
+    cards_table = build_table_for_cards(DF_HISTORICAL)
 
     # get the same data as the run page
     return render_template(
@@ -180,9 +150,6 @@ def predict():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    session["isAuthenticated"] = True
-    return redirect(url_for('index'))
-
     if session.get("isAuthenticated", False):
         session['url'] = url_for('login')
         return redirect(url_for('index'))
@@ -267,51 +234,3 @@ def report():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-    # FROM RUN
-    # # Print BigQuery data on terminal
-    # pd.set_option('display.max_rows', None)
-    # pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 1000)
-
-    # df_historic_data = querry_bq('sublime-lyceum-426907-r9', 'ama', 'merged')
-
-    # # filter the dataframe
-    # filtered_df_2024 = df_historic_data[df_historic_data['Year'] == 2024]
-    # filtered_df_2024 = filtered_df_2024.sort_values(by="Designacao")
-    # columns_to_drop = ["Latitude", "Longitude", "Year", "Month", "Day", "Localidade_Postal",
-    #                    "Freguesia", "Codigo_do_Ponto_de_Atendimento", "Population_Density", "Codigo_Freguesia", "Data"]
-    # filtered_df_2024 = filtered_df_2024.drop(columns=columns_to_drop)
-
-    # # group the rows by designacao, averaging the other elements
-    # df_grouped = filtered_df_2024.groupby('Designacao').agg({"Procuras": 'mean',
-    #                                                          "Atendimentos": 'mean',
-    #                                                          "Desistencias": 'mean',
-    #                                                          "Tempo_medio_de_espera_diario": 'mean',
-    #                                                          "Population": 'mean',
-    #                                                          }).reset_index()
-
-    # # Calculate the stress values
-    # stress_value = [int((a['Procuras'] * a['Desistencias'] * a['Tempo_medio_de_espera_diario'])
-    #                     / (a['Atendimentos'] * a['Population']))
-    #                 for a in json.loads(df_grouped.to_json(orient='records'))]
-
-    # # Dispose of unecessary data
-
-    # columns_to_drop = ["Procuras", "Atendimentos", "Desistencias",
-    #                    "Tempo_medio_de_espera_diario", "Population"]
-    # df_grouped = df_grouped.drop(columns=columns_to_drop)
-    # df_grouped['stress_value'] = stress_value
-
-    # original_df = pd.read_csv('./static/assets/model_frame.csv')
-    # original_df.sort_values(by='Location')
-    # predictions = create_dataframe_with_random_deviation(original_df)
-    # to_merge_to_cards_table = predictions.sort_values(by='Location')
-    # columns_to_drop = ["Year", "Procuras",
-    #                    "Tempo_medio_de_espera_diario", "Atendimentos", "Desistencias"]
-    # to_merge_to_cards_table = to_merge_to_cards_table.drop(
-    #     columns=columns_to_drop)
-    # to_merge_to_cards_table = to_merge_to_cards_table.groupby(
-    #     'Location').agg({"necessity_metric": 'mean'}).reset_index()
-    # # print(to_merge_to_cards_table.head(3))
