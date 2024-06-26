@@ -64,15 +64,13 @@ def create_cards_table():
     max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
     cards_table = []
     js = json.loads(max_necessity_metric_entries.to_json())
-    i = 0
-    for item in js['Designacao'].keys():
+    for index, item in enumerate(js['Designacao'].keys()):
         cards_table.append({
             'index_before_sorting': js['Index'][item],
-            'index': i,
+            'index': index,
             'designacao': js['Designacao'][item],
             'necessity_metric': js['Necessity_Metric'][item]
         })
-        i += 1
     return cards_table
 
 
@@ -83,11 +81,11 @@ def run():
         return redirect(url_for('login'))
 
     # Period for prediction
-    period = request.args.get('period')
-    length_of_prediction = period.split()[0]
-    print("--------------------------------------------------------")
-    print(f"YEARS: {length_of_prediction}")
-    print("--------------------------------------------------------")
+    # period = request.args.get('period')
+    # length_of_prediction = period.split()[0]
+    # print("--------------------------------------------------------")
+    # print(f"YEARS: {length_of_prediction}")
+    # print("--------------------------------------------------------")
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots_merged = []
@@ -113,7 +111,7 @@ def run():
         data_by_year=data_by_year,
         data_analysis=data_analysis,
         cards_data=cards_table,
-        user = session.get("username")
+        user=session.get("username")
     )
 
 @app.route('/edit', methods=['GET'])
@@ -128,7 +126,7 @@ def edit():
         isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=os.getenv('GOOGLE_MAP_API_KEY'),
-        user = session.get("username")
+        user=session.get("username")
     )
 
 
@@ -266,7 +264,13 @@ def report():
             'user': user.login
         })
 
-    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
+    return render_template(
+        'report.html',
+        isLoginPage=False,
+        isAuthenticated=session.get("isAuthenticated", False),
+        report_data=report_data,
+        user=session.get("username")
+    )
 
 
 if __name__ == '__main__':

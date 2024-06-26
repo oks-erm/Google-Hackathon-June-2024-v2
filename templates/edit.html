@@ -18,9 +18,11 @@ Edit Prediction
                     Adicionar pontos
                 </h3>
                 <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Fixo')">Ponto
+                    <button type="button" class="rounded py-2 mx-1"
+                        onclick="addNewDraggablePoint(selectedLocation, 'Fixo')">Ponto
                         fixo</button>
-                    <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint(selectedLocation, 'Móvel')">Ponto
+                    <button type="button" class="rounded py-2 mx-1"
+                        onclick="addNewDraggablePoint(selectedLocation, 'Móvel')">Ponto
                         móvel</button>
                 </div>
 
@@ -44,17 +46,23 @@ Edit Prediction
 
 <script>
     let selectedLocation = null;
+    let additionalParams = null;
 
     document.addEventListener('DOMContentLoaded', (event) => {
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            return decodeURIComponent(urlParams.get(param));
         }
 
         selectedLocation = {
             lat: parseFloat(getQueryParam('lat')),
             lng: parseFloat(getQueryParam('lng')),
             title: getQueryParam('title')
+        }
+
+        additionalParams = {
+            period: getQueryParam('period'),
+            location: getQueryParam('location')
         }
 
         // push the location as non draggable
@@ -72,7 +80,11 @@ Edit Prediction
             return;
         }
 
-        window.location.href = `/run?lat=${selectedLocation.lat}&lng=${selectedLocation.lng}`;
+        const fullUrl = `/run?lat=${selectedLocation.lat}
+                            &lng=${selectedLocation.lng}
+                            &location=${additionalParams.location}
+                            &period=${additionalParams.period}`;
+        window.location.href = fullUrl;
     }
 
     function saveReport() {
@@ -91,6 +103,7 @@ Edit Prediction
                         type: point.type
                     }
                 }),
+                location: additionalParams.location,
             }),
         }).then(() => {
             console.log('Report saved successfully');
