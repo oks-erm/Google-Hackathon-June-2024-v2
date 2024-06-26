@@ -240,17 +240,9 @@ def save_report():
                 card for card in cards_table if card.get('designacao') == location
             ]
 
-            # Filter data_analysis for the specific location
-            filtered_data_analysis = {
-                loc: msg for loc, msg in data_analysis.items() if loc == location
-            }
-
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table
-            body['AI_insight'] = filtered_data_analysis
-
-            # Serialize AI_insight to a JSON string
-            ai_insight_json = json.dumps(filtered_data_analysis)
+            body['AI_insight'] = data_analysis[location]
 
             # Create the Report object
             report = Report(
@@ -258,7 +250,7 @@ def save_report():
                 report=json.dumps(body),
                 user=session.get("user_id"),
                 cards_table=json.dumps(filtered_cards_table),
-                AI_insight=ai_insight_json
+                AI_insight=data_analysis[location]
             )
             
             db.session.add(report)
