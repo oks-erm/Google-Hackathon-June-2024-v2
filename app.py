@@ -63,14 +63,12 @@ def create_cards_table():
     max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
     cards_table = []
     js = json.loads(max_necessity_metric_entries.to_json())
-    i = 0
-    for item in js['Designacao'].keys():
+    for index, item in enumerate(js['Designacao'].keys()):
         cards_table.append({
-            'index': i,
+            'index': index,
             'designacao': js['Designacao'][item],
             'necessity_metric': js['Necessity_Metric'][item]
         })
-        i += 1
     return cards_table
 
 
@@ -81,11 +79,11 @@ def run():
         return redirect(url_for('login'))
 
     # Period for prediction
-    period = request.args.get('period')
-    length_of_prediction = period.split()[0]
-    print("--------------------------------------------------------")
-    print(f"YEARS: {length_of_prediction}")
-    print("--------------------------------------------------------")
+    # period = request.args.get('period')
+    # length_of_prediction = period.split()[0]
+    # print("--------------------------------------------------------")
+    # print(f"YEARS: {length_of_prediction}")
+    # print("--------------------------------------------------------")
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []

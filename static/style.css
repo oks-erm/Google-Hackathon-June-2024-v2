@@ -272,7 +272,6 @@ footer div {
 #start_button:hover,
 .auth_login:hover,
 #report_button:hover,
-#add_button:hover,
 #login_button:hover,
 .item>button:hover
 {
@@ -288,10 +287,31 @@ footer div {
     font-size: 1.05rem !important;
 }
 
-#add_button {
+.add_button_class {
     padding: 12px 40px !important;
 }
 
+.add_button_class:hover {
+    background-color: #1871ff !important;
+}
+
+.disabled-btn {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.disabled-btn:hover {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.specific-location {
+    cursor: pointer;
+}
+
+.selected-location {
+    outline: 2px solid #1871ff !important;
+}
 #map_wrapper {
     display: flex;
 }
