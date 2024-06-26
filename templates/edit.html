@@ -107,6 +107,8 @@ Edit Prediction
                     }
                 }),
                 location: additionalParams.location,
+                period: additionalParams.period,
+                mapData: getImageFromMap(selectedLocation)
             }),
         }).then(() => {
             console.log('Report saved successfully');
