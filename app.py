@@ -40,8 +40,38 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    user = session.get("username")
-    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('index.html',
+                           isLoginPage=False,
+                           isAuthenticated=session.get("isAuthenticated", False),
+                           user=session.get("username"))
+
+
+def create_cards_table():
+    df_predicted = DF_PREDICTED
+    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
+    df_predicted['Ano'] = df_predicted['Meses'].dt.year
+    df_predicted = df_predicted.groupby(['Designacao', 'Ano']).agg({
+        'Procuras': 'sum',
+        'Atendimentos': 'sum',
+        'Desistencias': 'sum',
+        'Tempo_medio_de_espera_diario': 'mean',
+        'Necessity_Metric': 'mean'
+    }).reset_index()
+    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].astype(int)
+    idx = df_predicted.groupby('Designacao')['Necessity_Metric'].idxmax()
+    max_necessity_metric_entries = df_predicted.loc[idx]
+    max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
+    cards_table = []
+    js = json.loads(max_necessity_metric_entries.to_json())
+    i = 0
+    for item in js['Designacao'].keys():
+        cards_table.append({
+            'index': i,
+            'designacao': js['Designacao'][item],
+            'necessity_metric': js['Necessity_Metric'][item]
+        })
+        i += 1
+    return cards_table
 
 
 @app.route('/run', methods=['GET', 'POST'])
@@ -49,13 +79,15 @@ def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
-
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
+    data_analysis = []
     for location in available_locations:
-        plots.append(make_plots(location))
+        p, msg = make_plots(location)
+        plots.append(p)
+        data_analysis.append(msg)
 
-    cards_table = build_table_for_cards(DF_HISTORICAL)
+    cards_table = create_cards_table()
 
     return render_template(
         'run.html',
@@ -63,6 +95,7 @@ def run():
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
         graph_html=plots,
+        data_analysis=data_analysis,
         cards_data=cards_table,
         user = session.get("username")
     )
@@ -205,8 +238,7 @@ def profile():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('profile')
         return redirect(url_for('login'))
-    user = session.get("username")
-    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
 
 
 @app.route('/report', methods=['GET', 'POST'])
