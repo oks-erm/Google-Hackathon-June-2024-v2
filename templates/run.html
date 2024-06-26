@@ -1,24 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Programa
+Programa
 {% endblock %}
 {% block content %}
 
-<div id="prediction-container" class="runs w-100 m-auto">
+<div class="runs w-100 m-auto">
   <div class="w-100 m-auto p-0">
     <div class="w-100 row m-auto p-0">
-      <div class="w-50 col p-0">
-        <iframe
-          width="600"
-          height="450"
-          loading="lazy"
-          style="display: block; margin: auto"
-          class="float-end"
-          allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps/embed/v1/place?q=42%20Lisboa&key={{ google_map_api_key }}">
-        </iframe>
+
+      <div id="map_wrapper" class="w-50 p-0">
+        <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
       </div>
       {% for card in cards_data %}
       <!-- Modal -->
@@ -79,7 +71,7 @@
                     <div class="d-flex flex-column justify-content-around">
                       <div class="d-flex flex-column justify-content-around">
                         <div>
-                          
+
                         </div>
                       </div>
                     </div>
@@ -104,7 +96,7 @@
           <div class="sort item w-100 title mx-auto py-0 w-100">
             <div class="w-100 title-cont py-0 d-flex flex-row align-items-center justify-content-between">
               <h6 class="py-0 text-left">Lisboa</h6>
-              <h6 class="py-0 text-left">Ordem: Decrescente, Necessidade</h6> 
+              <h6 class="py-0 text-left">Ordem: Decrescente, Necessidade</h6>
               <h6 class="py-0 text-right">2024-2027</h6>
             </div>
           </div>
@@ -140,7 +132,8 @@
         </div>
         <div class="w-100">
           <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-            <button id="add_button" type="button" class="bg-secondary rounded py-2 mx-1" disabled onclick="showEditPredictionPage()">Adicionar pontos</button>
+            <button id="add_button" type="button" class="rounded py-2 mx-1" onclick="pushToEditPage()">Adicionar
+              pontos</button>
           </div>
         </div>
       </div>
@@ -148,83 +141,38 @@
   </div>
 </div>
 
-<div id="edit-prediction-container" class="runs w-100 m-auto">
-  <div class="w-100 m-auto p-0">
-    <div class="w-100 row m-auto p-0">
-
-      <div id="map_wrapper" class="w-50 p-0">
-        <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
-
-      </div>
-
-      <div class="w-50 m-auto col p-0">
-        <h3 class="p-0 m-0 text-center">
-          Adicionar pontos
-        </h3>
-          <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Ponto fixo</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Ponto móvel</button>
-          </div>
-
-        <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
-
-        <div class="w-100">
-          <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" class="" onclick="showPredictionPage()">Voltar</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>btn-secondary
-
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
-<script>
-  function saveReport() {
-    // do a post request to save the report
-    console.log("saveReport", points);
-    // send the data to the server
-    fetch('/save-report', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        points: points,
-        // add more needed data here
-      }),
-    })
-  }
-  function enableAddPoints() {
-    if (document.getElementById("add_button").disabled = true)
-    {
-      document.getElementById("add_button").disabled = false;
-      document.getElementById("add_button").classList.remove("bg-secondary");
-    }
-  }
-</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-     document.getElementById("edit-prediction-container").style.display = "none";
+  document.addEventListener('DOMContentLoaded', (event) => {
+    addExistingPoints();
   });
 
-  function showEditPredictionPage() {
-    let predictionContainer = document.getElementById("prediction-container");
-    let editPredictionContainer = document.getElementById("edit-prediction-container");
+  function addExistingPoints() {
+    const cords = [
+      {
+        lat: 38.73137703560319,
+        lng: -9.144382789532516,
+        title: 'Loja de Cidadão do Saldanha'
+      },
+      {
+        lat: 38.750402670143856,
+        lng: -9.17123563186069,
+        title: 'Loja de Cidadão das Laranjeiras'
+      }
+    ];
 
-    predictionContainer.style.display = "none";
-    editPredictionContainer.style.display = "flex";
+    cords.forEach(cord => {
+      addNewNonDraggabePoint({ lat: cord.lat, lng: cord.lng }, cord.title, true);
+    });
   }
 
-  function showPredictionPage() {
-    let predictionContainer = document.getElementById("prediction-container");
-    let editPredictionContainer = document.getElementById("edit-prediction-container");
 
-    predictionContainer.style.display = "flex";
-    editPredictionContainer.style.display = "none";
+  pushToEditPage = () => {
+    const selectedLocation = _.head(exisingPoints);
+    const url = `/edit?lat=${selectedLocation.cordinates.lat}&lng=${selectedLocation.cordinates.lng}&title=${selectedLocation.title}`;
+    window.location.href = url;
   }
 </script>
 
