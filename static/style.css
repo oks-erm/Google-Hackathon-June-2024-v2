@@ -186,7 +186,7 @@ footer div {
 }
 
 #add-new-pins, .entries {
-    height: 350px !important;
+    height: 250px !important;
     overflow-y: scroll;
 }
 
