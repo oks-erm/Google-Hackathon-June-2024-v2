@@ -133,7 +133,7 @@ def edit():
 # this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return redirect(url_for('login'))
+    return redirect(url_for('login')) # for now no signing up
 
     if request.method == 'POST':
         login = request.form['username']

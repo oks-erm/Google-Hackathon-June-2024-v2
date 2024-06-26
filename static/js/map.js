@@ -3,11 +3,17 @@ let selectedPoint = null;
 let exisingPoints = [];
 let points = [];
 
+const FIXED_ICON = "https://cdn-icons-png.flaticon.com/512/602/602182.png";
+const MOBILE_ICON = "https://cdn-icons-png.flaticon.com/512/31/31238.png";
+
+const FIXED_COLOR = "#fff200";
+const MOBILE_COLOR = "#000000";
+
 const createNewImage = (type) => {
     const img = document.createElement("img");
     img.src = type === 'Fixo'
-        ? "https://cdn-icons-png.flaticon.com/512/602/602182.png"
-        : "https://cdn-icons-png.flaticon.com/512/31/31238.png";
+        ? FIXED_ICON
+        : MOBILE_ICON;
 
     img.style.width = "30px";
     img.style.height = "30px";
@@ -21,6 +27,39 @@ function removePointFromMap(id) {
     points[index].marker.setMap(null);
 }
 
+
+function getImageFromMap(existingPoint) {
+    let data = {
+        image: '',
+        links: []
+    };
+
+    let mapCenter = map.getCenter();
+    let zoomLevel = map.getZoom();
+
+    const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
+    const apiKey = "AIzaSyCNB7zNqVvSj_om_E2uiil2mNPb-XqqpJM";
+    const center = `${mapCenter.lat()},${mapCenter.lng()}`;
+
+    let mapMarkers = `markers=color:red|label:A|${existingPoint.lat},${existingPoint.lng}`
+    data['links'].push({
+        'A': `https://www.google.com/maps/search/?api=1&query=${existingPoint.lat},${existingPoint.lng}`
+    });
+
+    let possibleLabels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (const [index, point] of points.entries()) {
+        const color = point.type === 'Fixo' ? 'yellow' : 'black';
+        mapMarkers += `&markers=color:${color}|label:${possibleLabels[index]}|${point.cordinates.lat},${point.cordinates.lng}`;
+        data['links'].push({
+            [`${possibleLabels[index]}`]: `https://www.google.com/maps/search/?api=1&query=${point.cordinates.lat},${point.cordinates.lng}`,
+            type: point.type
+        });
+    }
+
+    const mapImage = `${baseUrl}?style=visibility:on&center=${center}&zoom=${zoomLevel}&size=400x400&maptype=roadmap&${mapMarkers}&key=${apiKey}`;
+    data['image'] = mapImage;
+    return data;
+}
 
 const insetPointInView = (type) => {
     // create a new pin
