@@ -35,7 +35,30 @@ const insetPointInView = (type) => {
     let deletePoint = document.createElement("button");
     deletePoint.innerText = "X";
     deletePoint.className = "delete-point";
+;
+    let from = document.createElement("input");
+    from.setAttribute("type", "month");
+    from.setAttribute("name", "from");
+    from.setAttribute("value", "2024-01");
+    from.classList.add("ww");
+    from.classList.add("p-2");
+    from.classList.add("mx-2");
+    from.classList.add("fs-6");
 
+    let to, typing;
+    typing = `${type}`;
+    if (typing == "Móvel")
+    {
+        to = document.createElement("input");
+        to.setAttribute("type", "month");
+        to.setAttribute("name", "to");
+        to.setAttribute("value", "2027-12");
+        to.classList.add("ww");
+        to.classList.add("p-2");
+        to.classList.add("mx-2");
+        to.classList.add("fs-6");
+    }
+    
     deletePoint.onclick = () => {
         // get the id of the pin
         let id = newPin.dataset.id;
@@ -49,6 +72,9 @@ const insetPointInView = (type) => {
     newPin.className = "new-pin";
     newPin.appendChild(createNewImage(type));
     newPin.appendChild(pinText);
+    newPin.appendChild(from);
+    if (typing == "Móvel")
+        newPin.appendChild(to);
     newPin.appendChild(deletePoint);
 
     let newPinesContainer = document.getElementById("add-new-pins");
