@@ -22,6 +22,8 @@ warnings.filterwarnings("ignore")
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
+CURRENT_AI_MSG = ""
+
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
 def get_current_time():
@@ -83,6 +85,7 @@ def run():
     for location in available_locations:
         p, msg = make_plots(location)
         plots.append(p)
+        CURRENT_AI_MSG = msg
         data_analysis.append(msg)
 
     cards_table = create_cards_table()
@@ -198,9 +201,8 @@ def save_report():
 
     if request.method == 'POST':
         body = request.get_json()
-
-        # cards_table = create_cards_table()
-        # print(cards_table)
+        body['cardsTable'] = create_cards_table()
+        body['msg'] = CURRENT_AI_MSG
         
         report = Report(created_at=datetime.now(), report=json.dumps(body), user=session.get("user_id"))
         db.session.add(report)
