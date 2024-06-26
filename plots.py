@@ -1,16 +1,21 @@
 from models import *
 import pandas as pd
 from google.cloud import bigquery as bq
-# import bigquery_storage as bq_storage
+from google.oauth2 import service_account
 import plotly.express as px
 import plotly.graph_objects as go
 from openai import OpenAI
+from dotenv import load_dotenv
+from config import creds_dict
 
-# BigQuerry parameters
+# Load environment variables
+load_dotenv()
+
+# BigQuery parameters
 project_id = 'sublime-lyceum-426907-r9'
 dataset_id = 'ama'
 
-# # Plotly graph design
+# Plotly graph design
 plot_bgcolor = 'white'
 xy_font_family = "Roboto"
 xy_font_color = "black"
@@ -23,6 +28,9 @@ line1_width = 3
 line2_color = 'purple'
 line2_width = line1_width
 boundary_color = 'black'
+
+
+credentials = service_account.Credentials.from_service_account_info(creds_dict)
 
 client = OpenAI()
 def respond_gpt(df_historical, df_predicted) -> str:
@@ -49,7 +57,7 @@ def respond_gpt(df_historical, df_predicted) -> str:
 
 
 def querry_bq(project, dataset, table):
-    client = bq.Client()
+    client = bq.Client(credentials=credentials, project=project)
     query = f"""
         SELECT * FROM `{project}.{dataset}.{table}`
         LIMIT 1200
@@ -88,37 +96,30 @@ def plot_atendimentos_per_month(location, df_historical = None, df_predicted = N
         )
         fig.add_vline(x=boundary, line_width=line1_width, line_dash="dash", line_color=boundary_color)
 
-    # # Print BigQuery data on terminal
-    # pd.set_option('display.max_rows', None)
-    # pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 1000)
-    # print(df_historical)
-    # print(df_predicted)
-
     fig.update_layout(
         xaxis_title='Mês',
         yaxis_title='Atendimentos',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
@@ -152,37 +153,30 @@ def plot_waiting_time_per_month(location, df_historical = None, df_predicted = N
         )
         fig.add_vline(x=boundary, line_width=line1_width, line_dash="dash", line_color=boundary_color)
 
-    # # Print BigQuery data on terminal
-    # pd.set_option('display.max_rows', None)
-    # pd.set_option('display.max_columns', None)
-    # pd.set_option('display.width', 1000)
-    # print(df_historical)
-    # print(df_predicted)
-
     fig.update_layout(
         xaxis_title='Mês',
         yaxis_title='Tempo médio de espera',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
@@ -223,25 +217,25 @@ def plot_procuras_per_month(location, df_historical = None, df_predicted = None)
         yaxis_title='Procuras',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
@@ -280,25 +274,25 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
         yaxis_title='Desistencias',
         font_family=xy_font_family,
         font_color=xy_font_color,
-		plot_bgcolor=plot_bgcolor,
-		xaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		),
-		yaxis=dict(
-			showline=True,
-			showgrid=True,
-			showticklabels=True,
-			linecolor=xy_line_color,
-			linewidth=2,
-			ticks='outside',
-			tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
-		)
+        plot_bgcolor=plot_bgcolor,
+        xaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        ),
+        yaxis=dict(
+            showline=True,
+            showgrid=True,
+            showticklabels=True,
+            linecolor=xy_line_color,
+            linewidth=2,
+            ticks='outside',
+            tickfont=dict(family=tick_font_family, size=tick_font_size, color=tick_font_color)
+        )
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html

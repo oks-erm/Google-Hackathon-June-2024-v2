@@ -19,6 +19,7 @@
     </title>
     {% endblock %}
 </head>
+
 <body>
     <div class="base m-0 p-0 d-flex flex-column">
         <div class="w-100 p-4 d-flex align-items-center justify-content-between" style="position: absolute">
@@ -29,24 +30,31 @@
                 {% if isAuthenticated %}
                 <form action="/profile" method="GET">
                     <div class="row p-2">
-                        <button class="col rounded-start fs-5 p-2 pl-0" type="submit">{{ user }}</button>
+                        <button class="auth_login col rounded-start pl-0" type="submit">{{ user }}</button>
                         <button class="col rounded-end p-2 pr-0 px-4" id="logged" type="submit"></button>
                     </div>
                 </form>
                 {% elif isLoginPage %}
                 {% else %}
                 <form action="/login" method="GET">
-                    <button class="rounded shadow fs-5 p-2" type="submit">Iniciar Sessão</button>
+                    <button class="auth_login rounded shadow" type="submit">Iniciar Sessão</button>
                 </form>
                 {% endif %}
             </div>
+
         </div>
 
         <!-- Loader -->
-        <div id="loader" class="spinner-border" role="status">
+        <!-- <div id="loader" class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
+        </div> -->
+        <div id="loader" role="status">
+            <span class="spinner-grow text-success" role="status">
+            </span>
+            <span class="spinner-grow text-danger" role="status">
+            </span>
         </div>
-
+        
         <!-- Page Content -->
         <div id="content" style="display: none;"  class="align-items-center justify-content-center my-auto fs-6">
             {% block content %}{% endblock %}
@@ -60,13 +68,13 @@
             });
         </script>
 
-        <footer class="pt-2 pb-3 w-100 mx-auto bord" style="position: absolute; bottom: 0;">
+        <footer class="pb-3 w-75 mx-auto">
             <div class="w-100 row px-5">
                 <div class="m-0 p-0 col">
                     <p class="m-0 p-0 w-100 fs-6 text-start">Google AI Hackathon</p>
                 </div>
                     <div class="m-0 p-0 col">
-                    <p class="m-0 p-0 w-100 fs-6 text-center">Pointer Situation</p>
+                    <p class="m-0 p-0 w-100 fs-6 text-center">POINTER SITUATION</p>
                 </div>
                     <div class="m-0 p-0 col">
                     <p class="m-0 p-0 w-100 fs-6 text-end">42 Lisboa</p>

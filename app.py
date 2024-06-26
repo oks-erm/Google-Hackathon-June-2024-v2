@@ -38,8 +38,10 @@ def hash_password(password):
 
 @app.route("/")
 def index():
-    user = session.get("username")
-    return render_template('index.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('index.html', 
+                           isLoginPage=False,
+                           isAuthenticated=session.get("isAuthenticated", False),
+                           user=session.get("username"))
 
 
 def create_cards_table():
@@ -75,7 +77,6 @@ def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
         return redirect(url_for('login'))
-    
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots = []
     data_analysis = []
@@ -83,6 +84,7 @@ def run():
         p, msg = make_plots(location)
         plots.append(p)
         data_analysis.append(msg)
+
     cards_table = create_cards_table()
 
     return render_template(
@@ -156,6 +158,9 @@ def predict():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # session["isAuthenticated"] = True
+    # return redirect(url_for('index'))
+
     if session.get("isAuthenticated", False):
         session['url'] = url_for('login')
         return redirect(url_for('index'))
@@ -185,14 +190,30 @@ def logout():
     session["isAuthenticated"] = False
     return redirect(url_for('index'))
 
+@app.route('/save-report', methods=['POST'])
+def save_report():
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('report')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        created_at = datetime.now()
+        body = request.get_json()
+        user = session['user_id']
+        
+        report = Report(created_at=created_at, report=json.dumps(body), user=user)
+        db.session.add(report)
+        db.session.commit()
+
+    return redirect(url_for('report'))
+
 
 @app.route("/profile")
 def profile():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('profile')
         return redirect(url_for('login'))
-    user = session.get("username")
-    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=user)
+    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
 
 
 @app.route('/report', methods=['GET', 'POST'])
@@ -200,34 +221,20 @@ def report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
         return redirect(url_for('login'))
-    response = requests.get('https://www.worldpop.org/rest/data/pop/pic')
 
-    if response.status_code == 200:
-        data = response.json()
+    reports = Report.query.all()
+    
 
-        # Select specific fields from the response
-        report_data = [
-            {
-                "id": item["id"],
-                "title": item["title"],
-                "popyear": item["popyear"],
-                "iso3": item["iso3"]
-            }
-            for item in data["data"]
-        ] if data["data"] else []
+    report_data = []
+    for report in reports:
+        user = Login.query.filter_by(id=report.user).first()
+        report_data.append({
+            'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
+            'report': report.report,
+            'user': user.login
+        })
 
-        return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
-    else:
-        return render_template('error.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), error="Failed to retrieve data"), response.status_code
-
-
-@app.route('/save-report', methods=['POST'])
-def save_report():
-    if not session.get("isAuthenticated", False):
-        session['url'] = url_for('report')
-        return redirect(url_for('login'))
-    if request.method == 'POST':
-        print(request.form)
+    return render_template('report.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), report_data=report_data)
 
 
 if __name__ == '__main__':

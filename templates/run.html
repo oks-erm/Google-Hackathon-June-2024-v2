@@ -90,7 +90,7 @@
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-dark px-3" data-dismiss="modal">Fechar</button>
             </div>
           </div>
         </div>
@@ -98,28 +98,36 @@
       {% endfor %}
       <div class="w-50 m-auto col p-0">
         <h3 class="p-0 m-0 text-center">
-          Adicionar pontos
+        Previsões
         </h3>
-        <div class="entries m-auto my-1 px-5 py-1 w-100">
-          <div class="item w-100 title mx-auto py-0 w-100">
+        <div class="entries m-auto my-1 px-3 py-1 w-100">
+          <div class="sort item w-100 title mx-auto py-0 w-100">
             <div class="w-100 title-cont py-0 d-flex flex-row align-items-center justify-content-between">
               <h6 class="py-0 text-left">Lisboa</h6>
               <h6 class="py-0 text-left">Ordem: Decrescente, Necessidade</h6> 
               <h6 class="py-0 text-right">2024-2027</h6>
             </div>
           </div>
+          <!-- Sort field -->
+          <div class="sort text-center my-2">
+            <label for="sortField">Sort by: </label>
+            <select id="sortField" onchange="sortCards()">
+              <option value="necessity_metric">Necessity Metric</option>
+              <option value="designacao">Designation</option>
+            </select>
+          </div>
           <!-- Entries for each location -->
           {% for card in cards_data%}
-          <div class="item">
+          <div class="item py-3">
             <div class="d-flex flex-row">
               <div class="d-block p-0 mx-3 rounded-circle color-mark"></div>
             </div>
             <div class="row w-75 m-auto pl-2">
-              <div class="col fs-6">
-                {{ card['designacao'] }}
+              <div class="col-7">
+                <span>{{ card['designacao'] }}</span>
               </div>
-              <div class="col fs-6">
-                <span>Índice de Necessidade: {{ card['necessity_metric'] }}</span>
+              <div class="col-5">
+                <span>Necessidade: {{ card['necessity_metric'] }}%</span>
               </div>
             </div>
             <!-- Modal Button  -->
@@ -131,7 +139,7 @@
         </div>
         <div class="w-100">
           <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1"  onclick="showEditPredictionPage()">Adicionar pontos</button>
+            <button id="add_button" type="button" class="rounded py-2 mx-1"  onclick="showEditPredictionPage()">Adicionar pontos</button>
           </div>
         </div>
       </div>
@@ -142,21 +150,25 @@
 <div id="edit-prediction-container" class="runs w-100 m-auto">
   <div class="w-100 m-auto p-0">
     <div class="w-100 row m-auto p-0">
-      <div class="w-50 col p-0">
-        <div id="map" class="border-0 m-auto" style="width: 600px"></div>
+
+      <div id="map_wrapper" class="w-50 p-0">
+        <div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
+
       </div>
 
       <div class="w-50 m-auto col p-0">
         <h3 class="p-0 m-0 text-center">
           Adicionar pontos
         </h3>
+          <div class="add_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
+            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Ponto fixo</button>
+            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Ponto móvel</button>
+          </div>
 
         <div id="add-new-pins" class="mx-auto my-1 px-5 py-1"></div>
 
         <div class="w-100">
-          <div class="d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Fixo')">Adicionar ponto fixo</button>
-            <button type="button" class="rounded py-2 mx-1" onclick="addNewDraggablePoint('Móvel')">Adicionar ponto móvel</button>
+          <div class="nav_buttons d-flex py-3 flex-row d-flex flex-row justify-content-center mx-auto">
             <button type="button" class="rounded py-2 mx-1" class="" onclick="showPredictionPage()">Voltar</button>
             <button type="button" class="rounded py-2 mx-1" onclick="saveReport()">Guardar</button>
           </div>
@@ -166,62 +178,23 @@
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap" async defer></script>
 <script>
-  /* map stuff */
-  let map;
-
-  async function addNewDraggablePoint(type) {
-    // create a new pin
-    let newPin = document.createElement("div");
-    newPin.className = "new-pin";
-    newPin.innerText = type;
-
-    let newPinesContainer = document.getElementById("add-new-pins");
-    newPinesContainer.appendChild(newPin);
-
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    const randomNess = Math.random() * 0.001;
-    const draggableMarker = new AdvancedMarkerElement({
-      map,
-      position: { lat: 38.73067129535301, lng: -9.129937518620784 + randomNess },
-      gmpDraggable: true,
-      title: type,
-    });
-
-    draggableMarker.addListener("dragend", (event) => {
-      const position = draggableMarker.position;
-
-      infoWindow.close();
-      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
-      infoWindow.open(draggableMarker.map, draggableMarker);
-    });
-  }
-
-  async function initMap() {
-    // Request needed libraries.
-    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-    map = new Map(document.getElementById("map"), {
-      center: { lat: 38.73067129535301, lng: -9.129937518620784 },
-      zoom: 16,
-      mapId: "4504f8b37365c3d0",
-    });
-    const infoWindow = new InfoWindow();
-    const draggableMarker = new AdvancedMarkerElement({
-      map,
-      position: { lat: 38.73067129535301, lng: -9.129937518620784 },
-      gmpDraggable: true,
-      title: "This marker is draggable.",
-    });
-
-    draggableMarker.addListener("dragend", (event) => {
-      const position = draggableMarker.position;
-
-      infoWindow.close();
-      infoWindow.setContent(`Pin dropped at: ${position.lat}, ${position.lng}`);
-      infoWindow.open(draggableMarker.map, draggableMarker);
-    });
+  function saveReport() {
+    // do a post request to save the report
+    console.log("saveReport", points);
+    // send the data to the server
+    fetch('/save-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        points: points,
+        // add more needed data here
+      }),
+    })
   }
 </script>
 
@@ -231,7 +204,6 @@
   });
 
   function showEditPredictionPage() {
-    console.log("showEditPredictionPage");
     let predictionContainer = document.getElementById("prediction-container");
     let editPredictionContainer = document.getElementById("edit-prediction-container");
 
@@ -245,11 +217,6 @@
 
     predictionContainer.style.display = "flex";
     editPredictionContainer.style.display = "none";
-  }
-
-  function saveReport() {
-    // do a post request to save the report
-    console.log("saveReport");
   }
 </script>
 
