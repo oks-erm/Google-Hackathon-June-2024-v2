@@ -279,7 +279,6 @@ run
 #start_button:hover,
 .auth_login:hover,
 #report_button:hover,
-#add_button:hover,
 #login_button:hover,
 .item>button:hover
 {
@@ -295,10 +294,31 @@ run
     font-size: 1.05rem !important;
 }
 
-#add_button {
+.add_button_class {
     padding: 12px 40px !important;
 }
 
+.add_button_class:hover {
+    background-color: #1871ff !important;
+}
+
+.disabled-btn {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.disabled-btn:hover {
+    background-color: #d3d3d3 !important;
+    color: #a9a9a9 !important;
+}
+
+.specific-location {
+    cursor: pointer;
+}
+
+.selected-location {
+    outline: 2px solid #1871ff !important;
+}
 #map_wrapper {
     display: flex;
 }
@@ -354,4 +374,65 @@ run
 
 #auth-form>form>input.auth_login.rounded.shadow.mt-2 {
     opacity: 1;
+}
+
+.modal-body {
+    padding: 5% !important;
+}
+
+#ai-insight {
+    padding: 1.7rem;
+    border-top: 1px solid #ededed;
+}
+
+#predicted-data0>div>div>div.d-flex.flex-column.justify-content-around>div>h3 {
+    text-align: center;
+    padding: 15px;
+    font-family: 'Poppins';
+}
+
+#info0>div>div>ul>li {
+    padding: 10px;
+}
+
+.modal-title {
+    padding: 0.3rem 1.5rem !important;
+    font-size: 18px;
+}
+
+#info0>div>div>h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-family: 'Poppins';
+}
+
+#modal-0>div>div>div.modal-footer>button {
+    background-color: var(--dark) !important;
+}
+
+strong {
+    font-weight: 600 !important;
+}
+
+.modal-header {
+    border-bottom: none !important;
+    padding: 10px 16px 8px 16px !important;
+}
+
+.nav-link {
+    padding: 10px 40px !important;
+}
+
+.subtext {
+    padding: 20 20 20 5px !important;
+}
+
+/* SIZE OF MODAL */
+.custom-modal {
+    max-width: 90% !important;
+}
+
+.ww
+{
+    width: 30%;
 }

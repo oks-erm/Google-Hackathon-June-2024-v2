@@ -40,14 +40,14 @@ def respond_gpt(df_historical, df_predicted) -> str:
             messages=[
                 {
                     "role": "system",
-                    "content": "Você é um analista de dados experiente. A sua função é fornecer insights de grandes dataframes de forma coesa e coerente. Responda em um parágrafo destacando as tendências mais importantes e dando recomendações sobre a interpretação dos dados"
+                    "content": "Você é um analista de dados experiente. Sua função é fornecer insights de dataframes de forma coesa e coerente. Responder em alguns breves 'pontos' destacando as tendências mais importantes e dando recomendações sobre a interpretação dos dados. Não diga coisas genéricas. Não utilize nomes de colunas de uma tabela de dados em inglês. Produza a resposta de uma forma que possa ser exibida na página html com um layout adequado usando <ul> e <li> ."
                 },
                 {
                     "role": "user",
                     "content": f"Aqui está um conjunto de dados projetados: {df_predicted}, {df_predicted}, incluindo a métrica de necessidade que derivámos para ajudar o utilizador a entender estes dados. Os dados estão relacionados com atendimentos e tempos de espera de vários escritórios de uma entidade governamental e as suas recomendações têm como objetivo ajudar a abrir mais pontos de contacto, se necessário. Forneça insights e recomendações com base nesses dados. A resposta deve ser específica e direta evite frases genéricas. Responda em português de Portugal"
                 }
             ],
-            max_tokens=500,
+            max_tokens=600,
             temperature=0.4,
         )
         response = (response.choices[0].message.content)
@@ -298,13 +298,6 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
     return graph_html
 
 
-# Plots to implement
-
-# def plot_necessity_metric(df):
-# def plot_waiting_time_per_month(df):
-# def plot_desistencias_per_month(df):
-# def plot_(df):
-
 def filter_historical_data(df_historical, location):
     df_historical['Type'] = 'Historical'
     df_historical['Data'] = pd.to_datetime(df_historical['Data'])
@@ -331,18 +324,44 @@ def filter_predicted_data(df_predicted, location):
     df_predicted['Meses'] = df_predicted['Meses'].dt.to_timestamp()
     return df_predicted
 
+def get_data_per_year(df):
+    df['Ano'] = df['Meses'].dt.to_period('Y')
+    df = df.groupby('Ano').agg({'Procuras': 'sum',
+        'Atendimentos': 'sum',
+        'Desistencias': 'sum',
+        'Tempo_medio_de_espera_diario': 'mean',
+        'Necessity_Metric': 'max'}).reset_index()
+    df['Procuras'] = df['Procuras'].astype(int)
+    df['Atendimentos'] = df['Atendimentos'].astype(int)
+    df['Desistencias'] = df['Desistencias'].astype(int)
+    df['Atendimentos'] = df['Atendimentos'].astype(int)
+    df['Tempo_medio_de_espera_diario'] = df['Tempo_medio_de_espera_diario'].astype(int)
+    df['Necessity_Metric'] = df['Necessity_Metric'].round(2)
+    df['Index'] = df.index
+
+    return df.to_dict(orient='list')
+
 def make_plots(location):
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
 
     df_historical = filter_historical_data(df_historical, location)
     df_predicted = filter_predicted_data(df_predicted, location)
-    plot_list = [
+    plot_merged_list = [
         plot_atendimentos_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_waiting_time_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_procuras_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
         plot_desistencias_per_month(location, df_historical=df_historical, df_predicted=df_predicted),
 	]
-    response = respond_gpt(df_historical.to_string(), df_predicted.to_string())
+    plot_historical_list = [
+        plot_atendimentos_per_month(location, df_historical=df_historical),
+        plot_waiting_time_per_month(location, df_historical=df_historical),
+        plot_procuras_per_month(location, df_historical=df_historical),
+        plot_desistencias_per_month(location, df_historical=df_historical),
+    ]
+    ai_insights = respond_gpt(df_historical.to_string(), df_predicted.to_string())
+    
+    # Dictionary containing columns and data, grouped by year
+    data_by_year = get_data_per_year(df_predicted)
 
-    return plot_list, response
+    return plot_merged_list, plot_historical_list, data_by_year, ai_insights
