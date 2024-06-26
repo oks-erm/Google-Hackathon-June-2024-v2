@@ -10,18 +10,18 @@
         Defina o próximo ponto de atendimento ao cidadão com IA!<br>
         Selecione a região e periodo de previsão para começar
     </p>
-    <div class="p-0 pt-1 pb-3 mt-4 mb-2 w-50 row mx-auto btn-cont">
-        <div class="dropdown-center mx-auto col-sm-8 offset-sm-2">
-            <button class="brder dropdown-toggle text-dark py-2 bg-white w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="p-0 pb-2 mt-4 mb-2 w-50 row mx-auto btn-cont">
+        <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6 offset-sm-2">
+            <button class="brder dropdown-toggle text-dark py-2 bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             Lisboa
             </button>
             <ul class="dropdown-menu w-100">
             <li class="dropdown-item">Lisboa</li>
             </ul>
         </div>
-        <div class="dropdown-center col mx-auto col-sm-4">
-            <button class="brder dropdown-toggle text-dark py-2 bg-white w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Previsão
+        <div class="dropdown_wrap dropdown-center col mx-auto col-sm-6">
+            <button class="brder dropdown-toggle text-dark py-2 bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Periodo
             </button>
             <ul class="dropdown-menu w-100">
                 <li class="dropdown-item">1 ano</li>
@@ -33,7 +33,7 @@
         </div>
     </div>
     <form class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
-        <button id="start_button" class="index-button shadow fs-3 rounded" type="submit">Iniciar</button>
+        <button id="start_button" class="btn index-button shadow fs-3 rounded" type="submit">Iniciar</button>
     </form>
 </div>
 {% endblock %}
