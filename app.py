@@ -19,7 +19,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './google_credentials.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-c71832baf239.json'
 
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
