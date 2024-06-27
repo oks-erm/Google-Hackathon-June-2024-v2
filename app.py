@@ -234,23 +234,21 @@ def save_report():
 
     if request.method == 'POST':
         try:
-            # location = 'Loja de Cidadão Saldanha'
-            location = 'Loja de Cidadão Laranjeiras'
-
             body = request.get_json()
+            location = 'Loja de Cidadão Laranjeiras'
             
             # Retrieve and deserialize the stored JSON strings from the session
             cards_table = json.loads(session.get('cards_table', '[]'))
             data_analysis = json.loads(session.get('data_analysis', '{}'))
             
+
             # Filter cards_table for the specific location
-            filtered_cards_table = [
-                card for card in cards_table if card.get('designacao') == location
-            ]
+            filtered_cards_table = [card for card in cards_table if card.get('designacao') == location][0]
 
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table
             body['AI_insight'] = data_analysis[location]
+
 
             # Create the Report object
             report = Report(
@@ -260,7 +258,7 @@ def save_report():
                 cards_table=json.dumps(filtered_cards_table),
                 AI_insight=data_analysis[location]
             )
-            
+
             db.session.add(report)
             db.session.commit()
 

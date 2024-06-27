@@ -13,14 +13,14 @@ Relatórios
             <img src="{{ url_for('static', filename='assets/testMap.png') }}" alt="Test Map" class="w-100 h-auto" id="reportImage">
         </div>
         <div class="w-75 p-3">
-            <div class="p-1"><strong>Location:</strong> {{ item.cards_table[0]['designacao'] }}</div>
+            <div class="p-1"><strong>Location:</strong> {{ item.cards_table['designacao'] }}</div>
             <div class="p-1"><strong>Created at:</strong> {{ item.created_at }}</div>
             <div class="p-1"><strong>Created by:</strong> {{ item.user }}</div>
         </div>
         <button class="rounded report-btn p-2 fs-6" data-created_at="{{ item.created_at }}" 
-                                                    data-location="{{ item.cards_table[0]['designacao'] }}"
+                                                    data-location="{{ item.cards_table['designacao'] }}"
                                                     data-AI="{{ item.AI_insight }}" 
-                                                    data-metric="{{ item.cards_table[0]['necessity_metric'] }}" 
+                                                    data-metric="{{ item.cards_table['necessity_metric'] }}" 
                                                     data-email="{{ item.email }}" ">Descarregar</button>
     </div>
     {% endfor %}
@@ -30,103 +30,144 @@ Relatórios
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    var buttons = document.querySelectorAll('.report-btn');
+        var buttons = document.querySelectorAll('.report-btn');
 
-    buttons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const created_at = this.getAttribute('data-created_at');
-            const location = this.getAttribute('data-location');
-            const AI = this.getAttribute('data-AI');
-            const metric = this.getAttribute('data-metric');
-            const email = this.getAttribute('data-email');
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const created_at = this.getAttribute('data-created_at');
+                const location = this.getAttribute('data-location');
+                const AI = this.getAttribute('data-AI');
+                const metric = this.getAttribute('data-metric');
+                const email = this.getAttribute('data-email');
 
-            const reportData = {
-                created_at: created_at,
-                location: location,
-                AI_insights: AI,
-                metric: metric,
-                email: email,
-            };
+                const reportData = {
+                    created_at: created_at,
+                    location: location,
+                    AI_insights: AI,
+                    metric: metric,
+                    email: email,
+                };
 
-            const imgElement = document.getElementById('reportImage');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+                const imgElement = document.getElementById('reportImage');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
 
-            canvas.width = imgElement.naturalWidth;
-            canvas.height = imgElement.naturalHeight;
-            ctx.drawImage(imgElement, 0, 0);
+                canvas.width = imgElement.naturalWidth;
+                canvas.height = imgElement.naturalHeight;
+                ctx.drawImage(imgElement, 0, 0);
 
-            const imageData = canvas.toDataURL('image/png');
-            reportData.imageData = imageData;
+                const imageData = canvas.toDataURL('image/png');
+                reportData.imageData = imageData;
 
-            createAndDownloadPDF(reportData);
+                createAndDownloadPDF(reportData);
+            });
         });
     });
-});
 
-function createAndDownloadPDF(reportData) {
-    const docDefinition = {
-        content: [
-            {
-                columns: [
-                    { text: `${reportData.location}`, style: 'subheader', width: 'auto', alignment: 'right' },
-                    { width: '*', text: '' },
-                    { text: 'RAJH PHUYAL, PUT YOUR SHIT TIME HERE', style: 'subheader', width: 'auto' }
-                ]
-            },
-            { text: 'Link A', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
-            { text: 'Link B', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
-            { text: 'Link C', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
-            {
-                image: reportData.imageData,
-                width: 300,
-                alignment: 'center',
-                margin: [0, 20, 0, 20]
-            },
-            { text: `AI Insights: ${reportData.AI_insights}`, style: 'subheader', alignment: 'left' },
-            { text: `Necessity Metric: ${reportData.metric}`, style: 'subheader', alignment: 'center' },
-            {
-                canvas: [
-                    { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }
-                ],
-                margin: [0, 20, 0, 20]
-            },
-            {
-                columns: [
-                    { width: '*', text: '' },
-                    {
-                        stack: [
-                            { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
-                            { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' }
-                        ],
-                        width: 'auto'
-                    },
-                    { width: '*', text: '' }
-                ]
+    function createAndDownloadPDF(reportData) {
+        // Function to convert AI Insights from HTML to text and split into main and indented parts
+        function splitAIInsights(insightsHtml) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = insightsHtml;
+            const insightsText = tempDiv.textContent || tempDiv.innerText || '';
+
+            const lines = insightsText.split('\n').filter(line => line.trim() !== '');
+            const index = lines.findIndex(line => line.includes('Recomendações:'));
+            if (index === -1) {
+                return { mainContent: lines, indentedContent: [] };
             }
-        ],
-        styles: {
-            header: {
-                fontSize: 22,
-                bold: true,
-                margin: [0, 0, 0, 10]
-            },
-            subheader: {
-                fontSize: 14,
-                margin: [0, 10, 0, 10]
-            },
-            link: {
-                fontSize: 14,
-                color: 'blue',
-                decoration: 'underline',
-                margin: [10, 0, 10, 0]
-            }
+            const mainContent = lines.slice(0, index + 1);
+            const indentedContent = lines.slice(index + 1);
+
+            // Make text before ':' bold
+            const formattedMainContent = mainContent.map(line => {
+                const colonIndex = line.indexOf(':');
+                if (colonIndex !== -1) {
+                    const beforeColon = line.substring(0, colonIndex + 1);
+                    const afterColon = line.substring(colonIndex + 1).trim();
+                    return {
+                        text: [
+                            { text: beforeColon, bold: true },
+                            ` ${afterColon}`
+                        ]
+                    };
+                }
+                return { text: line };
+            });
+
+            return { mainContent: formattedMainContent, indentedContent };
         }
-    };
 
-    pdfMake.createPdf(docDefinition).download('report.pdf');
-}
+        const { mainContent, indentedContent } = splitAIInsights(reportData.AI_insights);
 
+        const docDefinition = {
+            content: [
+                {
+                    columns: [
+                        { text: 'Time: RAJH PHUYAL, PUT YOUR SHIT HERE', style: 'subheader', width: 'auto' },
+                        { width: '*', text: '' },
+                        { text: `Location: ${reportData.location}`, style: 'subheader', width: 'auto', alignment: 'right' }
+                    ]
+                },
+                { text: 'Link A', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
+                { text: 'Link B', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
+                { text: 'Link C', link: 'https://profile.intra.42.fr/users/jalves-c', style: 'link' },
+                {
+                    image: reportData.imageData,
+                    width: 300,
+                    alignment: 'center',
+                    margin: [0, 20, 0, 20]
+                },
+                {
+                    text: 'AI Insights:',
+                    style: 'subheader',
+                    alignment: 'right'
+                },
+                ...mainContent,
+                {
+                    ul: indentedContent.map(line => ({ text: line })),
+                    margin: [20, 0, 0, 0]
+                },
+                {
+                    canvas: [
+                        { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }
+                    ],
+                    margin: [0, 20, 0, 20]
+                },
+                {
+                    columns: [
+                        { width: '*', text: '' },
+                        {
+                            stack: [
+                                { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
+                                { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' }
+                            ],
+                            width: 'auto'
+                        },
+                        { width: '*', text: '' }
+                    ]
+                }
+            ],
+            styles: {
+                header: {
+                    fontSize: 22,
+                    bold: true,
+                    margin: [0, 0, 0, 10]
+                },
+                subheader: {
+                    fontSize: 14,
+                    margin: [0, 10, 0, 10]
+                },
+                link: {
+                    fontSize: 14,
+                    color: 'blue',
+                    decoration: 'underline',
+                    margin: [10, 0, 10, 0]
+                }
+            }
+        };
 
+        pdfMake.createPdf(docDefinition).download('report.pdf');
+    }
 </script>
 {% endblock %}
