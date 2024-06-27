@@ -19,7 +19,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-353181f6f35f.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-c71832baf239.json'
 
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
@@ -250,7 +250,7 @@ def save_report():
             data_analysis = CACHE.get('data_analysis', lambda: {})
 
             # Filter cards_table for the specific location
-            filtered_cards_table = next([card for card in cards_table if card.get('designacao') == location], None)
+            filtered_cards_table = next((card for card in cards_table if card.get('designacao') == location), None)
 
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table

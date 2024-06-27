@@ -146,7 +146,7 @@ async function addNewDraggablePoint(selectedLocation, type) {
 
     const pointId = insetPointInView(type);
 
-    const randomSalt = Math.random() * 0.001;
+    const randomSalt = Math.random() * 0.003;
     const draggableMarker = new AdvancedMarkerElement({
         map,
         position: {

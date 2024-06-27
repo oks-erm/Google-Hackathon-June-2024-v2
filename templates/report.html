@@ -10,7 +10,7 @@ Relatórios
     {% for item in report_data %}
     <div class="rounded report-container d-flex align-items-center justify-content-between">
         <div class="image-container p-1">
-            <img src="../static/assets/testMap.png" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
+            <img src="{{ item.report.mapData.image }}" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
         </div>
         <div class="w-75 p-3">
             <div class="p-1"><strong>Location:</strong> {{ item.cards_table['designacao'] }}</div>
