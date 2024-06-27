@@ -6,8 +6,8 @@ let points = [];
 const FIXED_ICON = "https://cdn-icons-png.flaticon.com/512/602/602182.png";
 const MOBILE_ICON = "https://cdn-icons-png.flaticon.com/512/31/31238.png";
 
-const FIXED_COLOR = "#fff200";
-const MOBILE_COLOR = "#000000";
+const FIXED_COLOR = "0xFCBA03";
+const MOBILE_COLOR = "0x000000";
 
 const createNewImage = (type) => {
     const img = document.createElement("img");
@@ -43,7 +43,8 @@ function getImageFromMap(existingPoint) {
 
     let mapMarkers = `markers=color:red|label:A|${existingPoint.lat},${existingPoint.lng}`
     data['links'].push({
-        'A': `https://www.google.com/maps/search/?api=1&query=${existingPoint.lat},${existingPoint.lng}`
+        'A': `https://www.google.com/maps/search/?api=1&query=${existingPoint.lat},${existingPoint.lng}`,
+        type: 'Ponto selecionado'
     });
 
     let possibleLabels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';

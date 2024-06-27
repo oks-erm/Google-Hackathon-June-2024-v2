@@ -87,6 +87,8 @@ Edit Prediction
                             &lng=${selectedLocation.lng}
                             &location=${additionalParams.location}
                             &period=${additionalParams.period}`;
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("content").style.display = "none";
         window.location.href = fullUrl;
     }
 

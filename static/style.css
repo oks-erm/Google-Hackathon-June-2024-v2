@@ -161,6 +161,7 @@ footer div {
 .delete-point {
     margin-left: auto;
     cursor: pointer;
+    padding: 0px 10px;
     border-radius: 8px;
 }
 
