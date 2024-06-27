@@ -353,6 +353,7 @@ def get_data_per_year(df):
     return df.to_dict(orient='list')
 
 def make_plots(location):
+    print('Making plots...')
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
 

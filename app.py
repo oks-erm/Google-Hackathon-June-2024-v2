@@ -10,6 +10,7 @@ from flask import (
     flash,
     jsonify
 )
+from cache import Cache
 import pandas as pd
 import numpy as np
 import json
@@ -23,6 +24,9 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-35318
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
+
+CACHE = Cache()
+
 
 def get_current_time():
     from datetime import datetime as dt
@@ -80,11 +84,11 @@ def run():
         return redirect(url_for('login'))
 
     # # Period for prediction
-    # period = request.args.get('period')
-    # length_of_prediction = period.split()[0]
-    # print("--------------------------------------------------------")
-    # print(f"YEARS: {length_of_prediction}")
-    # print("--------------------------------------------------------")
+    period = request.args.get('period')
+    if not period:
+        period = '1 year'
+
+    length_of_prediction = period.split()[0]
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots_merged = []
@@ -92,15 +96,17 @@ def run():
     data_by_year = []
     data_analysis = {}
     for location in available_locations:
-        pm, ph, dby, msg = make_plots(location)
+        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
+        if not pm:
+            pm, ph, dby, msg = make_plots(location)
+
         plots_merged.append(pm)
         plots_historic.append(ph)
         data_by_year.append(dby)
         data_analysis[location] = msg
 
-    cards_table = create_cards_table()
-    session['cards_table'] = json.dumps(cards_table)
-    session['data_analysis'] = json.dumps(data_analysis)
+    cards_table = CACHE.get('cards_table', create_cards_table)
+    CACHE.set('data_analysis', data_analysis)
 
     return render_template(
         'run.html',
@@ -192,13 +198,13 @@ def predict():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # session["isAuthenticated"] = True
-    # return redirect(url_for('index'))
-
     if session.get("isAuthenticated", False):
         session['url'] = url_for('login')
         return redirect(url_for('index'))
+
     if request.method == 'POST':
+        CACHE.clear()
+
         username = request.form['username']
         password = request.form['password']
 
@@ -221,10 +227,14 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
+    CACHE.clear()
+
+    session.pop("user_id", None)
+    session.pop("username", None)
     session["isAuthenticated"] = False
     return redirect(url_for('index'))
 
-@app.route('/save-report', methods=['POST'])
+
 @app.route('/save-report', methods=['POST'])
 def save_report():
     if not session.get("isAuthenticated", False):
@@ -236,10 +246,8 @@ def save_report():
             body = request.get_json()
             location = 'Loja de Cidadão Laranjeiras'
 
-            # Retrieve and deserialize the stored JSON strings from the session
-            cards_table = json.loads(session.get('cards_table', '[]'))
-            data_analysis = json.loads(session.get('data_analysis', '{}'))
-
+            cards_table = CACHE.get('cards_table', create_cards_table)
+            data_analysis = CACHE.get('data_analysis', lambda: {})
 
             # Filter cards_table for the specific location
             filtered_cards_table = [card for card in cards_table if card.get('designacao') == location][0]
@@ -247,7 +255,6 @@ def save_report():
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table
             body['AI_insight'] = data_analysis[location]
-
 
             # Create the Report object
             report = Report(
