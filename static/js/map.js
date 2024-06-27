@@ -38,7 +38,6 @@ function getImageFromMap(existingPoint) {
     let zoomLevel = map.getZoom();
 
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
-    const apiKey = "AIzaSyCNB7zNqVvSj_om_E2uiil2mNPb-XqqpJM";
     const center = `${mapCenter.lat()},${mapCenter.lng()}`;
 
     let mapMarkers = `markers=color:red|label:A|${existingPoint.lat},${existingPoint.lng}`
@@ -57,7 +56,7 @@ function getImageFromMap(existingPoint) {
         });
     }
 
-    const mapImage = `${baseUrl}?style=visibility:on&center=${center}&zoom=${zoomLevel}&size=400x400&maptype=roadmap&${mapMarkers}&key=${apiKey}`;
+    const mapImage = `${baseUrl}?style=visibility:on&center=${center}&zoom=${zoomLevel}&size=400x400&maptype=roadmap&${mapMarkers}&key=${mapsApiKey}`;
     data['image'] = mapImage;
     return data;
 }

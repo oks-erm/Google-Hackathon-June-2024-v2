@@ -244,13 +244,13 @@ def save_report():
     if request.method == 'POST':
         try:
             body = request.get_json()
-            location = 'Loja de Cidadão Laranjeiras'
+            location = body.get('location')
 
             cards_table = CACHE.get('cards_table', create_cards_table)
             data_analysis = CACHE.get('data_analysis', lambda: {})
 
             # Filter cards_table for the specific location
-            filtered_cards_table = [card for card in cards_table if card.get('designacao') == location][0]
+            filtered_cards_table = next([card for card in cards_table if card.get('designacao') == location])
 
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table
