@@ -161,6 +161,7 @@ footer div {
 .delete-point {
     margin-left: auto;
     cursor: pointer;
+    padding: 0px 10px;
     border-radius: 8px;
 }
 
@@ -429,7 +430,7 @@ strong {
 
 /* SIZE OF MODAL */
 .custom-modal {
-    max-width: 90% !important;
+    max-width: 70% !important;
 }
 
 .ww

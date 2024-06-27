@@ -6,8 +6,8 @@ let points = [];
 const FIXED_ICON = "https://cdn-icons-png.flaticon.com/512/602/602182.png";
 const MOBILE_ICON = "https://cdn-icons-png.flaticon.com/512/31/31238.png";
 
-const FIXED_COLOR = "#fff200";
-const MOBILE_COLOR = "#000000";
+const FIXED_COLOR = "0xFCBA03";
+const MOBILE_COLOR = "0x000000";
 
 const createNewImage = (type) => {
     const img = document.createElement("img");
@@ -38,17 +38,17 @@ function getImageFromMap(existingPoint) {
     let zoomLevel = map.getZoom();
 
     const baseUrl = "https://maps.googleapis.com/maps/api/staticmap";
-    const apiKey = "AIzaSyCNB7zNqVvSj_om_E2uiil2mNPb-XqqpJM";
     const center = `${mapCenter.lat()},${mapCenter.lng()}`;
 
     let mapMarkers = `markers=color:red|label:A|${existingPoint.lat},${existingPoint.lng}`
     data['links'].push({
-        'A': `https://www.google.com/maps/search/?api=1&query=${existingPoint.lat},${existingPoint.lng}`
+        'A': `https://www.google.com/maps/search/?api=1&query=${existingPoint.lat},${existingPoint.lng}`,
+        type: 'Ponto selecionado'
     });
 
-    let possibleLabels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let possibleLabels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (const [index, point] of points.entries()) {
-        const color = point.type === 'Fixo' ? 'yellow' : 'black';
+        const color = point.type === 'Fixo' ? FIXED_COLOR : MOBILE_COLOR;
         mapMarkers += `&markers=color:${color}|label:${possibleLabels[index]}|${point.cordinates.lat},${point.cordinates.lng}`;
         data['links'].push({
             [`${possibleLabels[index]}`]: `https://www.google.com/maps/search/?api=1&query=${point.cordinates.lat},${point.cordinates.lng}`,
@@ -56,7 +56,7 @@ function getImageFromMap(existingPoint) {
         });
     }
 
-    const mapImage = `${baseUrl}?style=visibility:on&center=${center}&zoom=${zoomLevel}&size=400x400&maptype=roadmap&${mapMarkers}&key=${apiKey}`;
+    const mapImage = `${baseUrl}?style=visibility:on&center=${center}&zoom=${zoomLevel}&size=400x400&maptype=roadmap&${mapMarkers}&key=${mapsApiKey}`;
     data['image'] = mapImage;
     return data;
 }
@@ -74,15 +74,24 @@ const insetPointInView = (type) => {
     let deletePoint = document.createElement("button");
     deletePoint.innerText = "X";
     deletePoint.className = "delete-point";
-;
+
     let from = document.createElement("input");
     from.setAttribute("type", "month");
     from.setAttribute("name", "from");
     from.setAttribute("value", "2024-01");
     from.classList.add("ww");
     from.classList.add("p-2");
-    from.classList.add("mx-2");
+    from.classList.add(type == 'Fixo' ? "ml-5" : "mx-2");
     from.classList.add("fs-6");
+
+    from.addEventListener("change", () => {
+        // get the id of the pin
+        let id = newPin.dataset.id;
+
+        // remove the point from the array
+        let point = _.head(points.filter((point) => point.id === id));
+        point['from'] = from.value;
+    });
 
     let to, typing;
     typing = `${type}`;
@@ -96,8 +105,17 @@ const insetPointInView = (type) => {
         to.classList.add("p-2");
         to.classList.add("mx-2");
         to.classList.add("fs-6");
+
+        to.addEventListener("change", () => {
+            // get the id of the pin
+            let id = newPin.dataset.id;
+
+            // remove the point from the array
+            let point = _.head(points.filter((point) => point.id === id));
+            point['to'] = to.value;
+        });
     }
-    
+
     deletePoint.onclick = () => {
         // get the id of the pin
         let id = newPin.dataset.id;

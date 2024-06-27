@@ -50,6 +50,7 @@ Edit Prediction
 <script>
     let selectedLocation = null;
     let additionalParams = null;
+    let mapsApiKey = '{{ google_map_api_key }}';
 
     document.addEventListener('DOMContentLoaded', (event) => {
         function getQueryParam(param) {
@@ -87,11 +88,15 @@ Edit Prediction
                             &lng=${selectedLocation.lng}
                             &location=${additionalParams.location}
                             &period=${additionalParams.period}`;
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("content").style.display = "none";
         window.location.href = fullUrl;
     }
 
     function saveReport() {
         // send the data to the server
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("content").style.display = "none";
         fetch('/save-report', {
             method: 'POST',
             headers: {
@@ -103,18 +108,22 @@ Edit Prediction
                         lat: point.cordinates.lat,
                         lng: point.cordinates.lng,
                         title: point.title,
-                        type: point.type
+                        type: point.type,
+                        from: point.from,
+                        to: point?.to
                     }
                 }),
-                location: selectedLocation.title,
-                district: additionalParams.location,
-                period: additionalParams.period,
+                location: selectedLocation.title.trim(),
+                district: additionalParams.location.trim(),
+                period: additionalParams.period.trim(),
                 mapData: getImageFromMap(selectedLocation)
             }),
         }).then(() => {
-            console.log('Report saved successfully');
             window.location.href = '/report';
-        })
+        }).catch(() => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("content").style.display = "block";
+        });
     }
 </script>
 
