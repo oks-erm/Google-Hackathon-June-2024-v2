@@ -102,6 +102,9 @@ def plot_atendimentos_per_month(location, df_historical = None, df_predicted = N
         font_family=xy_font_family,
         font_color=xy_font_color,
         plot_bgcolor=plot_bgcolor,
+        xaxis_autorange=True,
+        yaxis_autorange=True,
+        autosize=True,
         xaxis=dict(
             showline=True,
             showgrid=True,
@@ -159,6 +162,9 @@ def plot_waiting_time_per_month(location, df_historical = None, df_predicted = N
         font_family=xy_font_family,
         font_color=xy_font_color,
         plot_bgcolor=plot_bgcolor,
+        xaxis_autorange=True,
+        yaxis_autorange=True,
+        autosize=True,
         xaxis=dict(
             showline=True,
             showgrid=True,
@@ -218,6 +224,9 @@ def plot_procuras_per_month(location, df_historical = None, df_predicted = None)
         font_family=xy_font_family,
         font_color=xy_font_color,
         plot_bgcolor=plot_bgcolor,
+        xaxis_autorange=True,
+        yaxis_autorange=True,
+        autosize=True,
         xaxis=dict(
             showline=True,
             showgrid=True,
@@ -275,6 +284,9 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
         font_family=xy_font_family,
         font_color=xy_font_color,
         plot_bgcolor=plot_bgcolor,
+        xaxis_autorange=True,
+        yaxis_autorange=True,
+        autosize=True,
         xaxis=dict(
             showline=True,
             showgrid=True,

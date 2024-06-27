@@ -380,7 +380,7 @@ run
     padding: 5% !important;
 }
 
-#ai-insight {
+.data-titles {
     padding: 1.7rem;
     border-top: 1px solid #ededed;
 }
@@ -435,4 +435,9 @@ strong {
 .ww
 {
     width: 30%;
+}
+
+.graphs
+{
+    width: 100%;
 }
