@@ -131,10 +131,12 @@ Relatórios
                         text: [
                             { text: beforeColon, bold: true },
                             ` ${afterColon}`
-                        ]
+                        ],
+                        lineHeight: 1.25,
+                        margin: 5
                     };
                 }
-                return { text: line };
+                return { text: line, lineHeight: 1.25, margin: 5 };
             });
 
             return { mainContent: formattedMainContent, indentedContent };
@@ -150,17 +152,6 @@ Relatórios
         }
 
         const docDefinition = {
-            header: [
-                {
-                    columns: [
-                        { width: '*', text: '' },
-                        { text: `Região: Lisboa`, style: 'subheader', width: 'auto', alignment: 'right' },
-                        { width: '*', text: '' },
-                        { text: 'Período de Previsão: 2024 - 2027', style: 'subheader', width: 'auto' },
-                        { width: '*', text: '' }
-                    ]
-                },
-            ],
             content: [
                 {
                     text: `${reportData.location}`,
@@ -168,9 +159,20 @@ Relatórios
                     alignment: 'center'
                 },
                 {
-                    text: 'Relatório de Previsão',
-                    style: 'subheader',
-                    alignment: 'center'
+                    columns: [
+                        { width: '*', text: '' },
+                        { text: `Região: Lisboa`, style: 'subheader', width: '25%', alignment: 'left' },
+                        { width: '*', text: '' },
+                        { text: `Relatório de Previsão`, style: 'subheader', width: '25%', alignment: 'center' },
+                        { width: '*', text: '' },
+                        { text: 'Período: 2024-2027', style: 'subheader', width: '25%', alignment: 'right' },
+                        { width: '*', text: '' }
+                    ]
+                },
+                {
+                    canvas: [
+                        { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }
+                    ],
                 },
                 {
                     image: reportData.imageData,
@@ -184,9 +186,15 @@ Relatórios
                     style: 'header',
                     alignment: 'center'
                 },
+                {
+                    canvas: [
+                        { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }
+                    ],
+                    margin: [0, 20, 0, 20]
+                },
                 ...mainContent,
                 {
-                    ul: indentedContent.map(line => ({ text: line, lineHeight: 1.5 })),
+                    ul: indentedContent.map(line => ({ text: line, lineHeight: 1.25 })),
                     alignment: 'left',
                     margin: [20, 0, 0, 0]
                 },
@@ -196,14 +204,11 @@ Relatórios
                     ],
                     margin: [0, 20, 0, 20]
                 },
-            ],
-            footer: [
                 {
                     columns: [
                         { width: '*', text: '' },
-                        { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
-                        { width: '*', text: '' },
-                        { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' },
+                        { text: `Created by: ${reportData.email}`, style: 'subheader', width:"50%", alignment: 'center' },
+                        { text: `Created at: ${reportData.created_at}`, style: 'subheader', width:"50%", alignment: 'center' },
                         { width: '*', text: '' }
                     ],
                 },
@@ -212,14 +217,14 @@ Relatórios
                 header: {
                     fontSize: 22,
                     bold: true,
-                    margin: [10, 0, 2, 10]
+                    margin: [5, 0, 2, 5]
                 },
                 subheader: {
                     fontSize: 12,
                     margin: [0, 10, 0, 10]
                 },
                 link: {
-                    fontSize: 14,
+                    fontSize: 12,
                     color: 'blue',
                     decoration: 'underline',
                     margin: [10, 0, 10, 0]
