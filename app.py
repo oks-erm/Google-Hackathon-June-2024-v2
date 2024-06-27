@@ -79,7 +79,7 @@ def run():
         session['url'] = url_for('run')
         return redirect(url_for('login'))
 
-    # Period for prediction
+    # # Period for prediction
     # period = request.args.get('period')
     # length_of_prediction = period.split()[0]
     # print("--------------------------------------------------------")
@@ -90,15 +90,17 @@ def run():
     plots_merged = []
     plots_historic = []
     data_by_year = []
-    data_analysis = []
+    data_analysis = {}
     for location in available_locations:
         pm, ph, dby, msg = make_plots(location)
         plots_merged.append(pm)
         plots_historic.append(ph)
         data_by_year.append(dby)
-        data_analysis.append(msg)
+        data_analysis[location] = msg
 
     cards_table = create_cards_table()
+    session['cards_table'] = json.dumps(cards_table)
+    session['data_analysis'] = json.dumps(data_analysis)
 
     return render_template(
         'run.html',
@@ -223,22 +225,47 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/save-report', methods=['POST'])
+@app.route('/save-report', methods=['POST'])
 def save_report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        created_at = datetime.now()
-        body = request.get_json()
-        user = session['user_id']
+        try:
+            body = request.get_json()
+            location = 'Loja de Cidadão Laranjeiras'
 
-        print(body)
-        report = Report(created_at=created_at, report=json.dumps(body), user=user)
-        db.session.add(report)
-        db.session.commit()
+            # Retrieve and deserialize the stored JSON strings from the session
+            cards_table = json.loads(session.get('cards_table', '[]'))
+            data_analysis = json.loads(session.get('data_analysis', '{}'))
 
-    return jsonify({'status': 'success'})
+
+            # Filter cards_table for the specific location
+            filtered_cards_table = [card for card in cards_table if card.get('designacao') == location][0]
+
+            # Update body with the filtered data
+            body['cards_table'] = filtered_cards_table
+            body['AI_insight'] = data_analysis[location]
+
+
+            # Create the Report object
+            report = Report(
+                created_at=datetime.now(),
+                report=json.dumps(body),
+                user=session.get("user_id"),
+                cards_table=json.dumps(filtered_cards_table),
+                AI_insight=data_analysis[location]
+            )
+
+            db.session.add(report)
+            db.session.commit()
+
+            return jsonify({'status': 'success'})
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 @app.route("/profile")
@@ -251,11 +278,11 @@ def profile():
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
-    if not session.get("isAuthenticated", False):
-        session['url'] = url_for('report')
-        return redirect(url_for('login'))
+    # if not session.get("isAuthenticated", False):
+    #     session['url'] = url_for('report')
+    #     return redirect(url_for('login'))
 
-    reports = Report.query.all()
+    reports = Report.query.all()[::-1]
 
     report_data = []
     for report in reports:
@@ -263,8 +290,11 @@ def report():
         report_data.append({
             'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
             'report': report.report,
-            'user': user.login
-        })
+            'user': user.login,
+            'email': user.email,
+            'cards_table': report.cards_table,
+            'AI_insight': report.AI_insight
+    })
 
     return render_template(
         'report.html',
