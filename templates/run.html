@@ -242,13 +242,6 @@ Programa
   ];
 
   document.addEventListener('DOMContentLoaded', (event) => {
-    // get the parent of plotty
-    $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (event) {
-      var doc = $(".tab-pane.active ..plot-container");
-      for (var i = 0; i < doc.length; i++) {
-          Plotly.relayout(doc[i], {autosize: true});
-      }
-    })
 
     addExistingPoints();
 
