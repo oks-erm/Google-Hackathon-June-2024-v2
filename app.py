@@ -250,7 +250,7 @@ def save_report():
             data_analysis = CACHE.get('data_analysis', lambda: {})
 
             # Filter cards_table for the specific location
-            filtered_cards_table = next([card for card in cards_table if card.get('designacao') == location])
+            filtered_cards_table = next([card for card in cards_table if card.get('designacao') == location], None)
 
             # Update body with the filtered data
             body['cards_table'] = filtered_cards_table
@@ -295,12 +295,12 @@ def report():
     for report in reports:
         user = Login.query.filter_by(id=report.user).first()
         report_data.append({
-            'created_at': report.created_at.strftime("%d" + "-" + "%m" + "-" + "%Y"),
+            'created_at': report.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'report': report.report,
             'user': user.login,
             'email': user.email,
             'cards_table': report.cards_table,
-            'AI_insight': report.AI_insight
+            'AI_insight': report.AI_insight,
     })
 
     return render_template(

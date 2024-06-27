@@ -46,7 +46,7 @@ function getImageFromMap(existingPoint) {
         type: 'Ponto selecionado'
     });
 
-    let possibleLabels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let possibleLabels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (const [index, point] of points.entries()) {
         const color = point.type === 'Fixo' ? FIXED_COLOR : MOBILE_COLOR;
         mapMarkers += `&markers=color:${color}|label:${possibleLabels[index]}|${point.cordinates.lat},${point.cordinates.lng}`;
