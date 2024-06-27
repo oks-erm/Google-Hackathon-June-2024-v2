@@ -77,22 +77,23 @@
                 const selectedValue = item.textContent.trim();
                 periodDropdownButton.textContent = selectedValue;
                 periodInput.value = selectedValue;
-                console.log(periodInput.value);
             });
         });
 
         // Submit form
         mainForm.addEventListener('submit', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
 
-            const locationValue = locationInput.value;
-            const periodValue = periodInput.value;
+            const locationValue = locationInput.value.trim();
+            const periodValue = periodInput.value.trim();
 
             if (!locationValue || !periodValue) {
                 alert('Please select both location and period.');
                 return;
             }
             mainForm.action = `/run?location=${encodeURIComponent(locationValue)}&period=${encodeURIComponent(periodValue)}`;
+            document.getElementById("loader").style.display = "block";
+            document.getElementById("content").style.display = "none";
             mainForm.submit();
         });
     });

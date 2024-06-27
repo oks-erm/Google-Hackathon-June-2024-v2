@@ -48,7 +48,7 @@ function getImageFromMap(existingPoint) {
 
     let possibleLabels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (const [index, point] of points.entries()) {
-        const color = point.type === 'Fixo' ? 'yellow' : 'black';
+        const color = point.type === 'Fixo' ? FIXED_COLOR : MOBILE_COLOR;
         mapMarkers += `&markers=color:${color}|label:${possibleLabels[index]}|${point.cordinates.lat},${point.cordinates.lng}`;
         data['links'].push({
             [`${possibleLabels[index]}`]: `https://www.google.com/maps/search/?api=1&query=${point.cordinates.lat},${point.cordinates.lng}`,
@@ -74,15 +74,24 @@ const insetPointInView = (type) => {
     let deletePoint = document.createElement("button");
     deletePoint.innerText = "X";
     deletePoint.className = "delete-point";
-;
+
     let from = document.createElement("input");
     from.setAttribute("type", "month");
     from.setAttribute("name", "from");
     from.setAttribute("value", "2024-01");
     from.classList.add("ww");
     from.classList.add("p-2");
-    from.classList.add("mx-2");
+    from.classList.add(type == 'Fixo' ? "ml-5" : "mx-2");
     from.classList.add("fs-6");
+
+    from.addEventListener("change", () => {
+        // get the id of the pin
+        let id = newPin.dataset.id;
+
+        // remove the point from the array
+        let point = _.head(points.filter((point) => point.id === id));
+        point['from'] = from.value;
+    });
 
     let to, typing;
     typing = `${type}`;
@@ -96,8 +105,17 @@ const insetPointInView = (type) => {
         to.classList.add("p-2");
         to.classList.add("mx-2");
         to.classList.add("fs-6");
+
+        to.addEventListener("change", () => {
+            // get the id of the pin
+            let id = newPin.dataset.id;
+
+            // remove the point from the array
+            let point = _.head(points.filter((point) => point.id === id));
+            point['to'] = to.value;
+        });
     }
-    
+
     deletePoint.onclick = () => {
         // get the id of the pin
         let id = newPin.dataset.id;

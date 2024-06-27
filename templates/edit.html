@@ -92,6 +92,8 @@ Edit Prediction
 
     function saveReport() {
         // send the data to the server
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("content").style.display = "none";
         fetch('/save-report', {
             method: 'POST',
             headers: {
@@ -103,7 +105,9 @@ Edit Prediction
                         lat: point.cordinates.lat,
                         lng: point.cordinates.lng,
                         title: point.title,
-                        type: point.type
+                        type: point.type,
+                        from: point.from,
+                        to: point?.to
                     }
                 }),
                 location: additionalParams.location,
@@ -111,9 +115,11 @@ Edit Prediction
                 mapData: getImageFromMap(selectedLocation)
             }),
         }).then(() => {
-            console.log('Report saved successfully');
             window.location.href = '/report';
-        })
+        }).catch(() => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("content").style.display = "block";
+        });
     }
 </script>
 

@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 from openai import OpenAI
 from dotenv import load_dotenv
 from config import creds_dict
-
 # Load environment variables
 load_dotenv()
 
@@ -74,17 +73,17 @@ def plot_atendimentos_per_month(location, df_historical = None, df_predicted = N
 
     if df_historical is not None:
         fig.add_trace(go.Scatter(
-            x=df_historical['Meses'], 
-            y=df_historical['Atendimentos'], 
-            mode='lines', 
+            x=df_historical['Meses'],
+            y=df_historical['Atendimentos'],
+            mode='lines',
             name='Dados Históricos',
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
         fig.add_trace(go.Scatter(
-            x=df_predicted['Meses'], 
-            y=df_predicted['Atendimentos'], 
-            mode='lines', 
+            x=df_predicted['Meses'],
+            y=df_predicted['Atendimentos'],
+            mode='lines',
             name='Previsões',
             line=dict(color=line2_color, width=line2_width)
         ))
@@ -131,17 +130,17 @@ def plot_waiting_time_per_month(location, df_historical = None, df_predicted = N
 
     if df_historical is not None:
         fig.add_trace(go.Scatter(
-            x=df_historical['Meses'], 
-            y=df_historical['Tempo_medio_de_espera_diario'], 
-            mode='lines', 
+            x=df_historical['Meses'],
+            y=df_historical['Tempo_medio_de_espera_diario'],
+            mode='lines',
             name='Dados Históricos',
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
         fig.add_trace(go.Scatter(
-            x=df_predicted['Meses'], 
-            y=df_predicted['Tempo_medio_de_espera_diario'], 
-            mode='lines', 
+            x=df_predicted['Meses'],
+            y=df_predicted['Tempo_medio_de_espera_diario'],
+            mode='lines',
             name='Previsões',
             line=dict(color=line2_color, width=line2_width)
         ))
@@ -189,18 +188,18 @@ def plot_procuras_per_month(location, df_historical = None, df_predicted = None)
     if df_historical is not None:
 
         fig.add_trace(go.Scatter(
-            x=df_historical['Meses'], 
-            y=df_historical['Procuras'], 
-            mode='lines', 
+            x=df_historical['Meses'],
+            y=df_historical['Procuras'],
+            mode='lines',
             name='Dados Históricos',
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
 
         fig.add_trace(go.Scatter(
-            x=df_predicted['Meses'], 
-            y=df_predicted['Procuras'], 
-            mode='lines', 
+            x=df_predicted['Meses'],
+            y=df_predicted['Procuras'],
+            mode='lines',
             name='Previsões',
             line=dict(color=line2_color, width=line2_width)
         ))
@@ -247,17 +246,17 @@ def plot_desistencias_per_month(location, df_historical = None, df_predicted = N
 
     if df_historical is not None:
         fig.add_trace(go.Scatter(
-            x=df_historical['Meses'], 
-            y=df_historical['Desistencias'], 
-            mode='lines', 
+            x=df_historical['Meses'],
+            y=df_historical['Desistencias'],
+            mode='lines',
             name='Dados Históricos',
             line=dict(color=line1_color, width=line1_width)
         ))
     if df_predicted is not None:
         fig.add_trace(go.Scatter(
-            x=df_predicted['Meses'], 
-            y=df_predicted['Desistencias'], 
-            mode='lines', 
+            x=df_predicted['Meses'],
+            y=df_predicted['Desistencias'],
+            mode='lines',
             name='Previsões',
             line=dict(color=line2_color, width=line2_width)
         ))
@@ -360,7 +359,7 @@ def make_plots(location):
         plot_desistencias_per_month(location, df_historical=df_historical),
     ]
     ai_insights = respond_gpt(df_historical.to_string(), df_predicted.to_string())
-    
+
     # Dictionary containing columns and data, grouped by year
     data_by_year = get_data_per_year(df_predicted)
 

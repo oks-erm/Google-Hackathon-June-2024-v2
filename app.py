@@ -58,7 +58,6 @@ def create_cards_table():
     df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].round(2)
     idx = df_predicted.groupby('Designacao')['Necessity_Metric'].idxmax()
     max_necessity_metric_entries = df_predicted.loc[idx]
-    print(max_necessity_metric_entries)
     max_necessity_metric_entries = max_necessity_metric_entries.reset_index(drop=True)
     max_necessity_metric_entries['Index'] = max_necessity_metric_entries.index
     max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
@@ -234,6 +233,7 @@ def save_report():
         body = request.get_json()
         user = session['user_id']
 
+        print(body)
         report = Report(created_at=created_at, report=json.dumps(body), user=user)
         db.session.add(report)
         db.session.commit()
