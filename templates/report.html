@@ -10,7 +10,7 @@ Relatórios
     {% for item in report_data %}
     <div class="rounded report-container d-flex align-items-center justify-content-between">
         <div class="image-container p-1">
-            <img src="{{ item.report.mapData.image }}" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
+            <img src="../static/assets/testMap.png" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
         </div>
         <div class="w-75 p-3">
             <div class="p-1"><strong>Location:</strong> {{ item.cards_table['designacao'] }}</div>
@@ -150,36 +150,44 @@ Relatórios
         }
 
         const docDefinition = {
+            header: [
+                {
+                    columns: [
+                        { width: '*', text: '' },
+                        { text: `Região: Lisboa`, style: 'subheader', width: 'auto', alignment: 'right' },
+                        { width: '*', text: '' },
+                        { text: 'Período de Previsão: 2024 - 2027', style: 'subheader', width: 'auto' },
+                        { width: '*', text: '' }
+                    ]
+                },
+            ],
             content: [
                 {
-                    columns: [
-                        { width: '*', text: '' },
-                        { text: 'Relatório de Análise de Necessidades', style: 'header', width: 'auto', alignment: 'center' },
-                        { width: '*', text: '' },
-                    ]
+                    text: `${reportData.location}`,
+                    style: 'header',
+                    alignment: 'center'
                 },
                 {
-                    columns: [
-                        { text: `${reportData.location}`, style: 'subheader', width: 'auto', alignment: 'left' },
-                        { width: '*', text: '' },
-                        { text: `Periodo de ${reportData.period}`, style: 'subheader', width: 'auto', alignment: 'right' },
-                    ]
+                    text: 'Relatório de Previsão',
+                    style: 'subheader',
+                    alignment: 'center'
                 },
-                ...mapPointsLink,
                 {
                     image: reportData.imageData,
                     width: 300,
                     alignment: 'center',
                     margin: [0, 20, 0, 20]
                 },
+                ...mapPointsLink,
                 {
-                    text: 'AI Insights:',
-                    style: 'subheader',
-                    alignment: 'right'
+                    text: 'IA Insights',
+                    style: 'header',
+                    alignment: 'center'
                 },
                 ...mainContent,
                 {
-                    ul: indentedContent.map(line => ({ text: line })),
+                    ul: indentedContent.map(line => ({ text: line, lineHeight: 1.5 })),
+                    alignment: 'left',
                     margin: [20, 0, 0, 0]
                 },
                 {
@@ -188,28 +196,26 @@ Relatórios
                     ],
                     margin: [0, 20, 0, 20]
                 },
+            ],
+            footer: [
                 {
                     columns: [
                         { width: '*', text: '' },
-                        {
-                            stack: [
-                                { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
-                                { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' }
-                            ],
-                            width: 'auto'
-                        },
+                        { text: `Created by: ${reportData.email}`, style: 'subheader', alignment: 'center' },
+                        { width: '*', text: '' },
+                        { text: `Created at: ${reportData.created_at}`, style: 'subheader', alignment: 'center' },
                         { width: '*', text: '' }
-                    ]
-                }
+                    ],
+                },
             ],
             styles: {
                 header: {
                     fontSize: 22,
                     bold: true,
-                    margin: [0, 0, 0, 10]
+                    margin: [10, 0, 2, 10]
                 },
                 subheader: {
-                    fontSize: 14,
+                    fontSize: 12,
                     margin: [0, 10, 0, 10]
                 },
                 link: {
