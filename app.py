@@ -25,7 +25,7 @@ from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
-CACHE = Cache()
+CACHE = Cache(disk=False)
 
 
 def get_current_time():

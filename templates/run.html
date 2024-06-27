@@ -15,7 +15,7 @@ Programa
       {% for card in cards_data %}
       <!-- Modal -->
       <div class="modal fade" id="modal-{{card.index}}">
-        <div class="custom-modal modal-dialog modal-dialog-centered modal-lg">
+        <div class="custom-modal modal-dialog modal-dialog-centered modal-md">
           <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
@@ -72,8 +72,8 @@ Programa
                       data-necessidade="{{ data_by_year[card.index_before_sorting]['Necessity_Metric'][index] }}">
                     </span>
                     {% endfor %}
-                    <h3 class="text-center pt-3">Gráficos Previstos</h3>
-                    <div class="d-flex flex-column justify-content-around graphs mx-3">
+                    <h3 class="text-center pt-5">Gráficos Previstos</h3>
+                    <div class="d-flex flex-column justify-content-around graphs mx-3 data-titles">
                       <div class="graphs">
                         {{ graph_html_merged[card.index][0] | safe }}
                       </div>
@@ -91,7 +91,7 @@ Programa
                       <div>
                         <h3 class="text-center">IA Insights</h3>
                         <div class="data-titles">
-                          {{ data_analysis[0] | safe }}
+                          {{ data_analysis[card.designacao] | safe }}
                         </div>
                       </div>
                     </div>
@@ -343,7 +343,7 @@ Programa
     }
     id.appendChild(newRow);
   }
-  
+
   window.onload = function() {
     const indicators = document.querySelectorAll('.indicator');
     indicators.forEach(function(element) {
