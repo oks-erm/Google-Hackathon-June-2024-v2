@@ -44,40 +44,54 @@ Programa
                 aria-labelledby="predicted-data-tab{{card.index}}">
                 <div class="modal-body">
                   <div class="d-flex flex-column justify-content-around">
+                    <h3 class="text-center">Métricas Previstas</h3>
+                    <div class="d-flex flex-column justify-content-around pb-3">
+                      <table class="text-center">
+                        <thead>
+                          <tr class="border-bottom">
+                            <th scope="col">Ano</th>
+                            <th scope="col">Procuras</th>
+                            <th scope="col">Atendimentos</th>
+                            <th scope="col">Desistências</th>
+                            <th scope="col">T. espera diário</th>
+                            <th scope="col">Necessidade</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
                     <!-- index = year index | card.index = card index starting at the top one | card.index_before_sorting = index based on location list (app.py)-->
                     {% for index in data_by_year[card.index]['Index'] %}
-                    <div class="metrics-year">
-                      Ano {{data_by_year[card.index]['Ano'][index]}}
-                    </div>
-                    <div class="metrics-row">
-                      <span>Procuras {{ data_by_year[card.index_before_sorting]['Procuras'][index] }}</span>
-                      <span>Atendimentos {{ data_by_year[card.index_before_sorting]['Atendimentos'][index] }}</span>
-                      <span>Desistencias {{ data_by_year[card.index_before_sorting]['Desistencias'][index] }}</span>
-                      <span>Tempo medio de espera diário {{ data_by_year[card.index_before_sorting]['Tempo_medio_de_espera_diario'][index] }}</span>
-                      <span>Necessidade {{ data_by_year[card.index_before_sorting]['Necessity_Metric'][index] }}</span>
-                    </div>
+                    <span class="data-rows"
+                      data-year="{{data_by_year[card.index]['Ano'][index]}}"
+                      data-procuras="{{ data_by_year[card.index_before_sorting]['Procuras'][index] }}"
+                      data-atendim="{{ data_by_year[card.index_before_sorting]['Atendimentos'][index] }}"
+                      data-desist="{{ data_by_year[card.index_before_sorting]['Desistencias'][index] }}"
+                      data-espera="{{ data_by_year[card.index_before_sorting]['Tempo_medio_de_espera_diario'][index] }}"
+                      data-necessidade="{{ data_by_year[card.index_before_sorting]['Necessity_Metric'][index] }}">
+                    </span>
                     {% endfor %}
-                    <div class="graph_box">
-                      <div>
+                    <h3 class="text-center pt-3">Gráficos Previstos</h3>
+                    <div class="d-flex flex-column justify-content-around graphs mx-3">
+                      <div class="graphs">
                         {{ graph_html_merged[card.index][0] | safe }}
                       </div>
-                      <div>
+                      <div class="graphs">
                         {{ graph_html_merged[card.index][1] | safe }}
                       </div>
-                    </div>
-                    <div class="graph_box">
-                      <div>
+                      <div class="graphs">
                         {{ graph_html_merged[card.index][2] | safe }}
                       </div>
-                      <div>
+                      <div class="graphs">
                         {{ graph_html_merged[card.index][3] | safe }}
                       </div>
                     </div>
                     <div class="d-flex flex-column justify-content-around">
                       <div>
-                        <h3>IA Insights</h3>
-                        <div>
-                          {{ data_analysis[card.designacao] | safe }}
+                        <h3 class="text-center">IA Insights</h3>
+                        <div class="data-titles">
+                          {{ data_analysis[0] | safe }}
                         </div>
                       </div>
                     </div>
@@ -90,22 +104,19 @@ Programa
                   aria-labelledby="historic-data-tab{{card.index}}">
                   <div class="modal-body">
                     <div class="d-flex flex-column justify-content-around">
-                      <div class="d-flex flex-column justify-content-around">
-                        <div class="graph_box">
-                          <div>
-                            {{ graph_html_historic[card.index][0] | safe }}
-                          </div>
-                          <div>
-                            {{ graph_html_historic[card.index][1] | safe }}
-                          </div>
+                      <h3 class="text-center pt-3">Gráficos Históricos</h3>
+                      <div class="d-flex flex-column justify-content-around graphs mx-3">
+                        <div class="graphs">
+                          {{ graph_html_historic[card.index][0] | safe }}
                         </div>
-                        <div class="graph_box">
-                          <div>
-                            {{ graph_html_historic[card.index][2] | safe }}
-                          </div>
-                          <div>
-                            {{ graph_html_historic[card.index][3] | safe }}
-                          </div>
+                        <div class="graphs">
+                          {{ graph_html_historic[card.index][1] | safe }}
+                        </div>
+                        <div class="graphs">
+                          {{ graph_html_historic[card.index][2] | safe }}
+                        </div>
+                        <div class="graphs">
+                          {{ graph_html_historic[card.index][3] | safe }}
                         </div>
                       </div>
                     </div>
@@ -147,11 +158,7 @@ Programa
                     </ul>
                   </div>
                 </div>
-
-
-
               </div>
-
             </div>
             <!-- Modal Footer -->
             <div class="modal-footer">
@@ -235,6 +242,14 @@ Programa
   ];
 
   document.addEventListener('DOMContentLoaded', (event) => {
+    // get the parent of plotty
+    $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (event) {
+      var doc = $(".tab-pane.active ..plot-container");
+      for (var i = 0; i < doc.length; i++) {
+          Plotly.relayout(doc[i], {autosize: true});
+      }
+    })
+
     addExistingPoints();
 
     let addButton = document.getElementById('add_button');
@@ -297,12 +312,54 @@ Programa
     window.location.href = url;
   }
 
+  function addRows(elem, id)
+  {
+    let newRow = document.createElement('tr');
+    for (var i = 0; i < 6; i++) {
+        let newCell = document.createElement('td');
+        switch (i) {
+          case 0:
+            newCell.innerHTML = elem.getAttribute('data-year');
+            break;
+          case 1:
+            newCell.innerHTML = elem.getAttribute('data-procuras');
+            break;
+          case 2:
+            newCell.innerHTML = elem.getAttribute('data-atendim');
+            break;
+          case 3:
+            newCell.innerHTML = elem.getAttribute('data-desist');
+            break;
+          case 4:
+            newCell.innerHTML = elem.getAttribute('data-espera');
+            break;
+          case 5:
+            newCell.innerHTML = elem.getAttribute('data-necessidade');
+            break;
+          default:
+            break;
+        }
+        newRow.appendChild(newCell);
+    }
+    id.appendChild(newRow);
+  }
+  
   window.onload = function() {
     const indicators = document.querySelectorAll('.indicator');
     indicators.forEach(function(element) {
       const necessityMetric = element.getAttribute('data-necessity');
       colorize(necessityMetric, element);
-    })
+    });
+    const rows = document.querySelectorAll('.data-rows');
+    let tables = document.querySelectorAll('tbody');
+    let times = rows.length / tables.length;
+    let i = 0;
+    tables.forEach(function(id) {
+      for (; i < times; i++)
+        addRows(rows[i], id);
+      times += times;
+    });
+    window.dispatchEvent(new Event('resize'));
   };
 </script>
 
