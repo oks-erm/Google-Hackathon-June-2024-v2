@@ -88,7 +88,7 @@
             const periodValue = periodInput.value.trim();
 
             if (!locationValue || !periodValue) {
-                alert('Please select both location and period.');
+                alert('Selecione a região e período de previsão para continuar');
                 return;
             }
             mainForm.action = `/run?location=${encodeURIComponent(locationValue)}&period=${encodeURIComponent(periodValue)}`;
