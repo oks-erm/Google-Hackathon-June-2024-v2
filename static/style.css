@@ -266,10 +266,10 @@ footer div {
     font-size: 1.05rem !important;
     padding: 0.4rem 1.7rem !important
 }
-run
+
 #start_button {
     font-size: 21px !important;
-    padding: 0.5rem 7rem;
+    padding: 0.5rem 7rem !important;
 }
 
 .bgr
