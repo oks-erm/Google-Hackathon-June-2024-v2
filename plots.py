@@ -29,7 +29,7 @@ line2_width = line1_width
 boundary_color = 'black'
 
 
-credentials = service_account.Credentials.from_service_account_info(creds_dict)
+# credentials = service_account.Credentials.from_service_account_info(creds_dict)
 
 client = OpenAI()
 
@@ -67,9 +67,8 @@ def querry_bq(project, dataset, table):
     return df
 
 
-DF_HISTORICAL = querry_bq(project_id, dataset_id, 'merged')
-DF_PREDICTED = querry_bq(project_id, dataset_id,
-                         'aggregated_data_with_necessity')
+DF_HISTORICAL = [] #querry_bq(project_id, dataset_id, 'merged')
+DF_PREDICTED = [] #querry_bq(project_id, dataset_id, 'aggregated_data_with_necessity')
 
 # Atendimentos Per Month
 

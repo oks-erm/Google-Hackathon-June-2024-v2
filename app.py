@@ -19,7 +19,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-c71832baf239.json'
+# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-c71832baf239.json'
 
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
 
@@ -95,18 +95,20 @@ def run():
     plots_historic = []
     data_by_year = []
     data_analysis = {}
-    for location in available_locations:
-        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
-        if not pm:
-            pm, ph, dby, msg = make_plots(location)
+    # for location in available_locations:
+    #     pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
+    #     if not pm:
+    #         pm, ph, dby, msg = make_plots(location)
 
-        plots_merged.append(pm)
-        plots_historic.append(ph)
-        data_by_year.append(dby)
-        data_analysis[location] = msg
+    #     plots_merged.append(pm)
+    #     plots_historic.append(ph)
+    #     data_by_year.append(dby)
+    #     data_analysis[location] = msg
 
-    cards_table = CACHE.get('cards_table', create_cards_table)
-    CACHE.set('data_analysis', data_analysis)
+    # testing 
+    cards_table = []
+    # cards_table = CACHE.get('cards_table', create_cards_table)
+    # CACHE.set('data_analysis', data_analysis)
 
     return render_template(
         'run.html',
@@ -313,4 +315,4 @@ def report():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
