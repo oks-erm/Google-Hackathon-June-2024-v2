@@ -285,9 +285,9 @@ def profile():
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
-    # if not session.get("isAuthenticated", False):
-    #     session['url'] = url_for('report')
-    #     return redirect(url_for('login'))
+    if not session.get("isAuthenticated", False):
+        session['url'] = url_for('report')
+        return redirect(url_for('login'))
 
     reports = Report.query.all()[::-1]
 
