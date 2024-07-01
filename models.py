@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import JSON, TIMESTAMP
 from datetime import datetime
 
 class Login(db.Model):
-    __tablename__ = 'logins'
+    __tablename__ = 'users'
     id = db.Column(db.BigInteger, primary_key=True)
     created_at = db.Column(db.TIMESTAMP, unique=False, nullable=False)
     login = db.Column(db.Text, unique=True, nullable=False)
@@ -21,5 +21,4 @@ class Report(db.Model):
     created_at = db.Column(db.TIMESTAMP, default=datetime.now())
     report = db.Column(db.Text, nullable=False)
     user = db.Column(db.BigInteger, nullable=False)
-    cards_table = db.Column(db.Text, nullable=False)
-    AI_insight = db.Column(db.Text, nullable=False)
+

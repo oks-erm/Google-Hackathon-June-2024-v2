@@ -1,4 +1,4 @@
-from config import app, db
+from config import app, db, supabase
 from models import *
 from flask import (
     render_template,
@@ -16,12 +16,12 @@ import numpy as np
 import json
 import os
 import warnings
+from dateutil import parser
+
 
 warnings.filterwarnings("ignore")
 
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './sublime-lyceum-426907-r9-c71832baf239.json'
-
-from plots import make_plots, DF_PREDICTED, DF_HISTORICAL
+from plots import make_plots, DF_PREDICTED, DF_HISTORICAL, supabase_querry, supabase_insert
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
@@ -95,20 +95,20 @@ def run():
     plots_historic = []
     data_by_year = []
     data_analysis = {}
-    # for location in available_locations:
-    #     pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
-    #     if not pm:
-    #         pm, ph, dby, msg = make_plots(location)
+    for location in available_locations:
+        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
+        if not pm:
+            pm, ph, dby, msg = make_plots(location)
 
-    #     plots_merged.append(pm)
-    #     plots_historic.append(ph)
-    #     data_by_year.append(dby)
-    #     data_analysis[location] = msg
+        plots_merged.append(pm)
+        plots_historic.append(ph)
+        data_by_year.append(dby)
+        data_analysis[location] = msg
 
     # testing 
     cards_table = []
-    # cards_table = CACHE.get('cards_table', create_cards_table)
-    # CACHE.set('data_analysis', data_analysis)
+    cards_table = CACHE.get('cards_table', create_cards_table)
+    CACHE.set('data_analysis', data_analysis)
 
     return render_template(
         'run.html',
@@ -250,7 +250,6 @@ def save_report():
 
             cards_table = CACHE.get('cards_table', create_cards_table)
             data_analysis = CACHE.get('data_analysis', lambda: {})
-
             # Filter cards_table for the specific location
             filtered_cards_table = next((card for card in cards_table if card.get('designacao') == location), None)
 
@@ -259,21 +258,16 @@ def save_report():
             body['AI_insight'] = data_analysis[location]
 
             # Create the Report object
-            report = Report(
-                created_at=datetime.now(),
-                report=json.dumps(body),
-                user=session.get("user_id"),
-                cards_table=json.dumps(filtered_cards_table),
-                AI_insight=data_analysis[location]
-            )
-
-            db.session.add(report)
-            db.session.commit()
+            report = {
+                "created_at": datetime.now().isoformat(),
+                "report": body,
+                "user": session.get("user_id", -1)
+            }
+            supabase_insert('reports', report)
 
             return jsonify({'status': 'success'})
 
         except Exception as e:
-            db.session.rollback()
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
@@ -291,20 +285,26 @@ def report():
         session['url'] = url_for('report')
         return redirect(url_for('login'))
 
-    reports = Report.query.all()[::-1]
+    # Filtered querry to supabase
+    reports = (
+        supabase.table("reports")
+        .select("*")
+        .eq("user", session.get('user_id', -1))
+        .execute()
+    ).data
+
 
     report_data = []
     for report in reports:
-        user = Login.query.filter_by(id=report.user).first()
+        user = Login.query.filter_by(id=report['user']).first()
+        report['created_at'] = parser.parse(report['created_at']).strftime('%Y-%m-%d %H:%M:%S')
         report_data.append({
-            'created_at': report.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'report': report.report,
+            'created_at': report['created_at'],
+            'report': report['report'],
             'user': user.login,
             'email': user.email,
-            'cards_table': report.cards_table,
-            'AI_insight': report.AI_insight,
     })
-
+        
     return render_template(
         'report.html',
         isLoginPage=False,

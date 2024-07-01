@@ -1,18 +1,12 @@
 from models import *
 import pandas as pd
-from google.cloud import bigquery as bq
-from google.oauth2 import service_account
-import plotly.express as px
 import plotly.graph_objects as go
-from openai import OpenAI
 from dotenv import load_dotenv
-from config import creds_dict
+from config import supabase, openai
+
+
 # Load environment variables
 load_dotenv()
-
-# BigQuery parameters
-project_id = 'sublime-lyceum-426907-r9'
-dataset_id = 'ama'
 
 # Plotly graph design
 plot_bgcolor = 'white'
@@ -29,14 +23,9 @@ line2_width = line1_width
 boundary_color = 'black'
 
 
-# credentials = service_account.Credentials.from_service_account_info(creds_dict)
-
-client = OpenAI()
-
-
 def respond_gpt(df_historical, df_predicted) -> str:
     try:
-        response = client.chat.completions.create(
+        response = openai.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {
@@ -56,19 +45,23 @@ def respond_gpt(df_historical, df_predicted) -> str:
     except Exception as e:
         return f"Error: {e}"
 
+# do Error handling 
+def supabase_querry(table):
+    response = supabase.table(table).select('*').execute()
+    return response.data
 
-def querry_bq(project, dataset, table):
-    client = bq.Client(credentials=credentials, project=project)
-    query = f"""
-        SELECT * FROM `{project}.{dataset}.{table}`
-        LIMIT 1200
-        """
-    df = client.query(query).to_dataframe()
-    return df
+def supabase_insert(table, row):
+    # row should be a list {"column": data, ...}
+    response = (
+    supabase.table(table)
+    .insert(row)
+    .execute())
+
+    return response
 
 
-DF_HISTORICAL = [] #querry_bq(project_id, dataset_id, 'merged')
-DF_PREDICTED = [] #querry_bq(project_id, dataset_id, 'aggregated_data_with_necessity')
+DF_HISTORICAL = pd.DataFrame(supabase_querry('merged'))
+DF_PREDICTED =  pd.DataFrame(supabase_querry('aggregated_data_monthly_with_necessity_long'))
 
 # Atendimentos Per Month
 
