@@ -8,10 +8,10 @@ load_dotenv()
 
 # Plotly graph design
 plot_bgcolor = 'white'
-xy_font_family = "Roboto"
-xy_font_color = "black"
+xy_font_family = 'Roboto'
+xy_font_color = 'black'
 xy_line_color = 'black'
-tick_font_family = "monospace"
+tick_font_family = 'monospace'
 tick_font_size = 12
 tick_font_color = 'black'
 line1_color = 'royalblue'

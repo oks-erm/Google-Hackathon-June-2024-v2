@@ -79,7 +79,9 @@ def create_cards_table():
 def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
+
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
 
     # Period for prediction
     period = request.args.get('period')
@@ -87,7 +89,6 @@ def run():
         period = '3 years'
     length_of_prediction = period.split()[0]
 
-    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     plots_merged = []
     plots_historic = []
     data_by_year = []
@@ -124,7 +125,7 @@ def run():
 def edit():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
 
     # get the same data as the run page
     return render_template(
@@ -136,10 +137,9 @@ def edit():
     )
 
 
-# this is not used as of now
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return redirect(url_for('login')) # for now no signing up
+    return redirect(url_for('/')) # for now no signing up
 
     if request.method == 'POST':
         login = request.form['username']
@@ -170,31 +170,6 @@ def signup():
     return render_template('signup.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
 
 
-def create_dataframe_with_random_deviation(original_data: pd.DataFrame) -> pd.DataFrame:
-    percentage_deviation_large = 0.05
-    percentage_deviation_small = 0.015
-
-    new_data = original_data.copy()
-
-    for column in ['Procuras', 'Tempo_medio_de_espera_diario', 'Desistencias', 'Atendimentos']:
-        new_data[column] = new_data[column] * \
-            (1 + np.random.uniform(-percentage_deviation_large,
-             percentage_deviation_large, size=new_data.shape[0]))
-
-    new_data['necessity_metric'] = new_data['necessity_metric'] * \
-        (1 + np.random.uniform(-percentage_deviation_small,
-         percentage_deviation_small, size=new_data.shape[0]))
-    return new_data
-
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    original_df = pd.read_csv('/static/assets/model_frame.csv')
-    predictions = create_dataframe_with_random_deviation(original_df)
-
-    return jsonify(predictions)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if session.get("isAuthenticated", False):
@@ -215,14 +190,14 @@ def login():
         ).data
 
         if user_check and user_check[0]['password'] == hash_password(password):
-            session['user_id'] = user_check[0]['id']
             session["isAuthenticated"] = True
+            session['user_id'] = user_check[0]['id']
             session['username'] = user_check[0]['username']
             flash('Login successful', 'success')
             return redirect(session.get('url', url_for('index')))
         else:
             flash('Invalid credentials', 'error')
-            return redirect(url_for('login'))
+            return redirect(url_for('/'))
 
     return render_template('login.html', isLoginPage=True, isAuthenticated=session.get("isAuthenticated", False))
 
@@ -231,9 +206,12 @@ def login():
 def logout():
     CACHE.clear()
 
-    session.pop("user_id", None)
-    session.pop("username", None)
-    session["isAuthenticated"] = False
+    session.pop('user_id', None)
+    session.pop('username', None)
+    session['isAuthenticated'] = False
+	session['user_id'] = -1
+	session['username'] = ''
+
     return redirect(url_for('index'))
 
 
@@ -241,7 +219,7 @@ def logout():
 def save_report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
 
     if request.method == 'POST':
         try:
@@ -266,7 +244,6 @@ def save_report():
             supabase_insert('reports', report)
 
             return jsonify({'status': 'success'})
-
         except Exception as e:
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
@@ -275,7 +252,7 @@ def save_report():
 def profile():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('profile')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
     return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
 
 
@@ -283,7 +260,7 @@ def profile():
 def report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
 
     # Filtered querry to supabase
     reports = (
