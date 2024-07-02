@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Autenticação
+Autenticação
 {% endblock %}
 {% block content %}
-<div class="w-50 m-auto">
+<section class="w-50 m-auto">
     <div class="rounded shadow p-5">
         <h2 class="text-center fs-1">Autenticação</h2>
         <form action="/login" method="post" class="text-center p-1 important">
@@ -13,5 +13,5 @@
             <input type="submit" class="auth_login rounded shadow mt-3" value="Iniciar Sessão">
         </form>
     </div>
-</div>
+</section>
 {% endblock %}

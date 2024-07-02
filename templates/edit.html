@@ -3,9 +3,8 @@
 {% block title %}
 Edit Prediction
 {% endblock %}
-
 {% block content %}
-<div id="edit-prediction-container" class="runs w-100 m-auto">
+<section id="edit-prediction-container" class="runs w-100 m-auto">
     <div class="w-100 m-auto p-0">
         <div class="w-100 row m-auto p-0">
 
@@ -41,8 +40,7 @@ Edit Prediction
             </div>
         </div>
     </div>
-</div>
-
+</section>
 
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initEditMap"></script>

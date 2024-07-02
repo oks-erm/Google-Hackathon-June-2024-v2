@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.72/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.72/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+	{% block scripts %}{% endblock %}
     <title>
         {% block title %}
         {% endblock %}
@@ -23,27 +24,21 @@
 
 <body>
     <div class="base m-0 p-0 d-flex flex-column">
-        <div class="w-100 p-4 d-flex align-items-center justify-content-between" style="position: absolute">
-            <a href="/" class="flex-row">
-                <img id="logo" src="../static/assets/logo.png">
-            </a>
-            <div>
-                {% if isAuthenticated %}
-                <form action="/profile" method="GET">
-                    <div class="row p-2">
-                        <button class="auth_login col rounded-start pl-0" type="submit">{{ user }}</button>
-                        <button class="col rounded-end p-2 pr-0 px-4" id="logged" type="submit"></button>
-                    </div>
-                </form>
-                {% elif isLoginPage %}
-                {% else %}
-                <!-- <form action="/login" method="GET">
-                    <button class="auth_login rounded shadow" type="submit">Iniciar Sessão</button>
-                </form> -->
-                {% endif %}
-            </div>
-
-        </div>
+		<nav class="w-100 p-4 d-flex align-items-center justify-content-between">
+			<a href="/" class="flex-row">
+				<img id="logo" src="../static/assets/logo.png">
+			</a>
+			<div>
+				{% if isAuthenticated %}
+				<form action="/profile" method="GET">
+					<div class="row p-2">
+						<button class="auth_login col rounded-start pl-0" type="submit">{{ user }}</button>
+						<button class="col rounded-end p-2 pr-0 px-4" id="logged" type="submit"></button>
+					</div>
+				</form>
+				{% endif %}
+			</div>
+		</nav>
 
         <!-- Loader -->
         <div id="loader" role="status">
@@ -56,9 +51,9 @@
         </div>
         
         <!-- Page Content -->
-        <div id="content" style="display: none;"  class="align-items-center justify-content-center my-auto fs-6">
-            {% block content %}{% endblock %}
-        </div>
+        <main id="content" style="display: none;" class="align-items-center justify-content-center my-auto fs-6">
+			{% block content %}{% endblock %}
+		</main>
 
         <script>
             // Hide loader and show content when the page is fully loaded

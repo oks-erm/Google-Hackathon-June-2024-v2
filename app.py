@@ -41,7 +41,6 @@ def hash_password(password):
 @app.route("/")
 def index():
     return render_template('index.html',
-                           isLoginPage=False,
                            isAuthenticated=session.get("isAuthenticated", False),
                            user=session.get("username"))
 
@@ -79,7 +78,7 @@ def create_cards_table():
 def run():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
 
@@ -110,7 +109,6 @@ def run():
 
     return render_template(
         'run.html',
-        isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
         graph_html_merged=plots_merged,
@@ -125,12 +123,11 @@ def run():
 def edit():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('run')
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
 
     # get the same data as the run page
     return render_template(
         'edit.html',
-        isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=os.getenv('GOOGLE_MAP_API_KEY'),
         user=session.get("username")
@@ -139,7 +136,7 @@ def edit():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    return redirect(url_for('/')) # for now no signing up
+    return redirect(url_for('index')) # for now no signing up
 
     if request.method == 'POST':
         login = request.form['username']
@@ -167,7 +164,7 @@ def signup():
         session['url'] = url_for('signup')
         return redirect(url_for('index'))
 
-    return render_template('signup.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False))
+    return render_template('signup.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -197,9 +194,9 @@ def login():
             return redirect(session.get('url', url_for('index')))
         else:
             flash('Invalid credentials', 'error')
-            return redirect(url_for('/'))
+            return redirect(url_for('index'))
 
-    return render_template('login.html', isLoginPage=True, isAuthenticated=session.get("isAuthenticated", False))
+    return render_template('login.html', isAuthenticated=session.get("isAuthenticated", False))
 
 
 @app.route('/logout', methods=['GET'])
@@ -209,8 +206,8 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     session['isAuthenticated'] = False
-	session['user_id'] = -1
-	session['username'] = ''
+    session['user_id'] = -1
+    session['username'] = ''
 
     return redirect(url_for('index'))
 
@@ -219,7 +216,7 @@ def logout():
 def save_report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
         try:
@@ -252,15 +249,15 @@ def save_report():
 def profile():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('profile')
-        return redirect(url_for('/'))
-    return render_template('profile.html', isLoginPage=False, isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
+        return redirect(url_for('index'))
+    return render_template('profile.html', isAuthenticated=session.get("isAuthenticated", False), user=session.get("username"))
 
 
 @app.route('/report', methods=['GET', 'POST'])
 def report():
     if not session.get("isAuthenticated", False):
         session['url'] = url_for('report')
-        return redirect(url_for('/'))
+        return redirect(url_for('index'))
 
     # Filtered querry to supabase
     reports = (
@@ -291,7 +288,6 @@ def report():
         
     return render_template(
         'report.html',
-        isLoginPage=False,
         isAuthenticated=session.get("isAuthenticated", False),
         report_data=report_data,
         user=session.get("username")
