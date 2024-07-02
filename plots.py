@@ -1,9 +1,7 @@
-from models import *
 import pandas as pd
 import plotly.graph_objects as go
 from dotenv import load_dotenv
 from config import supabase, openai
-
 
 # Load environment variables
 load_dotenv()
@@ -62,8 +60,6 @@ def supabase_insert(table, row):
 
 DF_HISTORICAL = pd.DataFrame(supabase_querry('merged'))
 DF_PREDICTED =  pd.DataFrame(supabase_querry('aggregated_data_monthly_with_necessity_long'))
-
-# Atendimentos Per Month
 
 
 def plot_atendimentos_per_month(location, df_historical=None, df_predicted=None):
@@ -130,8 +126,6 @@ def plot_atendimentos_per_month(location, df_historical=None, df_predicted=None)
     graph_html = fig.to_html(full_html=False)
     return graph_html
 
-# Waiting Time Per Month
-
 
 def plot_waiting_time_per_month(location, df_historical=None, df_predicted=None):
 
@@ -197,8 +191,6 @@ def plot_waiting_time_per_month(location, df_historical=None, df_predicted=None)
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
-
-# Procuras Per Month
 
 
 def plot_procuras_per_month(location, df_historical=None, df_predicted=None):
@@ -267,8 +259,6 @@ def plot_procuras_per_month(location, df_historical=None, df_predicted=None):
     )
     graph_html = fig.to_html(full_html=False)
     return graph_html
-
-# Desistencias Per Month
 
 
 def plot_desistencias_per_month(location, df_historical=None, df_predicted=None):
@@ -383,7 +373,7 @@ def get_data_per_year(df):
     return df.to_dict(orient='list')
 
 
-def make_plots(location):
+def make_plots(location, length_of_prediction):
     print('Making plots...')
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
@@ -411,5 +401,6 @@ def make_plots(location):
 
     # Dictionary containing columns and data, grouped by year
     data_by_year = get_data_per_year(df_predicted)
+
 
     return plot_merged_list, plot_historical_list, data_by_year, ai_insights

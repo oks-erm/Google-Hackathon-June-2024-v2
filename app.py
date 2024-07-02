@@ -1,5 +1,4 @@
-from config import app, db, supabase
-from models import *
+from config import app, supabase
 from flask import (
     render_template,
     session,
@@ -17,7 +16,6 @@ import json
 import os
 import warnings
 from dateutil import parser
-
 
 warnings.filterwarnings("ignore")
 
@@ -83,11 +81,10 @@ def run():
         session['url'] = url_for('run')
         return redirect(url_for('login'))
 
-    # # Period for prediction
+    # Period for prediction
     period = request.args.get('period')
     if not period:
-        period = '1 year'
-
+        period = '3 years'
     length_of_prediction = period.split()[0]
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
@@ -96,9 +93,9 @@ def run():
     data_by_year = []
     data_analysis = {}
     for location in available_locations:
-        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location)
+        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location, length_of_prediction)
         if not pm:
-            pm, ph, dby, msg = make_plots(location)
+            pm, ph, dby, msg = make_plots(location, length_of_prediction)
 
         plots_merged.append(pm)
         plots_historic.append(ph)
@@ -210,14 +207,17 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        login = Login.query.filter_by(login=username).first()
-        # here is the problem
-        current_entered_pass = hash_password(password)
+        user_check = (
+            supabase.table('users')
+            .select('username', 'password', 'id')
+            .eq('username', username)
+            .execute()
+        ).data
 
-        if login and login.password == current_entered_pass:
-            session['user_id'] = login.id
+        if user_check and user_check[0]['password'] == hash_password(password):
+            session['user_id'] = user_check[0]['id']
             session["isAuthenticated"] = True
-            session['username'] = username
+            session['username'] = user_check[0]['username']
             flash('Login successful', 'success')
             return redirect(session.get('url', url_for('index')))
         else:
@@ -296,13 +296,20 @@ def report():
 
     report_data = []
     for report in reports:
-        user = Login.query.filter_by(id=report['user']).first()
+        user = (
+            supabase.table('users')
+            .select('username', 'email', 'id')
+            .eq('id', report['user'])
+            .execute()
+        ).data
+        if not user:
+            continue
         report['created_at'] = parser.parse(report['created_at']).strftime('%Y-%m-%d %H:%M:%S')
         report_data.append({
             'created_at': report['created_at'],
             'report': report['report'],
-            'user': user.login,
-            'email': user.email,
+            'user': user[0]['username'],
+            'email': user[0]['email'],
     })
         
     return render_template(
