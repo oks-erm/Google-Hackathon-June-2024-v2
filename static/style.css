@@ -219,13 +219,12 @@ footer div {
     height: 450px;
 }
 
-.color-mark
-{
+.color-mark {
     width: 15px;
     height: 15px;
-    background-color: rgb(199, 0, 0);
+    background-color: #9cb6d3;
     border: 1px solid #4f5562;
-	border-radius: 50%;
+    border-radius: 50%;
 }
 
 /* profile.html */

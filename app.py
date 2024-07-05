@@ -5,7 +5,6 @@ from flask import (
     request,
     redirect,
     url_for,
-    session,
     flash,
     jsonify
 )
@@ -16,6 +15,7 @@ import json
 import os
 import warnings
 from dateutil import parser
+from datetime import datetime
 
 warnings.filterwarnings("ignore")
 
@@ -239,7 +239,7 @@ def save_report():
                 "user": session.get("user_id", -1)
             }
             supabase_insert('reports', report)
-
+            print('report created!')
             return jsonify({'status': 'success'})
         except Exception as e:
             return jsonify({'status': 'error', 'message': str(e)}), 500
