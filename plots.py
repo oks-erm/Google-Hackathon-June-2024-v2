@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from dotenv import load_dotenv
 from config import supabase, openai
+from datetime import datetime
 
 # Load environment variables
 load_dotenv()
@@ -340,10 +341,13 @@ def filter_historical_data(df_historical, location):
     return df_historical
 
 
-def filter_predicted_data(df_predicted, location):
+def filter_predicted_data(df_predicted, location, length_of_prediction):
+    cutoff_year = datetime.now().year + int(length_of_prediction)
+    
     df_predicted['Type'] = 'Predicted'
     df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
     df_predicted = df_predicted[df_predicted['Designacao'] == location]
+    df_predicted = df_predicted[df_predicted['Meses'].dt.year <= cutoff_year]
     df_predicted['Meses'] = df_predicted['Meses'].dt.to_period('M')
     df_predicted = df_predicted.groupby('Meses').agg({'Procuras': 'sum',
                                                       'Atendimentos': 'sum',
@@ -379,7 +383,7 @@ def make_plots(location, length_of_prediction):
     df_predicted = DF_PREDICTED
 
     df_historical = filter_historical_data(df_historical, location)
-    df_predicted = filter_predicted_data(df_predicted, location)
+    df_predicted = filter_predicted_data(df_predicted, location, length_of_prediction)
     plot_merged_list = [
         plot_atendimentos_per_month(
             location, df_historical=df_historical, df_predicted=df_predicted),
@@ -401,6 +405,6 @@ def make_plots(location, length_of_prediction):
 
     # Dictionary containing columns and data, grouped by year
     data_by_year = get_data_per_year(df_predicted)
-
+    print('databyyear: ', data_by_year)
 
     return plot_merged_list, plot_historical_list, data_by_year, ai_insights

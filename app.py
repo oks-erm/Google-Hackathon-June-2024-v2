@@ -45,10 +45,14 @@ def index():
                            user=session.get("username"))
 
 
-def create_cards_table():
+def create_cards_table(length_of_prediction):
     df_predicted = DF_PREDICTED
+
+    cutoff_year = datetime.now().year + int(length_of_prediction)
+
     df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
     df_predicted['Ano'] = df_predicted['Meses'].dt.year
+    df_predicted = df_predicted[df_predicted['Ano'] <= cutoff_year]
     df_predicted = df_predicted.groupby(['Designacao', 'Ano']).agg({
         'Procuras': 'sum',
         'Atendimentos': 'sum',
@@ -71,6 +75,9 @@ def create_cards_table():
             'designacao': js['Designacao'][item],
             'necessity_metric': js['Necessity_Metric'][item]
         })
+    print('carsds: \n', df_predicted)
+    print('maxnessessity: \n', max_necessity_metric_entries) 
+
     return cards_table
 
 
@@ -93,9 +100,9 @@ def run():
     data_by_year = []
     data_analysis = {}
     for location in available_locations:
-        pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location, length_of_prediction)
-        if not pm:
-            pm, ph, dby, msg = make_plots(location, length_of_prediction)
+        # pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location, length_of_prediction)
+        # if not pm:
+        pm, ph, dby, msg = make_plots(location, length_of_prediction)
 
         plots_merged.append(pm)
         plots_historic.append(ph)
@@ -104,7 +111,8 @@ def run():
 
     # testing 
     cards_table = []
-    cards_table = CACHE.get('cards_table', create_cards_table)
+    cards_table = create_cards_table(length_of_prediction)
+    # cards_table = CACHE.get('cards_table', create_cards_table)
     CACHE.set('data_analysis', data_analysis)
 
     return render_template(
@@ -223,7 +231,8 @@ def save_report():
             body = request.get_json()
             location = body.get('location')
 
-            cards_table = CACHE.get('cards_table', create_cards_table)
+            # This cache situation should be fixed
+            cards_table = CACHE.get('cards_table', create_cards_table, 3)
             data_analysis = CACHE.get('data_analysis', lambda: {})
             # Filter cards_table for the specific location
             filtered_cards_table = next((card for card in cards_table if card.get('designacao') == location), None)
@@ -242,6 +251,7 @@ def save_report():
             print('report created!')
             return jsonify({'status': 'success'})
         except Exception as e:
+            print(str(e))
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
