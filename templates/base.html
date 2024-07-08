@@ -23,8 +23,8 @@
 </head>
 
 <body>
-    <div class="base m-0 p-0 d-flex flex-column">
-		<nav class="w-100 p-4 d-flex align-items-center justify-content-between">
+    <div class="base m-0 p-0 d-flex flex-column justify-content-between">
+		<nav class="w-100 px-4 pt-4 d-flex align-items-center justify-content-between">
 			<a href="/" class="flex-row">
 				<img id="logo" src="../static/assets/logo.png">
 			</a>
@@ -42,12 +42,23 @@
 
         <!-- Loader -->
         <div id="loader" role="status">
-            <span class="spinner-grow text-success" role="status">
+            <!-- <span class="spinner-grow text-success" role="status">
             </span>
             <span class="spinner-grow text-warning" role="status">
             </span>
             <span class="spinner-grow text-danger" role="status">
-            </span>
+            </span> -->
+            <div class="loader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
         
         <!-- Page Content -->
@@ -62,16 +73,17 @@
                 document.getElementById("content").style.display = "block";
             });
         </script>
-		<footer class="pb-3 w-75 mx-auto">
-			<div class="w-100 row px-5">
+
+		<footer class="pb-3 w-75 mx-auto ">
+			<div class="w-100 row">
 				<div class="m-0 p-0 col">
-					<p class="m-0 p-0 w-100 fs-6 text-start">Google AI Hackathon</p>
+					<p class="m-0 p-0 w-100 text-start">Google AI Hackathon</p>
 				</div>
 					<div class="m-0 p-0 col">
-					<p class="m-0 p-0 w-100 fs-6 text-center">POINTER SITUATION</p>
+					<p class="m-0 p-0 w-100 text-center">POINTER SITUATION</p>
 				</div>
 					<div class="m-0 p-0 col">
-					<p class="m-0 p-0 w-100 fs-6 text-end">42 Lisboa</p>
+					<p class="m-0 p-0 w-100 text-end">42 Lisboa</p>
 				</div>
 			</div>
 		</footer>
