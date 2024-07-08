@@ -377,14 +377,29 @@ def get_data_per_year(df):
     return df.to_dict(orient='list')
 
 
+# Card summary shows up on the run page
+def create_card_summary(data_by_year):
+    summary = {}
+    summary['max_necessity_metric'] = max(data_by_year['Necessity_Metric'])
+
+    return summary
+
+
 def make_plots(location, length_of_prediction):
-    print('Making plots...')
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
-
+    card = {}
+    card['lat'] = df_historical[df_historical['Designacao'] == location]['Latitude'].iloc[0]
+    card['long'] = df_historical[df_historical['Designacao'] == location]['Longitude'].iloc[0]
+    
     df_historical = filter_historical_data(df_historical, location)
     df_predicted = filter_predicted_data(df_predicted, location, length_of_prediction)
-    plot_merged_list = [
+    # Limit necessity_metric to 100
+    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].clip(upper=100)
+
+    card['location'] = location
+    card['safe_location'] = location.replace(' ', '')
+    card['plots_merged'] = [
         plot_atendimentos_per_month(
             location, df_historical=df_historical, df_predicted=df_predicted),
         plot_waiting_time_per_month(
@@ -394,17 +409,16 @@ def make_plots(location, length_of_prediction):
         plot_desistencias_per_month(
             location, df_historical=df_historical, df_predicted=df_predicted),
     ]
-    plot_historical_list = [
+    card['plots_historic'] = [
         plot_atendimentos_per_month(location, df_historical=df_historical),
         plot_waiting_time_per_month(location, df_historical=df_historical),
         plot_procuras_per_month(location, df_historical=df_historical),
         plot_desistencias_per_month(location, df_historical=df_historical),
     ]
-    ai_insights = respond_gpt(
+    card['insights'] = respond_gpt(
         df_historical.to_string(), df_predicted.to_string())
-
     # Dictionary containing columns and data, grouped by year
-    data_by_year = get_data_per_year(df_predicted)
-    print('databyyear: ', data_by_year)
-
-    return plot_merged_list, plot_historical_list, data_by_year, ai_insights
+    card['data_by_year'] = get_data_per_year(df_predicted)
+    card['summary'] = create_card_summary(card['data_by_year'])
+    
+    return card

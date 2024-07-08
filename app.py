@@ -45,42 +45,6 @@ def index():
                            user=session.get("username"))
 
 
-def create_cards_table(length_of_prediction):
-    df_predicted = DF_PREDICTED
-
-    cutoff_year = datetime.now().year + int(length_of_prediction)
-
-    df_predicted['Meses'] = pd.to_datetime(df_predicted['Meses'])
-    df_predicted['Ano'] = df_predicted['Meses'].dt.year
-    df_predicted = df_predicted[df_predicted['Ano'] <= cutoff_year]
-    df_predicted = df_predicted.groupby(['Designacao', 'Ano']).agg({
-        'Procuras': 'sum',
-        'Atendimentos': 'sum',
-        'Desistencias': 'sum',
-        'Tempo_medio_de_espera_diario': 'mean',
-        'Necessity_Metric': 'mean'
-    }).reset_index()
-    df_predicted['Necessity_Metric'] = df_predicted['Necessity_Metric'].round(2)
-    idx = df_predicted.groupby('Designacao')['Necessity_Metric'].idxmax()
-    max_necessity_metric_entries = df_predicted.loc[idx]
-    max_necessity_metric_entries = max_necessity_metric_entries.reset_index(drop=True)
-    max_necessity_metric_entries['Index'] = max_necessity_metric_entries.index
-    max_necessity_metric_entries = max_necessity_metric_entries.sort_values(by='Necessity_Metric', ascending=False)
-    cards_table = []
-    js = json.loads(max_necessity_metric_entries.to_json())
-    for index, item in enumerate(js['Designacao'].keys()):
-        cards_table.append({
-            'index_before_sorting': js['Index'][item],
-            'index': index,
-            'designacao': js['Designacao'][item],
-            'necessity_metric': js['Necessity_Metric'][item]
-        })
-    print('carsds: \n', df_predicted)
-    print('maxnessessity: \n', max_necessity_metric_entries) 
-
-    return cards_table
-
-
 @app.route('/run', methods=['GET', 'POST'])
 def run():
     if not session.get("isAuthenticated", False):
@@ -94,36 +58,17 @@ def run():
     if not period:
         period = '3 years'
     length_of_prediction = period.split()[0]
-
-    plots_merged = []
-    plots_historic = []
-    data_by_year = []
-    data_analysis = {}
+    
+    cards = []
     for location in available_locations:
-        # pm, ph, dby, msg = CACHE.get(f'{location}', make_plots, location, length_of_prediction)
-        # if not pm:
-        pm, ph, dby, msg = make_plots(location, length_of_prediction)
-
-        plots_merged.append(pm)
-        plots_historic.append(ph)
-        data_by_year.append(dby)
-        data_analysis[location] = msg
-
-    # testing 
-    cards_table = []
-    cards_table = create_cards_table(length_of_prediction)
-    # cards_table = CACHE.get('cards_table', create_cards_table)
-    CACHE.set('data_analysis', data_analysis)
+        cards.append(make_plots(location, length_of_prediction))
+    sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'], reverse=True)
 
     return render_template(
         'run.html',
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
-        graph_html_merged=plots_merged,
-        graph_html_historic=plots_historic,
-        data_by_year=data_by_year,
-        data_analysis=data_analysis,
-        cards_data=cards_table,
+        cards=sorted_cards,
         user=session.get("username")
     )
 

@@ -14,7 +14,7 @@
     margin: 0;
     padding: 0;
     border: none;
-	font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
     color: var(--dark);
     font-optical-sizing: auto;
     font-weight: 200;
@@ -22,14 +22,14 @@
 }
 
 /* base.html */
-.base
-{
+.base {
     width: 100%;
-    height: 100vh;
     background-color: var(--offwhite)
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     background-color: var(--offwhite);
     font-family: "Lexend", sans-serif;
 }
@@ -38,27 +38,24 @@ h1, h2, h3 {
     --bs-gutter-x: 0rem !important;
 }
 
-#logo
-{
+#logo {
     width: 120px;
     opacity: 0.8;
 }
 
-button, input[type="submit"]
-{
-    background-color:var(--blue) !important;
-    color : var(--bluesmoke) !important;
+button,
+input[type="submit"] {
+    background-color: var(--blue) !important;
+    color: var(--bluesmoke) !important;
     border: none;
     padding: 5px 10px;
 }
 
-.shadow
-{
+.shadow {
     box-shadow: -20px 15px 50px #00000015;
 }
 
-#logged
-{
+#logged {
 
     background-color: var(--blue);
     background-image: url("../static/assets/ppl-icon-white.png");
@@ -70,8 +67,7 @@ button, input[type="submit"]
     cursor: pointer;
 }
 
-footer
-{
+footer {
     color: var(--lightgray);
     padding: 0.5rem 0.75rem;
     border-top: 3px solid #4783e261;
@@ -90,33 +86,28 @@ footer div {
 
 
 /* index.html */
-.index-button
-{
+.index-button {
     padding: 10px 14%;
     box-shadow: -50px 50px 40px #00000015;
 }
 
-.intro-title
-{
+.intro-title {
     font-size: min(7.5vw, 54px);
     font-weight: 400;
 }
 
-.intro-text
-{
+.intro-text {
     font-size: min(4vw, 21px);
     color: var(--lightgray);
     line-height: 1.4;
     letter-spacing: 0.5px;
 }
 
-.btn-cont
-{
+.btn-cont {
     width: 36%;
 }
 
-.brder
-{
+.brder {
     border-radius: 6px;
     border: 2px solid #ececec;
     width: 14rem;
@@ -129,13 +120,13 @@ footer div {
 }
 
 /* login.html */
-.login-wrap
-{
+.login-wrap {
     padding: 5% 20%;
 }
 
 /* run.html */
-.item, .new-pin {
+.item,
+.new-pin {
     display: flex;
     flex-flow: row;
     align-items: center;
@@ -161,62 +152,61 @@ footer div {
 }
 
 
-.title
-{
+.title {
     padding: 0 5px;
     background-color: transparent;
     border: none;
     box-shadow: none;
 }
 
-.title-cont
-{
+.title-cont {
     margin: 0 5%;
 }
 
-.item>button, .add
-{
+.item>button,
+.add {
     border: none;
     border-radius: 0;
     /* font-weight: 300 !important; */
     font-size: 0.9rem;
 }
 
-.runs
-{
+.runs {
     display: flex;
     flex-flow: row;
 }
 
-.add
-{
+.add {
     width: 40%;
     margin: 30px auto;
 }
 
-#add-new-pins, .entries {
+#add-new-pins,
+.entries {
     height: 250px !important;
     overflow-y: scroll;
 }
 
-#add-new-pins::-webkit-scrollbar, .entries::-webkit-scrollbar {
+#add-new-pins::-webkit-scrollbar,
+.entries::-webkit-scrollbar {
     display: none;
 }
 
-#add-new-pins, .entries {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+#add-new-pins,
+.entries {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
-.new-pin
-{
+.new-pin {
     padding: 10px;
 }
 
-#map
-{
-    width: 600px;
-    height: 450px;
+#map {
+    max-width: 600px;
+    max-height: 450px;
 }
 
 .color-mark {
@@ -228,8 +218,7 @@ footer div {
 }
 
 /* profile.html */
-.profile-pic
-{
+.profile-pic {
     padding: 50px;
     border-radius: 50%;
     background-color: var(--offwhite);
@@ -267,8 +256,7 @@ footer div {
     padding: 0.5rem 7rem !important;
 }
 
-.bgr
-{
+.bgr {
     background-color: var(--offwhite)
 }
 
@@ -276,12 +264,12 @@ footer div {
 .auth_login:hover,
 #report_button:hover,
 #login_button:hover,
-.item>button:hover
-{
+.item>button:hover {
     background-color: #1871ff !important;
 }
 
-.auth_login, .nav_buttons button {
+.auth_login,
+.nav_buttons button {
     padding: 0.5rem 2rem !important;
 }
 
@@ -315,18 +303,20 @@ footer div {
 .selected-location {
     outline: 2px solid #1871ff !important;
 }
+
 #map_wrapper {
     display: flex;
 }
 
 #cards-wrapper {
-	display: flex;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 20px;
 }
 
-.sort{
-    opacity:0.5;
+.sort {
+    opacity: 0.5;
     font-size: 14px;
 }
 
@@ -335,8 +325,7 @@ footer div {
     padding: 0.5rem 2.4rem !important;
 }
 
-#map button
-{
+#map button {
     background-color: var(--offwhite) !important;
     color: inherit !important;
 }
@@ -434,19 +423,89 @@ strong {
     max-width: 70% !important;
 }
 
-.ww
-{
+.ww {
     width: 30%;
 }
 
-.graphs
-{
+.graphs {
     width: 100%;
 }
 
-@media only screen and (max-width: 430px) {
-	#map{
-		width: 100vw;
-		overflow: auto;
-	}
+.base {
+    min-height: 100vh;
+}
+
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media (max-width: 435px) {
+    #map {
+        width: 100%;
+        height: 420px;
+        overflow: auto;
+    }
+
+    #content>div>p {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #start_button {
+        margin-top: 8px;
+        width: 60vw;
+        padding: 0.5rem 5rem !important;
+    }
+}
+
+@media (max-width: 995px) {
+
+    .color-mark {
+        width: 15px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .modal-dialog {
+        max-width: 90%;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+    }
+
+    .footer-text {
+        text-align: center !important;
+    }
+
+    .footer-text-center {
+        margin-top: 1rem;
+    }
+
+    body>div>footer>div>div>p
+    {
+        font-size: 11px !important;
+    }
+
+    #map-wrapper {
+        overflow: hidden;
+    }
+
+    h1 {
+        font-size: 38px !important;
+        font-weight: 500 !important;
+    }
+
+    #auth-form {
+        max-width: 70vw;
+    }
+
+    body>div>footer>div {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
