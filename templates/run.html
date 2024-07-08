@@ -12,47 +12,47 @@ Previsões
 		<div id="cards-wrapper" class="col-md-6">
 			<h3 class="p-0 m-0 text-center">Previsões</h3>
 			<div id="cards">
-				{% for card in cards_data%}
+				{% for card in cards %}
 				<div class="card mb-3">
 					<div class="card-body d-flex flex-row justify-content-between
-							  align-items-center specific-location" id="{{card['designacao']}}" data-location="{{card['designacao']}}">
-					  <div class="d-block p-0 mx-3 color-mark indicator" data-necessity="{{ card['necessity_metric'] }}"></div>
-					  <span>{{ card['designacao'] }}</span>
-					  <span>Necessidade: {{ card['necessity_metric'] }}%</span>
+							  align-items-center specific-location" id="{{card['safe_location']}}" data-location="{{card['safe_location']}}">
+					  <div class="d-block p-0 mx-3 color-mark indicator" data-necessity="{{ card['summary']['max_necessity_metric'] }}"></div>
+					  <span>{{ card['location'] }}</span>
+					  <span>Necessidade: {{ card['summary']['max_necessity_metric'] }}%</span>
 					  <div>
-						<button type="button" class="btn btn-primary rounded" data-id="{{card.index}}" data-toggle="modal"
-						  data-target="#modal-{{card.index}}">Detalhes</button>
+						<button type="button" class="btn btn-primary rounded" data-id="{{card['safe_location']}}" data-toggle="modal"
+						  data-target="#modal-{{card['safe_location']}}">Detalhes</button>
 					  </div>
 					</div>
 				  </div>
 				<!-- Modal starts here -->
-				<div class="modal fade" id="modal-{{card.index}}">
+				<div class="modal fade" id="modal-{{card['safe_location']}}">
 					<div class="custom-modal modal-dialog modal-dialog-centered modal-md">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h4 class="modal-title">{{card.designacao}}</h4>
+								<h4 class="modal-title">{{card['location']}}</h4>
 							</div>
 							<!-- Modal Body -->
 							<!-- Tabs -->
-							<ul class="nav nav-tabs" id="myTab{{card.index}}" role="tablist">
+							<ul class="nav nav-tabs" id="myTab{{card['safe_location']}}" role="tablist">
 								<li class="nav-item" role="presentation">
-								<a class="nav-link active" id="predicted-data-tab{{card.index}}" data-bs-toggle="tab"
-									href="#predicted-data{{card.index}}" role="tab" aria-controls="predicted-data{{card.index}}"
+								<a class="nav-link active" id="predicted-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
+									href="#predicted-data{{card['safe_location']}}" role="tab" aria-controls="predicted-data{{card['safe_location']}}"
 									aria-selected="true">Previsões</a>
 								</li>
 								<li class="nav-item" role="presentation">
-								<a class="nav-link" id="historic-data-tab{{card.index}}" data-bs-toggle="tab"
-									href="#historic-data{{card.index}}" role="tab" aria-controls="historic-data{{card.index}}"
+								<a class="nav-link" id="historic-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
+									href="#historic-data{{card['safe_location']}}" role="tab" aria-controls="historic-data{{card['safe_location']}}"
 									aria-selected="false">Dados históricos</a>
 								</li>
 								<li class="nav-item" role="presentation">
-								<a class="nav-link" id="info-tab{{card.index}}" data-bs-toggle="tab" href="#info{{card.index}}" role="tab" aria-controls="info{{card.index}}" aria-selected="false">Info</a>
+								<a class="nav-link" id="info-tab{{card['safe_location']}}" data-bs-toggle="tab" href="#info{{card['safe_location']}}" role="tab" aria-controls="info{{card['safe_location']}}" aria-selected="false">Info</a>
 								</li>
 							</ul>
 							<!-- Tab content -->
-							<div class="tab-content" id="myTabContent{{card.index}}">
-								<div class="tab-pane fade show active" id="predicted-data{{card.index}}" role="tabpanel"
-								aria-labelledby="predicted-data-tab{{card.index}}">
+							<div class="tab-content" id="myTabContent{{card['safe_location']}}">
+								<div class="tab-pane fade show active" id="predicted-data{{card['safe_location']}}" role="tabpanel"
+								aria-labelledby="predicted-data-tab{{card['safe_location']}}">
 									<div class="modal-body">
 										<div class="d-flex flex-column justify-content-around">
 											<h3 class="text-center">Métricas Previstas</h3>
@@ -72,62 +72,61 @@ Previsões
 												</tbody>
 												</table>
 											</div>
-											<!-- index = year index | card.index = card index starting at the top one | card.index_before_sorting = index based on location list (app.py)-->
-											{% for index in data_by_year[card.index]['Index'] %}
+											{% for index in card['data_by_year']['Index'] %}
 											<span class="data-rows"
-												data-year="{{data_by_year[card.index]['Ano'][index]}}"
-												data-procuras="{{ data_by_year[card.index_before_sorting]['Procuras'][index] }}"
-												data-atendim="{{ data_by_year[card.index_before_sorting]['Atendimentos'][index] }}"
-												data-desist="{{ data_by_year[card.index_before_sorting]['Desistencias'][index] }}"
-												data-espera="{{ data_by_year[card.index_before_sorting]['Tempo_medio_de_espera_diario'][index] }}"
-												data-necessidade="{{ data_by_year[card.index_before_sorting]['Necessity_Metric'][index] }}">
+												data-year="{{card['data_by_year']['Ano'][index]}}"
+												data-procuras="{{ card['data_by_year']['Procuras'][index] }}"
+												data-atendim="{{ card['data_by_year']['Atendimentos'][index] }}"
+												data-desist="{{ card['data_by_year']['Desistencias'][index] }}"
+												data-espera="{{ card['data_by_year']['Tempo_medio_de_espera_diario'][index] }}"
+												data-necessidade="{{ card['data_by_year']['Necessity_Metric'][index] }}">
 											</span>
 											{% endfor %}
 											<h3 class="text-center pt-5">Gráficos Previstos</h3>
 											<div class="d-flex flex-column justify-content-around graphs mx-3 data-titles">
 												<div class="graphs">
-												{{ graph_html_merged[card.index][0] | safe }}
+												{{ card['plots_merged'][0] | safe }}
 												</div>
 												<div class="graphs">
-												{{ graph_html_merged[card.index][1] | safe }}
+												{{ card['plots_merged'][1] | safe }}
 												</div>
 												<div class="graphs">
-												{{ graph_html_merged[card.index][2] | safe }}
+												{{ card['plots_merged'][2] | safe }}
 												</div>
 												<div class="graphs">
-												{{ graph_html_merged[card.index][3] | safe }}
+												{{ card['plots_merged'][3] | safe }}
 												</div>
 											</div>
 											<div class="d-flex flex-column justify-content-around">
 												<div>
 													<h3 class="text-center">IA Insights</h3>
 													<div class="data-titles">
-														{{ data_analysis[card.designacao] | safe }}
+														{{ card['insights'] | safe }}
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="tab-pane fade" id="historic-data{{card.index}}" role="tabpanel"
-								aria-labelledby="historic-data-tab{{card.index}}">
-									<div class="tab-pane fade show active" id="predicted-data{{card.index}}" role="tabpanel"
-										aria-labelledby="historic-data-tab{{card.index}}">
+								<div class="tab-pane fade" id="historic-data{{card['safe_location']}}" role="tabpanel"
+								aria-labelledby="historic-data-tab{{card['safe_location']}}">
+									<div class="tab-pane fade show active" id="predicted-data{{card['safe_location']}}" role="tabpanel"
+										aria-labelledby="historic-data-tab{{card['safe_location']}}">
 										<div class="modal-body">
 											<div class="d-flex flex-column justify-content-around">
 												<h3 class="text-center pt-3">Gráficos Históricos</h3>
 												<div class="d-flex flex-column justify-content-around graphs mx-3">
 													<div class="graphs">
-														{{ graph_html_historic[card.index][0] | safe }}
+														{{ card['plots_merged'][0] | safe }}
 													</div>
 													<div class="graphs">
-														{{ graph_html_historic[card.index][1] | safe }}
+														{{ card['plots_merged'][1] | safe }}
 													</div>
 													<div class="graphs">
-														{{ graph_html_historic[card.index][2] | safe }}
+														{{ card['plots_merged'][2] | safe }}
 													</div>
 													<div class="graphs">
-														{{ graph_html_historic[card.index][3] | safe }}
+														{{ card['plots_merged'][3] | safe }}
 													</div>
 												</div>
 											</div>
@@ -135,7 +134,7 @@ Previsões
 									</div>
 								</div>
 				
-								<div class="tab-pane fade" id="info{{card.index}}" role="tabpanel" aria-labelledby="info-tab{{card.index}}">
+								<div class="tab-pane fade" id="info{{card['safe_location']}}" role="tabpanel" aria-labelledby="info-tab{{card['safe_location']}}">
 									<div class="modal-body">
 										<div class="d-flex flex-column justify-content-around">
 											<h3>Informações das Métricas</h3>
@@ -191,16 +190,18 @@ Previsões
 <script>
   let selectedLocation = null;
 
+  //  for loop goes through every location and retrieves coords and safe_location
+
   const cords = [
     {
-      lat: 38.73137703560319,
-      lng: -9.144382789532516,
-      title: 'Loja de Cidadão Saldanha'
+      lat: parseFloat("{{ cards[0]['long'] }}"),
+      lng: parseFloat("{{ cards[0]['lat'] }}"),
+      title: "{{ cards[0]['location'] }}"
     },
     {
-      lat: 38.750402670143856,
-      lng: -9.17123563186069,
-      title: 'Loja de Cidadão Laranjeiras'
+      lat: parseFloat("{{ cards[1]['long'] }}"),
+      lng: parseFloat("{{ cards[1]['lat'] }}"),
+      title: "{{ cards[1]['location'] }}"
     }
   ];
 
@@ -344,18 +345,18 @@ Previsões
 		  <option value="designacao">Designation</option>
 		</select>
 	  </div>
-	  {% for card in cards_data%}
-	  <div class="item py-3 my-2 specific-location" id="{{card['designacao']}}"
-		data-location="{{card['designacao']}}">
+	  {% for card in cards%}
+	  <div class="item py-3 my-2 specific-location" id="{{card['location']}}"
+		data-location="{{card['location']}}">
 		<div class="d-flex flex-row">
-		  <div class="d-block p-0 mx-3 rounded-circle color-mark indicator" data-necessity="{{ card['necessity_metric'] }}"></div>
+		  <div class="d-block p-0 mx-3 rounded-circle color-mark indicator" data-necessity="{{ card['summary']['max_necessity_metric'] }}"></div>
 		</div>
 		<div class="row w-75 m-auto pl-2">
 		  <div class="col-7">
-			<span>{{ card['designacao'] }}</span>
+			<span>{{ card['location'] }}</span>
 		  </div>
 		  <div class="col-5">
-			<span>Necessidade: {{ card['necessity_metric'] }}%</span>
+			<span>Necessidade: {{ card['summary']['max_necessity_metric'] }}%</span>
 		  </div>
 		</div>
 		<button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal"
