@@ -6,10 +6,10 @@ Previsões
 
 <section class="container mt-4">
 	<div id="wrapper" class="row">
-		<div id="map-wrapper" class="col-md-6">
-			<div id="map"></div>
+		<div id="map-wrapper" class="col-12 col-md-6 mb-4 mb-md-0">
+			<div id="map" style="height: 600px"></div>
 		</div>
-		<div id="cards-wrapper" class="col-md-6">
+		<div id="cards-wrapper" class="col-12 col-md-6">
 			<h3 class="p-0 m-0 text-center">Previsões</h3>
 			<div id="cards">
 				{% for card in cards %}
@@ -19,12 +19,12 @@ Previsões
 					  <div class="d-block p-0 mx-3 color-mark indicator" data-necessity="{{ card['summary']['max_necessity_metric'] }}"></div>
 					  <span>{{ card['location'] }}</span>
 					  <span>Necessidade: {{ card['summary']['max_necessity_metric'] }}%</span>
-					  <div>
+						<div>
 						<button type="button" class="btn btn-primary rounded" data-id="{{card['safe_location']}}" data-toggle="modal"
 						  data-target="#modal-{{card['safe_location']}}">Detalhes</button>
-					  </div>
+						</div>
 					</div>
-				  </div>
+				</div>
 				<!-- Modal starts here -->
 				<div class="modal fade" id="modal-{{card['safe_location']}}">
 					<div class="custom-modal modal-dialog modal-dialog-centered modal-md">
@@ -36,14 +36,14 @@ Previsões
 							<!-- Tabs -->
 							<ul class="nav nav-tabs" id="myTab{{card['safe_location']}}" role="tablist">
 								<li class="nav-item" role="presentation">
-								<a class="nav-link active" id="predicted-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
-									href="#predicted-data{{card['safe_location']}}" role="tab" aria-controls="predicted-data{{card['safe_location']}}"
-									aria-selected="true">Previsões</a>
+									<a class="nav-link active" id="predicted-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
+										href="#predicted-data{{card['safe_location']}}" role="tab" aria-controls="predicted-data{{card['safe_location']}}"
+										aria-selected="true">Previsões</a>
 								</li>
 								<li class="nav-item" role="presentation">
 								<a class="nav-link" id="historic-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
 									href="#historic-data{{card['safe_location']}}" role="tab" aria-controls="historic-data{{card['safe_location']}}"
-									aria-selected="false">Dados históricos</a>
+										aria-selected="false">Dados históricos</a>
 								</li>
 								<li class="nav-item" role="presentation">
 								<a class="nav-link" id="info-tab{{card['safe_location']}}" data-bs-toggle="tab" href="#info{{card['safe_location']}}" role="tab" aria-controls="info{{card['safe_location']}}" aria-selected="false">Info</a>
@@ -58,18 +58,18 @@ Previsões
 											<h3 class="text-center">Métricas Previstas</h3>
 											<div class="d-flex flex-column justify-content-around pb-3">
 												<table class="text-center">
-												<thead>
-													<tr class="border-bottom">
-													<th scope="col">Ano</th>
-													<th scope="col">Procuras</th>
-													<th scope="col">Atendimentos</th>
-													<th scope="col">Desistências</th>
-													<th scope="col">T. espera diário</th>
-													<th scope="col">Necessidade</th>
-													</tr>
-												</thead>
-												<tbody>
-												</tbody>
+													<thead>
+														<tr class="border-bottom">
+															<th scope="col">Ano</th>
+															<th scope="col">Procuras</th>
+															<th scope="col">Atendimentos</th>
+															<th scope="col">Desistências</th>
+															<th scope="col">T. espera diário</th>
+															<th scope="col">Necessidade</th>
+														</tr>
+													</thead>
+													<tbody>
+													</tbody>
 												</table>
 											</div>
 											{% for index in card['data_by_year']['Index'] %}
@@ -133,33 +133,48 @@ Previsões
 										</div>
 									</div>
 								</div>
-				
 								<div class="tab-pane fade" id="info{{card['safe_location']}}" role="tabpanel" aria-labelledby="info-tab{{card['safe_location']}}">
 									<div class="modal-body">
 										<div class="d-flex flex-column justify-content-around">
 											<h3>Informações das Métricas</h3>
 											<ul>
-												<li><strong>Procuras:</strong> Indica o número de pessoas que procuraram atendimento no serviço durante o mês. Este
-												dado é fundamental para entender a demanda pelo serviço.</li>
-												<li><strong>Atendimentos:</strong> Refere-se ao número de pessoas que efetivamente receberam atendimento no serviço
-												durante o mês. Este ponto de dado ajuda a avaliar a capacidade de resposta do serviço à demanda.</li>
-												<li><strong>Desistências:</strong> Representa o número de pessoas que desistiram de esperar pelo atendimento e não
-												foram atendidas. Este dado é crucial para medir a eficácia do serviço em reter e atender aos seus utentes.</li>
-												<li><strong>Tempo médio de espera diário:</strong> Indica o tempo médio que as pessoas esperaram diariamente para
-												serem atendidas. Este ponto de dado é vital para avaliar a eficiência do serviço e o impacto sobre os utentes.</li>
+												<li><strong>Procuras:</strong> Indica o número de pessoas que procuraram atendimento no
+													serviço
+													durante o mês. Este
+													dado é fundamental para entender a demanda pelo serviço.</li>
+												<li><strong>Atendimentos:</strong> Refere-se ao número de pessoas que efetivamente receberam
+													atendimento no serviço
+													durante o mês. Este ponto de dado ajuda a avaliar a capacidade de resposta do serviço à
+													demanda.</li>
+												<li><strong>Desistências:</strong> Representa o número de pessoas que desistiram de esperar
+													pelo
+													atendimento e não
+													foram atendidas. Este dado é crucial para medir a eficácia do serviço em reter e atender aos
+													seus utentes.</li>
+												<li><strong>Tempo médio de espera diário:</strong> Indica o tempo médio que as pessoas
+													esperaram
+													diariamente para
+													serem atendidas. Este ponto de dado é vital para avaliar a eficiência do serviço e o impacto
+													sobre os utentes.</li>
 												<li><strong>Necessidade:</strong></li>
 												<ul>
-													<li>A métrica de Necessidade é derivada considerando o limite de tempo de espera definido e os fatores de
-													crescimento e densidade populacional. Ela é calculada para identificar a urgência e a necessidade de melhorar
-													os serviços oferecidos.</li></br>
+													<li>A métrica de Necessidade é derivada considerando o limite de tempo de espera definido e
+														os
+														fatores de
+														crescimento e densidade populacional. Ela é calculada para identificar a urgência e a
+														necessidade de melhorar
+														os serviços oferecidos.</li></br>
 													<li><strong>Como é derivada:</strong></li></br>
 													<ul>
-														<li><strong>Limite de tempo de Espera:</strong> Define o tempo máximo aceitável que uma pessoa pode esperar
-														antes que a situação seja considerada crítica.</li>
-														<li><strong>Crescimento Populacional:</strong> Refere-se ao aumento da população na área servida, o que pode
-														aumentar a demanda pelos serviços.</li>
-														<li><strong>Densidade Populacional:</strong> Reflete o número de pessoas numa área específica, influenciando
-														diretamente a procura pelos serviços.</li>
+														<li><strong>Limite de tempo de Espera:</strong> Define o tempo máximo aceitável que uma
+															pessoa pode esperar
+															antes que a situação seja considerada crítica.</li>
+														<li><strong>Crescimento Populacional:</strong> Refere-se ao aumento da população na área
+															servida, o que pode
+															aumentar a demanda pelos serviços.</li>
+														<li><strong>Densidade Populacional:</strong> Reflete o número de pessoas numa área
+															específica, influenciando
+															diretamente a procura pelos serviços.</li>
 													</ul>
 												</ul>
 											</ul>
@@ -179,7 +194,7 @@ Previsões
 			</div>
 			<div class="d-flex mt-4 justify-content-center">
 				<button id="add_button" type="button" class="rounded py-2 mx-1 add_button_class"
-				onclick="pushToEditPage()">Adicionar pontos</button>
+					onclick="pushToEditPage()">Adicionar pontos</button>
 			</div>
 		</div>
 	</div>
@@ -188,193 +203,133 @@ Previsões
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap"></script>
 <script>
-  let selectedLocation = null;
+	let selectedLocation = null;
 
   //  for loop goes through every location and retrieves coords and safe_location
 
-  const cords = [
-    {
+	const cords = [
+		{
       lat: parseFloat("{{ cards[0]['long'] }}"),
       lng: parseFloat("{{ cards[0]['lat'] }}"),
-      title: "{{ cards[0]['location'] }}"
-    },
-    {
+      title: "{{ cards[0]['safe_location'] }}"
+		},
+		{
       lat: parseFloat("{{ cards[1]['long'] }}"),
       lng: parseFloat("{{ cards[1]['lat'] }}"),
-      title: "{{ cards[1]['location'] }}"
-    }
-  ];
+      title: "{{ cards[1]['safe_location'] }}"
+		}
+	];
 
-  document.addEventListener('DOMContentLoaded', (event) => {
+	document.addEventListener('DOMContentLoaded', (event) => {
 
-    addExistingPoints();
+		addExistingPoints();
 
-    let addButton = document.getElementById('add_button');
-    addButton.disabled = true;
-    addButton.classList.add('disabled-btn');
+		let addButton = document.getElementById('add_button');
+		addButton.disabled = true;
+		addButton.classList.add('disabled-btn');
 
-    // get all the classes with specific-location and attach a click event that called chooseThisLocation
-    allLocationElements = document.getElementsByClassName('specific-location');
-    for (let index = 0; index < allLocationElements.length; index++) {
-      allLocationElements[index].addEventListener('click', function () {
-        // chooseThisLocation(this);
-        let addButton = document.getElementById('add_button');
-        addButton.disabled = false;
-        addButton.classList.remove('disabled-btn');
+		// get all the classes with specific-location and attach a click event that called chooseThisLocation
+		allLocationElements = document.getElementsByClassName('specific-location');
+		for (let index = 0; index < allLocationElements.length; index++) {
+			allLocationElements[index].addEventListener('click', function () {
+				// chooseThisLocation(this);
+				let addButton = document.getElementById('add_button');
+				addButton.disabled = false;
+				addButton.classList.remove('disabled-btn');
 
 
-        const location = this.getAttribute('data-location');
-        for (let i = 0; i < allLocationElements.length; i++) {
-          allLocationElements[i].classList.remove('selected-location');
-        }
+				const location = this.getAttribute('data-location');
+				for (let i = 0; i < allLocationElements.length; i++) {
+					allLocationElements[i].classList.remove('selected-location');
+				}
 
-        this.classList.add('selected-location');
-        selectedLocation = _.head(_.filter(cords, cord => cord.title === location));
-      });
-    }
-  });
+				this.classList.add('selected-location');
+				selectedLocation = _.head(_.filter(cords, cord => cord.title === location));
+			});
+		}
+	});
 
-  function addExistingPoints() {
-    cords.forEach(cord => {
-      addNewNonDraggabePoint({ lat: cord.lat, lng: cord.lng }, cord.title, true);
-    });
-  }
+	function addExistingPoints() {
+		cords.forEach(cord => {
+			addNewNonDraggabePoint({ lat: cord.lat, lng: cord.lng }, cord.title, true);
+		});
+	}
 
-  function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    // decode the url
-    return decodeURIComponent(urlParams.get(param));
-  }
+	function getQueryParam(param) {
+		const urlParams = new URLSearchParams(window.location.search);
+		// decode the url
+		return decodeURIComponent(urlParams.get(param));
+	}
 
-  function colorize(vars, elem) {
-    let num = parseInt(vars);
-    if (num <= 33)
-      elem.style.backgroundColor = "green";
-    else if (num <= 66)
-    {
-      elem.style.backgroundColor = "yellow";
-    }
-    else
-      elem.style.backgroundColor = "rgb(199, 0, 0)";
-  }
+	function colorize(vars, elem) {
+		let num = parseInt(vars);
+		if (num <= 33)
+			elem.style.backgroundColor = "green";
+		else if (num <= 66) {
+			elem.style.backgroundColor = "yellow";
+		}
+		else
+			elem.style.backgroundColor = "rgb(199, 0, 0)";
+	}
 
-  pushToEditPage = () => {
+	pushToEditPage = () => {
+		// get selected location and its cords
+		const url = `/edit?lat=${selectedLocation.lat}
+											&lng=${selectedLocation.lng}
+											&title=${selectedLocation.title}
+											&location=${getQueryParam('location')}
+											&period=${getQueryParam('period')}`;
+		window.location.href = url;
+	}
 
-    // get selected location and its cords
-    const url = `/edit?lat=${selectedLocation.lat}
-                      &lng=${selectedLocation.lng}
-                      &title=${selectedLocation.title}
-                      &location=${getQueryParam('location')}
-                      &period=${getQueryParam('period')}`;
-    window.location.href = url;
-  }
+	function addRows(elem, id) {
+		let newRow = document.createElement('tr');
+		for (var i = 0; i < 6; i++) {
+			let newCell = document.createElement('td');
+			switch (i) {
+				case 0:
+					newCell.innerHTML = elem.getAttribute('data-year');
+					break;
+				case 1:
+					newCell.innerHTML = elem.getAttribute('data-procuras');
+					break;
+				case 2:
+					newCell.innerHTML = elem.getAttribute('data-atendim');
+					break;
+				case 3:
+					newCell.innerHTML = elem.getAttribute('data-desist');
+					break;
+				case 4:
+					newCell.innerHTML = elem.getAttribute('data-espera');
+					break;
+				case 5:
+					newCell.innerHTML = elem.getAttribute('data-necessidade');
+					break;
+				default:
+					break;
+			}
+			newRow.appendChild(newCell);
+		}
+		id.appendChild(newRow);
+	}
 
-  function addRows(elem, id)
-  {
-    let newRow = document.createElement('tr');
-    for (var i = 0; i < 6; i++) {
-        let newCell = document.createElement('td');
-        switch (i) {
-          case 0:
-            newCell.innerHTML = elem.getAttribute('data-year');
-            break;
-          case 1:
-            newCell.innerHTML = elem.getAttribute('data-procuras');
-            break;
-          case 2:
-            newCell.innerHTML = elem.getAttribute('data-atendim');
-            break;
-          case 3:
-            newCell.innerHTML = elem.getAttribute('data-desist');
-            break;
-          case 4:
-            newCell.innerHTML = elem.getAttribute('data-espera');
-            break;
-          case 5:
-            newCell.innerHTML = elem.getAttribute('data-necessidade');
-            break;
-          default:
-            break;
-        }
-        newRow.appendChild(newCell);
-    }
-    id.appendChild(newRow);
-  }
-
-  window.onload = function() {
-    const indicators = document.querySelectorAll('.indicator');
-    indicators.forEach(function(element) {
-      const necessityMetric = element.getAttribute('data-necessity');
-      colorize(necessityMetric, element);
-    });
-    const rows = document.querySelectorAll('.data-rows');
-    let tables = document.querySelectorAll('tbody');
-    let times = rows.length / tables.length;
-    let i = 0;
-    tables.forEach(function(id) {
-      for (; i < times; i++)
-        addRows(rows[i], id);
-      times += times;
-    });
-    window.dispatchEvent(new Event('resize'));
-  };
+	window.onload = function() {
+		const indicators = document.querySelectorAll('.indicator');
+		indicators.forEach(function(element) {
+			const necessityMetric = element.getAttribute('data-necessity');
+			colorize(necessityMetric, element);
+		});
+		const rows = document.querySelectorAll('.data-rows');
+		let tables = document.querySelectorAll('tbody');
+		let times = rows.length / tables.length;
+		let i = 0;
+		tables.forEach(function(id) {
+			for (; i < times; i++)
+				addRows(rows[i], id);
+			times += times;
+		});
+		window.dispatchEvent(new Event('resize'));
+	};
 </script>
 
 {% endblock %}
-
-
-
-<!-- <div id="map_wrapper" class="w-50 p-0">
-	<div id="map" class="float-end border-0 m-auto" style="width: 600px"></div>
-  </div>
-  <div class="w-50 m-auto col p-0">
-	<h3 class="p-0 m-0 text-center">
-	  Previsões
-	</h3>
-	<div class="entries m-auto my-1 px-3 py-1 w-100">
-	  <div class="sort item w-100 title mx-auto py-0 w-100">
-		<div class="w-100 title-cont py-0 d-flex flex-row align-items-center justify-content-between">
-		  <h6 class="py-0 text-left">Lisboa</h6>
-		  <h6 class="py-0 text-right">2024-2027</h6>
-		</div>
-	  </div>
-	  <div class="sort text-center my-2">
-		<label for="sortField">Sort by: </label>
-		<select id="sortField" onchange="sortCards()">
-		  <option value="necessity_metric">Necessity Metric</option>
-		  <option value="designacao">Designation</option>
-		</select>
-	  </div>
-	  {% for card in cards%}
-	  <div class="item py-3 my-2 specific-location" id="{{card['location']}}"
-		data-location="{{card['location']}}">
-		<div class="d-flex flex-row">
-		  <div class="d-block p-0 mx-3 rounded-circle color-mark indicator" data-necessity="{{ card['summary']['max_necessity_metric'] }}"></div>
-		</div>
-		<div class="row w-75 m-auto pl-2">
-		  <div class="col-7">
-			<span>{{ card['location'] }}</span>
-		  </div>
-		  <div class="col-5">
-			<span>Necessidade: {{ card['summary']['max_necessity_metric'] }}%</span>
-		  </div>
-		</div>
-		<button type="button" class="btn btn-primary w-25 rounded" data-id="{{card.index}}" data-toggle="modal"
-		  data-target="#modal-{{card.index}}">
-		  Detalhes
-		</button>
-	  </div>
-	  {% endfor %}
-	</div>
-	<div class="w-100">
-	  <div class="mt-4 d-flex flex-row d-flex flex-row justify-content-center mx-auto">
-		<button id="add_button" type="button" class="rounded py-2 mx-1 add_button_class"
-		  onclick="pushToEditPage()">Adicionar
-		  pontos</button>
-	  </div>
-	</div>
-  </div> -->
-
-
-
-
