@@ -462,6 +462,11 @@ strong {
     padding-right: 15px;
 }
 
+#input-fields>div {
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
 @media (max-width: 995px) {
 
     .color-mark {
@@ -514,7 +519,7 @@ strong {
     }
 
     h1 {
-        font-size: 40px !important;
+        font-size: 38px !important;
         font-weight: 500 !important;
     }
 
@@ -553,7 +558,11 @@ strong {
     }
 
     .intro-text {
-        font-size: 17px !important;
+        font-size: 16px !important;
+    }
+
+    #input-fields>div {
+        flex-wrap: wrap;
     }
 }
 
