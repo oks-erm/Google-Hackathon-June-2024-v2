@@ -551,6 +551,10 @@ strong {
         width: 60vw;
         padding: 0.5rem 5rem !important;
     }
+
+    .intro-text {
+        font-size: 17px !important;
+    }
 }
 
 .loader {

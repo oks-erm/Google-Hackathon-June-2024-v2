@@ -24,7 +24,7 @@ Página Inicial
 
     <div id="input-fields" {% if not isAuthenticated %} style="display: none;"{% endif %}>
         <div class="p-0 pb-2 mt-4 mb-2 w-50 row mx-auto btn-cont">
-            <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6 offset-sm-2">
+            <!-- <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6 offset-sm-2">
                 <button id="locationDropdown" class="brder dropdown-toggle text-dark py-2 bg-white" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     Lisboa
@@ -32,8 +32,17 @@ Página Inicial
                 <ul class="dropdown-menu w-100" aria-labelledby="locationDropdown">
                     <li class="dropdown-item">Lisboa</li>
                 </ul>
+            </div> -->
+            <div class="dropdown dropdown-center mx-auto col-sm-6 offset-sm-2">
+                <button id="locationDropdown" class="btn dropdown-toggle text-dark py-2 bg-white" type="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Location
+                </button>
+                <div class="dropdown-menu w-100" aria-labelledby="locationDropdown">
+                    <a class="dropdown-item" href="#">Lisboa</a>
+                </div>
             </div>
-            <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6">
+            <!-- <div class="dropdown dropdown_wrap dropdown-center mx-auto col-sm-6">
                 <button id="periodDropdown" class="brder dropdown-toggle text-dark py-2 bg-white" type="button"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     Periodo
@@ -45,6 +54,19 @@ Página Inicial
                     <li class="dropdown-item">4 anos</li>
                     <li class="dropdown-item">5 anos</li>
                 </ul>
+            </div> -->
+            <div class="dropdown dropdown-center mx-auto col-sm-6 offset-sm-2">
+                <button id="periodDropdown" class="btn dropdown-toggle text-dark py-2 bg-white" type="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Periodo
+                </button>
+                <div class="dropdown-menu" aria-labelledby="periodDropdown">
+                    <a class="dropdown-item" href="#">1 ano</a>
+                    <a class="dropdown-item" href="#">2 anos</a>
+                    <a class="dropdown-item" href="#">3 anos</a>
+                    <a class="dropdown-item" href="#">4 anos</a>
+                    <a class="dropdown-item" href="#">5 anos</a>
+                </div>
             </div>
         </div>
         <form id="mainForm" class="d-flex flex-column align-items-center justify-content-between" action="/run" method="GET">
