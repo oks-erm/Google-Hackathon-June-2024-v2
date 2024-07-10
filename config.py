@@ -19,7 +19,12 @@ app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_KEY_PREFIX'] = 'session:'
-app.config['SESSION_REDIS'] = redis.StrictRedis.from_url(os.getenv('REDIS_URL'))
+app.config['SESSION_REDIS'] = redis.StrictRedis(
+                        host=os.getenv('REDIS_HOST'),
+                        port=os.getenv('REDIS_PORT'),
+                        password=os.getenv('REDIS_PASSWORD')
+						)
+
 
 # change this
 os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
