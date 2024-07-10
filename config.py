@@ -6,13 +6,18 @@ from openai import OpenAI
 import os
 import redis
 
+import os
+import base64
+import binascii
+
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
 
 # Redis configuration
 app.config['SESSION_TYPE'] = 'redis'
