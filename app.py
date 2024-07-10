@@ -17,6 +17,9 @@ import warnings
 from dateutil import parser
 from datetime import datetime
 
+# to config file
+from flask_session import Session
+
 warnings.filterwarnings("ignore")
 
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL, supabase_querry, supabase_insert
@@ -24,6 +27,9 @@ from plots import make_plots, DF_PREDICTED, DF_HISTORICAL, supabase_querry, supa
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
 
 CACHE = Cache(disk=False)
+
+# to config file
+Session(app)
 
 
 def get_current_time():
@@ -250,4 +256,4 @@ def report():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
