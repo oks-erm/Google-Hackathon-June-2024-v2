@@ -3,7 +3,7 @@
 Previsões
 {% endblock %}
 {% block content %}
-
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <section class="container">
 	<div id="wrapper" class="row">
 		<div id="map-wrapper" class="col-12 col-lg-6 mb-4 mb-md-0">
@@ -86,18 +86,23 @@ Previsões
 											{% endfor %}
 											<h3 class="text-center pt-5">Gráficos Previstos</h3>
 											<div class="d-flex flex-column justify-content-around graphs mx-3 data-titles">
-												<div class="graphs">
-												{{ card['plots_merged'][0] | safe }}
-												</div>
-												<div class="graphs">
-												{{ card['plots_merged'][1] | safe }}
-												</div>
-												<div class="graphs">
-												{{ card['plots_merged'][2] | safe }}
-												</div>
-												<div class="graphs">
-												{{ card['plots_merged'][3] | safe }}
-												</div>
+												<div class="graphs" id="plot-atendimentos-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-waiting-time-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-procuras-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-desistencias-{{card['safe_location']}}"></div>
+												<script>
+													var plots_merged = [
+														{{ card['plots_merged'][0] | safe }},
+														{{ card['plots_merged'][1] | safe }},
+														{{ card['plots_merged'][2] | safe }},
+														{{ card['plots_merged'][3] | safe }}
+														];
+
+													Plotly.newPlot('plot-atendimentos-{{card['safe_location']}}', plots_merged[0].data, plots_merged[0].layout);
+													Plotly.newPlot('plot-waiting-time-{{card['safe_location']}}', plots_merged[1].data, plots_merged[1].layout);
+												 	Plotly.newPlot('plot-procuras-{{card['safe_location']}}', plots_merged[2].data, plots_merged[2].layout);
+													Plotly.newPlot('plot-desistencias-{{card['safe_location']}}', plots_merged[3].data, plots_merged[3].layout);
+												</script>
 											</div>
 											<div class="d-flex flex-column justify-content-around">
 												<div>
@@ -118,18 +123,24 @@ Previsões
 											<div class="d-flex flex-column justify-content-around">
 												<h3 class="text-center pt-3">Gráficos Históricos</h3>
 												<div class="d-flex flex-column justify-content-around graphs mx-3">
-													<div class="graphs">
-														{{ card['plots_historic'][0] | safe }}
-													</div>
-													<div class="graphs">
-														{{ card['plots_historic'][1] | safe }}
-													</div>
-													<div class="graphs">
-														{{ card['plots_historic'][2] | safe }}
-													</div>
-													<div class="graphs">
-														{{ card['plots_historic'][3] | safe }}
-													</div>
+													<div class="graphs" id="plot-historic-atendimentos-{{card['safe_location']}}"></div>
+													<div class="graphs" id="plot-historic-waiting-time-{{card['safe_location']}}"></div>
+													<div class="graphs" id="plot-historic-procuras-{{card['safe_location']}}"></div>
+													<div class="graphs" id="plot-historic-desistencias-{{card['safe_location']}}"></div>
+													
+													<script>
+														var plots_historic = [
+															{{ card['plots_historic'][0] | safe }},
+															{{ card['plots_historic'][1] | safe }},
+															{{ card['plots_historic'][2] | safe }},
+															{{ card['plots_historic'][3] | safe }}
+														];
+														
+														Plotly.newPlot('plot-historic-atendimentos-{{card['safe_location']}}', plots_historic[0].data, plots_historic[0].layout);
+														Plotly.newPlot('plot-historic-waiting-time-{{card['safe_location']}}', plots_historic[1].data, plots_historic[1].layout);
+														Plotly.newPlot('plot-historic-procuras-{{card['safe_location']}}', plots_historic[2].data, plots_historic[2].layout);
+														Plotly.newPlot('plot-historic-desistencias-{{card['safe_location']}}', plots_historic[3].data, plots_historic[3].layout);
+													</script>
 												</div>
 											</div>
 										</div>
@@ -185,7 +196,7 @@ Previsões
 								</div>
 								<!-- Modal Footer -->
 								<div class="modal-footer">
-									<button type="button" class="btn btn-dark px-3" data-dismiss="modal">Fechar</button>
+									<button type="button" class="btn btn-primary px-3" data-dismiss="modal">Fechar</button>
 								</div>
 							</div>
 						</div>
@@ -249,7 +260,7 @@ Previsões
 				selectedLocation = _.head(_.filter(cords, cord => cord.title === location));
 			});
 		}
-	});
+});
 
 	function addExistingPoints() {
 		cords.forEach(cord => {
@@ -332,6 +343,7 @@ Previsões
 		});
 		window.dispatchEvent(new Event('resize'));
 	};
+
 
 </script>
 

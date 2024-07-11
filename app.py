@@ -80,7 +80,7 @@ def run():
         # with open('output.txt', 'w') as file:
         #     file.write(str(cards))
         # print(f'cache_key: {cache_key} | cached\n')
-
+        
     return render_template(
         'run.html',
         isAuthenticated=session.get("isAuthenticated", False),
