@@ -27,6 +27,10 @@
     background-color: var(--offwhite)
 }
 
+nav {
+    margin-bottom: -5vh;
+}
+
 h1,
 h2,
 h3 {
@@ -40,7 +44,7 @@ h3 {
 
 #logo {
     width: 120px;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 button,
@@ -131,11 +135,18 @@ footer div {
     flex-flow: row;
     align-items: center;
     padding: 5px 15px;
-    margin: 5px 5%;
+    margin: 5px 2%;
     border: 1px solid #ddd;
     border-radius: 3px;
     background-color: var(--bluesmoke);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.pin-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .pin-text {
@@ -144,8 +155,11 @@ footer div {
     margin-left: 10px;
 }
 
+#add-new-pins>div>div>input {
+    font-size: 14px !important;
+}
+
 .delete-point {
-    margin-left: auto;
     cursor: pointer;
     padding: 0px 10px;
     border-radius: 8px;
@@ -181,9 +195,13 @@ footer div {
     margin: 30px auto;
 }
 
+#add-new-pins {
+    width: 96%;
+}
+
 #add-new-pins,
 .entries {
-    height: 250px !important;
+    height: 260px !important;
     overflow-y: scroll;
 }
 
@@ -317,6 +335,8 @@ footer div {
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
+    align-content: center;
+    flex-wrap: inherit;
 }
 
 .sort {
@@ -419,7 +439,8 @@ strong {
 }
 
 .subtext {
-    padding: 20 20 20 5px !important;
+    padding: 12px !important;
+    text-align: center;
 }
 
 /* SIZE OF MODAL */
@@ -469,6 +490,13 @@ strong {
     flex-wrap: nowrap;
 }
 
+@media (max-width: 1200px) {
+    #cards-wrapper>div>div>button,
+    #cards-wrapper>div>button {
+        padding: 0.5rem 1.5rem !important;
+    }
+}
+
 @media (max-width: 995px) {
 
     .color-mark {
@@ -487,6 +515,11 @@ strong {
 
     #cards-wrapper h3 {
         padding-bottom: 15px !important;
+    }
+
+    #map {
+        height: 500px;
+        margin-top: 50px;
     }
 }
 
