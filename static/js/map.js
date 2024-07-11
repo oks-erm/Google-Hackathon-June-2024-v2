@@ -61,14 +61,96 @@ function getImageFromMap(existingPoint) {
     return data;
 }
 
+// const insetPointInView = (type) => {
+//     // create a new pin
+//     let newPin = document.createElement("div");
+//     // add data id to the pin to use on delete later
+//     newPin.dataset.id = `${type}-pin-${points.length + 1}`;
+
+//     let pinText = document.createElement("p");
+//     pinText.innerText = `Ponto ${type}`;
+//     pinText.className = "pin-text";
+
+//     let deletePoint = document.createElement("button");
+//     deletePoint.innerText = "X";
+//     deletePoint.className = "delete-point";
+
+//     let from = document.createElement("input");
+//     from.setAttribute("type", "month");
+//     from.setAttribute("name", "from");
+//     from.setAttribute("value", "2024-01");
+//     from.classList.add("ww");
+//     from.classList.add("p-2");
+//     from.classList.add(type == 'Fixo' ? "ml-5" : "mx-2");
+//     from.classList.add("fs-6");
+
+//     from.addEventListener("change", () => {
+//         // get the id of the pin
+//         let id = newPin.dataset.id;
+
+//         // remove the point from the array
+//         let point = _.head(points.filter((point) => point.id === id));
+//         point['from'] = from.value;
+//     });
+
+//     let to, typing;
+//     typing = `${type}`;
+//     if (typing == "Móvel")
+//     {
+//         to = document.createElement("input");
+//         to.setAttribute("type", "month");
+//         to.setAttribute("name", "to");
+//         to.setAttribute("value", "2027-12");
+//         to.classList.add("ww");
+//         to.classList.add("p-2");
+//         to.classList.add("mx-2");
+//         to.classList.add("fs-6");
+
+//         to.addEventListener("change", () => {
+//             // get the id of the pin
+//             let id = newPin.dataset.id;
+
+//             // remove the point from the array
+//             let point = _.head(points.filter((point) => point.id === id));
+//             point['to'] = to.value;
+//         });
+//     }
+
+//     deletePoint.onclick = () => {
+//         // get the id of the pin
+//         let id = newPin.dataset.id;
+
+//         // remove the point from the array
+//         removePointFromMap(id);
+//         points = points.filter((point) => point.id !== id);
+//         newPin.remove();
+//     };
+
+//     newPin.className = "new-pin";
+//     newPin.appendChild(createNewImage(type));
+//     newPin.appendChild(pinText);
+//     newPin.appendChild(from);
+//     if (typing == "Móvel")
+//         newPin.appendChild(to);
+//     newPin.appendChild(deletePoint);
+
+//     let newPinesContainer = document.getElementById("add-new-pins");
+//     newPinesContainer.appendChild(newPin);
+
+//     return newPin.dataset.id;
+// };
+
 const insetPointInView = (type) => {
-    // create a new pin
     let newPin = document.createElement("div");
     // add data id to the pin to use on delete later
     newPin.dataset.id = `${type}-pin-${points.length + 1}`;
 
+    // create a wrapper div
+    let wrapperDiv = document.createElement("div");
+    wrapperDiv.className = "pin-wrapper";
+
     let pinText = document.createElement("p");
-    pinText.innerText = `Ponto ${type}`;
+    pinText.innerText = `  ${type}`;
     pinText.className = "pin-text";
 
     let deletePoint = document.createElement("button");
@@ -79,38 +161,31 @@ const insetPointInView = (type) => {
     from.setAttribute("type", "month");
     from.setAttribute("name", "from");
     from.setAttribute("value", "2024-01");
-    from.classList.add("ww");
-    from.classList.add("p-2");
-    from.classList.add(type == 'Fixo' ? "ml-5" : "mx-2");
-    from.classList.add("fs-6");
+    from.classList.add("ww", "p-2", type == 'Fixo' ? "ml-5" : "mx-2", "fs-6");
 
     from.addEventListener("change", () => {
         // get the id of the pin
         let id = newPin.dataset.id;
 
-        // remove the point from the array
+        // update the point in the array
         let point = _.head(points.filter((point) => point.id === id));
         point['from'] = from.value;
     });
 
     let to, typing;
     typing = `${type}`;
-    if (typing == "Móvel")
-    {
+    if (typing == "Móvel") {
         to = document.createElement("input");
         to.setAttribute("type", "month");
         to.setAttribute("name", "to");
         to.setAttribute("value", "2027-12");
-        to.classList.add("ww");
-        to.classList.add("p-2");
-        to.classList.add("mx-2");
-        to.classList.add("fs-6");
+        to.classList.add("ww", "p-2", "mx-2", "fs-6");
 
         to.addEventListener("change", () => {
             // get the id of the pin
             let id = newPin.dataset.id;
 
-            // remove the point from the array
+            // update the point in the array
             let point = _.head(points.filter((point) => point.id === id));
             point['to'] = to.value;
         });
@@ -127,18 +202,24 @@ const insetPointInView = (type) => {
     };
 
     newPin.className = "new-pin";
-    newPin.appendChild(createNewImage(type));
-    newPin.appendChild(pinText);
-    newPin.appendChild(from);
+
+    // Append elements to the wrapper div
+    wrapperDiv.appendChild(pinText);
+    pinText.prepend(createNewImage(type));
+    wrapperDiv.appendChild(from);
     if (typing == "Móvel")
-        newPin.appendChild(to);
-    newPin.appendChild(deletePoint);
+        wrapperDiv.appendChild(to);
+    wrapperDiv.appendChild(deletePoint);
+
+    // Append the wrapper div to the new pin
+    newPin.appendChild(wrapperDiv);
 
     let newPinesContainer = document.getElementById("add-new-pins");
     newPinesContainer.appendChild(newPin);
 
     return newPin.dataset.id;
 };
+
 
 async function addNewDraggablePoint(selectedLocation, type) {
     const { InfoWindow } = await google.maps.importLibrary("maps");
