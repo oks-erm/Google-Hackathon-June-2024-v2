@@ -70,7 +70,7 @@ def run():
         sorted_cards = cache_run
         # print(f'cache_key: {cache_key} | running on cache \n')
     else:
-        print('no cache... storing')
+        # print('no cache... storing')
         cards = []
         for location in available_locations:
             cards.append(make_plots(location, length_of_prediction))
