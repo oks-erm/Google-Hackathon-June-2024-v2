@@ -124,8 +124,8 @@ def plot_atendimentos_per_month(location, df_historical=None, df_predicted=None)
                           size=tick_font_size, color=tick_font_color)
         )
     )
-    graph_html = fig.to_json()
-    return graph_html
+    graph_json = fig.to_json()
+    return graph_json
 
 
 def plot_waiting_time_per_month(location, df_historical=None, df_predicted=None):
@@ -190,8 +190,8 @@ def plot_waiting_time_per_month(location, df_historical=None, df_predicted=None)
                           size=tick_font_size, color=tick_font_color)
         )
     )
-    graph_html = fig.to_json()
-    return graph_html
+    graph_json = fig.to_json()
+    return graph_json
 
 
 def plot_procuras_per_month(location, df_historical=None, df_predicted=None):
@@ -258,8 +258,8 @@ def plot_procuras_per_month(location, df_historical=None, df_predicted=None):
                           size=tick_font_size, color=tick_font_color)
         )
     )
-    graph_html = fig.to_json()
-    return graph_html
+    graph_json = fig.to_json()
+    return graph_json
 
 
 def plot_desistencias_per_month(location, df_historical=None, df_predicted=None):
@@ -324,8 +324,8 @@ def plot_desistencias_per_month(location, df_historical=None, df_predicted=None)
                           size=tick_font_size, color=tick_font_color)
         )
     )
-    graph_html = fig.to_json()
-    return graph_html
+    graph_json = fig.to_json()
+    return graph_json
 
 
 def filter_historical_data(df_historical, location):
