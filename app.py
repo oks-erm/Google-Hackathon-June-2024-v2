@@ -1,4 +1,4 @@
-from config import app, supabase
+from config import app, supabase, cache
 from flask import (
     render_template,
     session,
@@ -8,7 +8,7 @@ from flask import (
     flash,
     jsonify
 )
-from cache import Cache
+# from cache import Cache
 import pandas as pd
 import numpy as np
 import json
@@ -25,8 +25,6 @@ warnings.filterwarnings("ignore")
 from plots import make_plots, DF_PREDICTED, DF_HISTORICAL, supabase_querry, supabase_insert
 
 available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldanha']
-
-CACHE = Cache(disk=False)
 
 # to config file
 Session(app)
@@ -57,18 +55,31 @@ def run():
         session['url'] = url_for('run')
         return redirect(url_for('index'))
 
-    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    prediction_period = request.args.get('period')
+    prediction_location = request.args.get('location')
 
-    # Period for prediction
-    period = request.args.get('period')
-    if not period:
-        period = '3 years'
-    length_of_prediction = period.split()[0]
+    if not prediction_period:
+        return redirect(url_for('index'))
+    length_of_prediction = prediction_period.split()[0]
+
+    google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
+    cache_key = prediction_location + length_of_prediction
+    cache_run = cache.get(cache_key)
     
-    cards = []
-    for location in available_locations:
-        cards.append(make_plots(location, length_of_prediction))
-    sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'], reverse=True)
+    if cache_run:
+        sorted_cards = cache_run
+        # print(f'cache_key: {cache_key} | running on cache \n')
+    else:
+        print('no cache... storing')
+        cards = []
+        for location in available_locations:
+            cards.append(make_plots(location, length_of_prediction))
+        sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'],
+                            reverse=True)
+        cache.set(cache_key, sorted_cards, timeout=500)
+        # with open('output.txt', 'w') as file:
+        #     file.write(str(cards))
+        # print(f'cache_key: {cache_key} | cached\n')
 
     return render_template(
         'run.html',
@@ -133,7 +144,7 @@ def login():
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        CACHE.clear()
+        # CACHE.clear()
 
         username = request.form['username']
         password = request.form['password']
@@ -160,7 +171,7 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    CACHE.clear()
+    # CACHE.clear()
 
     session.pop('user_id', None)
     session.pop('username', None)
