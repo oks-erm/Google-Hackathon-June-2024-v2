@@ -63,8 +63,8 @@ def run():
     length_of_prediction = prediction_period.split()[0]
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
-    cache_key = prediction_location + length_of_prediction
-    cache_run = cache.get(cache_key)
+    session['cache_key'] = prediction_location + length_of_prediction
+    cache_run = cache.get(session['cache_key'])
     
     if cache_run:
         sorted_cards = cache_run
@@ -76,7 +76,7 @@ def run():
             cards.append(make_plots(location, length_of_prediction))
         sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'],
                             reverse=True)
-        cache.set(cache_key, sorted_cards, timeout=500)
+        cache.set(session['cache_key'], sorted_cards, timeout=500)
         # with open('output.txt', 'w') as file:
         #     file.write(str(cards))
         # print(f'cache_key: {cache_key} | cached\n')
@@ -144,8 +144,6 @@ def login():
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        # CACHE.clear()
-
         username = request.form['username']
         password = request.form['password']
 
@@ -160,7 +158,7 @@ def login():
             session["isAuthenticated"] = True
             session['user_id'] = user_check[0]['id']
             session['username'] = user_check[0]['username']
-            flash('Login successful', 'success')
+            flash('Login successful', 'info')
             return redirect(session.get('url', url_for('index')))
         else:
             flash('Invalid credentials', 'error')
@@ -171,8 +169,6 @@ def login():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    # CACHE.clear()
-
     session.pop('user_id', None)
     session.pop('username', None)
     session['isAuthenticated'] = False
@@ -190,18 +186,20 @@ def save_report():
 
     if request.method == 'POST':
         try:
+            print('creating report...')
             body = request.get_json()
             location = body.get('location')
 
-            # This cache situation should be fixed
-            cards_table = CACHE.get('cards_table', create_cards_table, 3)
-            data_analysis = CACHE.get('data_analysis', lambda: {})
-            # Filter cards_table for the specific location
-            filtered_cards_table = next((card for card in cards_table if card.get('designacao') == location), None)
+            # print('=== body\n', body)
+            # return jsonify({'status': 'error', 'message': str(e)}), 500
 
-            # Update body with the filtered data
-            body['cards_table'] = filtered_cards_table
-            body['AI_insight'] = data_analysis[location]
+            cards = cache.get(session['cache_key'])
+
+            this_card = next((card for card in cards if card.get('location') == location), None)
+
+            # Ai insight is redudant
+            body['AI_insight'] = this_card['insights']
+            body['cards_table'] = this_card
 
             # Create the Report object
             report = {

@@ -68,6 +68,14 @@
         
         <!-- Page Content -->
         <main id="content" style="display: none;" class="align-items-center justify-content-center my-auto fs-6">
+            <!--  Flash Message
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %} -->
 			{% block content %}{% endblock %}
 		</main>
 
