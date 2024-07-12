@@ -196,10 +196,20 @@ def save_report():
             cards = cache.get(session['cache_key'])
 
             this_card = next((card for card in cards if card.get('location') == location), None)
+            this_card.pop('plots_merged')
+            this_card.pop('plots_historic')
+            this_card.pop('plots_safe_location')
+            this_card.pop('summary')
+            this_card.pop('lat')
+            this_card.pop('long')
+            
+            from bs4 import BeautifulSoup
+            this_card['insights'] = BeautifulSoup(this_card['insights'], "html.parser").get_text()
+            # Remove this when generated report is done properly
+            this_card['old_insights'] = this_card['insights']
 
             # Ai insight is redudant
-            body['AI_insight'] = this_card['insights']
-            body['cards_table'] = this_card
+            body['cards'] = this_card
 
             # Create the Report object
             report = {
