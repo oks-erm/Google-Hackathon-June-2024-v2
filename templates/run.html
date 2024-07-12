@@ -43,12 +43,14 @@ Previsões
 										aria-selected="true">Previsões</a>
 								</li>
 								<li class="nav-item" role="presentation">
-								<a class="nav-link" id="historic-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
-									href="#historic-data{{card['safe_location']}}" role="tab" aria-controls="historic-data{{card['safe_location']}}"
+									<a class="nav-link" id="historic-data-tab{{card['safe_location']}}" data-bs-toggle="tab"
+										href="#historic-data{{card['safe_location']}}" role="tab" aria-controls="historic-data{{card['safe_location']}}"
 										aria-selected="false">Dados históricos</a>
 								</li>
 								<li class="nav-item" role="presentation">
-								<a class="nav-link" id="info-tab{{card['safe_location']}}" data-bs-toggle="tab" href="#info{{card['safe_location']}}" role="tab" aria-controls="info{{card['safe_location']}}" aria-selected="false">Info</a>
+									<a class="nav-link" id="info-tab{{card['safe_location']}}" data-bs-toggle="tab"
+										href="#info{{card['safe_location']}}" role="tab" aria-controls="info{{card['safe_location']}}"
+										aria-selected="false">Info</a>
 								</li>
 							</ul>
 							<!-- Tab content -->
@@ -98,10 +100,10 @@ Previsões
 														{{ card['plots_merged'][3] | safe }}
 														];
 
-													Plotly.newPlot('plot-atendimentos-{{card['safe_location']}}', plots_merged[0].data, plots_merged[0].layout);
-													Plotly.newPlot('plot-waiting-time-{{card['safe_location']}}', plots_merged[1].data, plots_merged[1].layout);
-												 	Plotly.newPlot('plot-procuras-{{card['safe_location']}}', plots_merged[2].data, plots_merged[2].layout);
-													Plotly.newPlot('plot-desistencias-{{card['safe_location']}}', plots_merged[3].data, plots_merged[3].layout);
+													Plotly.newPlot("plot-atendimentos-{{card['safe_location']}}", plots_merged[0].data, plots_merged[0].layout);
+													Plotly.newPlot("plot-waiting-time-{{card['safe_location']}}", plots_merged[1].data, plots_merged[1].layout);
+												 	Plotly.newPlot("plot-procuras-{{card['safe_location']}}", plots_merged[2].data, plots_merged[2].layout);
+													Plotly.newPlot("plot-desistencias-{{card['safe_location']}}", plots_merged[3].data, plots_merged[3].layout);
 												</script>
 											</div>
 											<div class="d-flex flex-column justify-content-around">
@@ -117,31 +119,28 @@ Previsões
 								</div>
 								<div class="tab-pane fade" id="historic-data{{card['safe_location']}}" role="tabpanel"
 								aria-labelledby="historic-data-tab{{card['safe_location']}}">
-									<div class="tab-pane fade show active" id="predicted-data{{card['safe_location']}}" role="tabpanel"
-										aria-labelledby="historic-data-tab{{card['safe_location']}}">
-										<div class="modal-body">
-											<div class="d-flex flex-column justify-content-around">
-												<h3 class="text-center pt-3">Gráficos Históricos</h3>
-												<div class="d-flex flex-column justify-content-around graphs mx-3">
-													<div class="graphs" id="plot-historic-atendimentos-{{card['safe_location']}}"></div>
-													<div class="graphs" id="plot-historic-waiting-time-{{card['safe_location']}}"></div>
-													<div class="graphs" id="plot-historic-procuras-{{card['safe_location']}}"></div>
-													<div class="graphs" id="plot-historic-desistencias-{{card['safe_location']}}"></div>
+									<div class="modal-body">
+										<div class="d-flex flex-column justify-content-around">
+											<h3 class="text-center pt-3">Gráficos Históricos</h3>
+											<div class="d-flex flex-column justify-content-around graphs mx-3">
+												<div class="graphs" id="plot-historic-atendimentos-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-historic-waiting-time-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-historic-procuras-{{card['safe_location']}}"></div>
+												<div class="graphs" id="plot-historic-desistencias-{{card['safe_location']}}"></div>
+												
+												<script>
+													var plots_historic = [
+														{{ card['plots_historic'][0] | safe }},
+														{{ card['plots_historic'][1] | safe }},
+														{{ card['plots_historic'][2] | safe }},
+														{{ card['plots_historic'][3] | safe }}
+													];
 													
-													<script>
-														var plots_historic = [
-															{{ card['plots_historic'][0] | safe }},
-															{{ card['plots_historic'][1] | safe }},
-															{{ card['plots_historic'][2] | safe }},
-															{{ card['plots_historic'][3] | safe }}
-														];
-														
-														Plotly.newPlot('plot-historic-atendimentos-{{card['safe_location']}}', plots_historic[0].data, plots_historic[0].layout);
-														Plotly.newPlot('plot-historic-waiting-time-{{card['safe_location']}}', plots_historic[1].data, plots_historic[1].layout);
-														Plotly.newPlot('plot-historic-procuras-{{card['safe_location']}}', plots_historic[2].data, plots_historic[2].layout);
-														Plotly.newPlot('plot-historic-desistencias-{{card['safe_location']}}', plots_historic[3].data, plots_historic[3].layout);
-													</script>
-												</div>
+													Plotly.newPlot("plot-historic-atendimentos-{{card['safe_location']}}", plots_historic[0].data, plots_historic[0].layout);
+													Plotly.newPlot("plot-historic-waiting-time-{{card['safe_location']}}", plots_historic[1].data, plots_historic[1].layout);
+													Plotly.newPlot("plot-historic-procuras-{{card['safe_location']}}", plots_historic[2].data, plots_historic[2].layout);
+													Plotly.newPlot("plot-historic-desistencias-{{card['safe_location']}}", plots_historic[3].data, plots_historic[3].layout);
+												</script>
 											</div>
 										</div>
 									</div>
@@ -224,12 +223,14 @@ Previsões
 		{
       lat: parseFloat("{{ cards[0]['long'] }}"),
       lng: parseFloat("{{ cards[0]['lat'] }}"),
-      title: "{{ cards[0]['safe_location'] }}"
+	  title: "{{ cards[0]['location'] }}",
+      safe_title: "{{ cards[0]['safe_location'] }}"
 		},
 		{
       lat: parseFloat("{{ cards[1]['long'] }}"),
       lng: parseFloat("{{ cards[1]['lat'] }}"),
-      title: "{{ cards[1]['safe_location'] }}"
+      safe_title: "{{ cards[1]['safe_location'] }}",
+	  title: "{{ cards[1]['location']}}"
 		}
 	];
 
@@ -246,10 +247,8 @@ Previsões
 		for (let index = 0; index < allLocationElements.length; index++) {
 			allLocationElements[index].addEventListener('click', function () {
 				// chooseThisLocation(this);
-				let addButton = document.getElementById('add_button');
 				addButton.disabled = false;
 				addButton.classList.remove('disabled-btn');
-
 
 				const location = this.getAttribute('data-location');
 				for (let i = 0; i < allLocationElements.length; i++) {
@@ -257,10 +256,10 @@ Previsões
 				}
 
 				this.classList.add('selected-location');
-				selectedLocation = _.head(_.filter(cords, cord => cord.title === location));
+				selectedLocation = _.head(_.filter(cords, cord => cord.safe_title === location));
 			});
 		}
-});
+	});
 
 	function addExistingPoints() {
 		cords.forEach(cord => {
@@ -279,7 +278,7 @@ Previsões
 		if (num <= 33)
 			elem.style.backgroundColor = "green";
 		else if (num <= 66) {
-			elem.style.backgroundColor = "yellow";
+			elem.style.backgroundColor = "rgb(204, 153, 0)";
 		}
 		else
 			elem.style.backgroundColor = "rgb(199, 0, 0)";
@@ -343,8 +342,6 @@ Previsões
 		});
 		window.dispatchEvent(new Event('resize'));
 	};
-
-
 </script>
 
 {% endblock %}

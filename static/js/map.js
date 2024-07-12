@@ -264,7 +264,6 @@ async function addNewDraggablePoint(selectedLocation, type) {
                     lat: e.latLng.lat(),
                     lng: e.latLng.lng(),
                 };
-                // map.setCenter(point.cordinates);
             }
             return point;
         });
@@ -306,7 +305,6 @@ async function addNewNonDraggabePoint(cord, title, center = false) {
 }
 
 async function initMap() {
-    // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
 
     map = new Map(document.getElementById("map"), {
@@ -316,7 +314,6 @@ async function initMap() {
 }
 
 async function initEditMap() {
-    // Request needed libraries.
     const { Map } = await google.maps.importLibrary("maps");
 
     map = new Map(document.getElementById("map"), {
