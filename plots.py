@@ -389,8 +389,9 @@ def make_plots(location, length_of_prediction):
     df_historical = DF_HISTORICAL
     df_predicted = DF_PREDICTED
     card = {}
-    card['lat'] = df_historical[df_historical['Designacao'] == location]['Latitude'].iloc[0]
-    card['long'] = df_historical[df_historical['Designacao'] == location]['Longitude'].iloc[0]
+    # these are switched on purpose
+    card['longitude'] = df_historical[df_historical['Designacao'] == location]['Latitude'].iloc[0]
+    card['latitude'] = df_historical[df_historical['Designacao'] == location]['Longitude'].iloc[0]
     
     df_historical = filter_historical_data(df_historical, location)
     df_predicted = filter_predicted_data(df_predicted, location, length_of_prediction)

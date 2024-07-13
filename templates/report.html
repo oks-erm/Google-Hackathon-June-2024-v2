@@ -12,14 +12,14 @@ Relatórios
 				<img src="{{ item.report.mapData.image }}" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
 			</div>
 			<div class="w-75 p-3">
-				<div class="p-1"><strong>Location:</strong> {{ item.report.cards['designacao'] }}</div>
+				<div class="p-1"><strong>Location:</strong> {{ item.report.card['location'] }}</div>
 				<div class="p-1"><strong>Created at:</strong> {{ item.created_at }}</div>
 				<div class="p-1"><strong>Created by:</strong> {{ item.user }}</div>
 			</div>
 			<button class="rounded report-btn p-2 fs-6" data-created_at="{{ item.created_at }}"
-														data-location="{{ item.report.cards['designacao'] }}"
-														data-AI="{{ item.report.cards['old_insights'] }}"
-														data-metric="{{ item.report.cards['necessity_metric'] }}"
+														data-location="{{ item.report.card['location'] }}"
+														data-AI="{{ item.report.card['old_insights'] }}"
+														data-metric="{{ item.report.card['summary']['max_necessity_metric'] }}"
 														data-email="{{ item.email }}"
 														data-report="{{ item.report }}">Descarregar</button>
 		</div>

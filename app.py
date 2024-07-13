@@ -29,6 +29,9 @@ available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldan
 # to config file
 Session(app)
 
+USING_CACHE = 0
+CACHE_TIMEOUT = 500
+
 
 def get_current_time():
     from datetime import datetime as dt
@@ -39,7 +42,7 @@ def get_current_time():
 def hash_password(password):
     from hashlib import sha256
 
-    return sha256((password + "tiny pinch of salt").encode("utf-8")).hexdigest()
+    return sha256((password + os.getenv('PASSWORD_SALT')).encode("utf-8")).hexdigest()
 
 
 @app.route("/")
@@ -47,6 +50,19 @@ def index():
     return render_template('index.html',
                            isAuthenticated=session.get("isAuthenticated", False),
                            user=session.get("username"))
+
+
+def generate_cards(length_of_prediction, location=None):
+    cards = []
+    if not location:
+        for location in available_locations:
+            cards.append(make_plots(location, length_of_prediction))
+    else:
+        cards.append(make_plots(location, length_of_prediction))
+    sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'],
+                        reverse=True)
+    
+    return sorted_cards
 
 
 @app.route('/run', methods=['GET', 'POST'])
@@ -64,28 +80,28 @@ def run():
 
     google_map_api_key = os.getenv('GOOGLE_MAP_API_KEY')
     session['cache_key'] = prediction_location + length_of_prediction
-    cache_run = cache.get(session['cache_key'])
-    
-    if cache_run:
-        sorted_cards = cache_run
-        # print(f'cache_key: {cache_key} | running on cache \n')
-    else:
-        # print('no cache... storing')
-        cards = []
-        for location in available_locations:
-            cards.append(make_plots(location, length_of_prediction))
-        sorted_cards = sorted(cards, key=lambda x: x['summary']['max_necessity_metric'],
-                            reverse=True)
-        cache.set(session['cache_key'], sorted_cards, timeout=500)
-        # with open('output.txt', 'w') as file:
-        #     file.write(str(cards))
-        # print(f'cache_key: {cache_key} | cached\n')
+    cards = cache.get(session['cache_key'])
+    if not cards:
+        cards = generate_cards(length_of_prediction)
+        if USING_CACHE:
+            cache.set(session['cache_key'], cards, timeout=CACHE_TIMEOUT)
+
+    cards_js = [
+        {
+            'latitude': card['latitude'],
+            'longitude': card['longitude'],
+            'location': card['location'],
+            'safe_location': card['safe_location']
+        }
+        for card in cards
+    ]
         
     return render_template(
         'run.html',
         isAuthenticated=session.get("isAuthenticated", False),
         google_map_api_key=google_map_api_key,
-        cards=sorted_cards,
+        cards=cards,
+        cards_js=cards_js,
         user=session.get("username")
     )
 
@@ -189,29 +205,31 @@ def save_report():
             print('creating report...')
             body = request.get_json()
             location = body.get('location')
-
-            # print('=== body\n', body)
-            # return jsonify({'status': 'error', 'message': str(e)}), 500
-
+            prediction_period = body.get('period')
+            length_of_prediction = prediction_period.split()[0]
             cards = cache.get(session['cache_key'])
+    
+            if not cards:
+                cards = generate_cards(length_of_prediction, location)
+                if USING_CACHE:
+                    cache.set(session['cache_key'], cards, timeout=CACHE_TIMEOUT)
 
             this_card = next((card for card in cards if card.get('location') == location), None)
             this_card.pop('plots_merged')
             this_card.pop('plots_historic')
-            this_card.pop('plots_safe_location')
-            this_card.pop('summary')
-            this_card.pop('lat')
-            this_card.pop('long')
+            this_card.pop('safe_location')
+            # this_card.pop('summary')
+            this_card.pop('latitude')
+            this_card.pop('longitude')
+            this_card.pop('data_by_year')
             
             from bs4 import BeautifulSoup
             this_card['insights'] = BeautifulSoup(this_card['insights'], "html.parser").get_text()
             # Remove this when generated report is done properly
             this_card['old_insights'] = this_card['insights']
 
-            # Ai insight is redudant
-            body['cards'] = this_card
+            body['card'] = this_card
 
-            # Create the Report object
             report = {
                 "created_at": datetime.now().isoformat(),
                 "report": body,

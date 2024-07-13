@@ -216,26 +216,10 @@ Previsões
 <script src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=initMap"></script>
 <script>
 	let selectedLocation = null;
+	let cards_js = '{{ cards_js | tojson }}';
+	cards_js = JSON.parse(cards_js);
 
-  //  for loop goes through every location and retrieves coords and safe_location
-
-	const cords = [
-		{
-      lat: parseFloat("{{ cards[0]['long'] }}"),
-      lng: parseFloat("{{ cards[0]['lat'] }}"),
-	  title: "{{ cards[0]['location'] }}",
-      safe_title: "{{ cards[0]['safe_location'] }}"
-		},
-		{
-      lat: parseFloat("{{ cards[1]['long'] }}"),
-      lng: parseFloat("{{ cards[1]['lat'] }}"),
-      safe_title: "{{ cards[1]['safe_location'] }}",
-	  title: "{{ cards[1]['location']}}"
-		}
-	];
-
-	document.addEventListener('DOMContentLoaded', (event) => {
-
+	document.addEventListener('DOMContentLoaded', (event) => {		
 		addExistingPoints();
 
 		let addButton = document.getElementById('add_button');
@@ -256,14 +240,14 @@ Previsões
 				}
 
 				this.classList.add('selected-location');
-				selectedLocation = _.head(_.filter(cords, cord => cord.safe_title === location));
+				selectedLocation = _.head(_.filter(cards_js, card => card.safe_location === location));
 			});
 		}
 	});
 
 	function addExistingPoints() {
-		cords.forEach(cord => {
-			addNewNonDraggabePoint({ lat: cord.lat, lng: cord.lng }, cord.title, true);
+		cards_js.forEach(card => {
+			addNewNonDraggabePoint({ lat: card.latitude, lng: card.longitude }, card.location, true);
 		});
 	}
 
@@ -286,11 +270,11 @@ Previsões
 
 	pushToEditPage = () => {
 		// get selected location and its cords
-		const url = `/edit?lat=${selectedLocation.lat}
-											&lng=${selectedLocation.lng}
-											&title=${selectedLocation.title}
-											&location=${getQueryParam('location')}
-											&period=${getQueryParam('period')}`;
+		const url = `/edit?lat=${selectedLocation.latitude}
+							&lng=${selectedLocation.longitude}
+							&title=${selectedLocation.location}
+							&location=${getQueryParam('location')}
+							&period=${getQueryParam('period')}`;
 		window.location.href = url;
 	}
 
