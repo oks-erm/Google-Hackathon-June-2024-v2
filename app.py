@@ -29,7 +29,7 @@ available_locations = ['Loja de Cidadão Laranjeiras' , 'Loja de Cidadão Saldan
 # to config file
 Session(app)
 
-USING_CACHE = 0
+USING_CACHE = 1
 CACHE_TIMEOUT = 500
 
 
