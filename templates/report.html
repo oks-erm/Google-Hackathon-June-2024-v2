@@ -5,29 +5,34 @@ Relatórios
 {% block content %}
 <section>
 	<h2 class="text-center h1 pa-10 mx-5 my-5 report">Relatórios</h2>
-	<div class="bgr d-flex flex-column align-items-center">
-		{% for item in report_data %}
-		<div class="rounded report-container d-flex align-items-center justify-content-between">
-			<div class="image-container p-1">
-				<img src="{{ item.report.mapData.image }}" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
-			</div>
-			<div class="w-75 p-3">
-				<div class="p-1"><strong>Location:</strong> {{ item.report.card['location'] }}</div>
-				<div class="p-1"><strong>Created at:</strong> {{ item.created_at }}</div>
-				<div class="p-1"><strong>Created by:</strong> {{ item.user }}</div>
-			</div>
-			<button class="rounded report-btn p-2 fs-6" data-created_at="{{ item.created_at }}"
-														data-location="{{ item.report.card['location'] }}"
-														data-AI="{{ item.report.card['old_insights'] }}"
-														data-metric="{{ item.report.card['summary']['max_necessity_metric'] }}"
-														data-email="{{ item.email }}"
-														data-report="{{ item.report }}">Descarregar</button>
-		</div>
-		{% endfor %}
+    <div class="bgr d-flex flex-column align-items-center">
+        {% if report_data|length > 0 %}
+            <div class="p-1">{{ report_data|length }} relatórios</div>
+            {% for item in report_data %}
+            <div class="rounded report-container d-flex align-items-center justify-content-between">
+                <div class="image-container p-1">
+                    <img src="{{ item.report.mapData.image }}" alt="Report map" class="w-100 h-auto" id="reportImage" crossorigin="anonymous">
+                </div>
+                <div class="w-75 p-3">
+                    <div class="p-1"><strong>Location:</strong> {{ item.report.card['location'] }}</div>
+                    <div class="p-1"><strong>Created at:</strong> {{ item.created_at }}</div>
+                    <div class="p-1"><strong>Created by:</strong> {{ item.user }}</div>
+                </div>
+                <button class="rounded report-btn p-2 fs-6" data-created_at="{{ item.created_at }}"
+                                                            data-location="{{ item.report.card['location'] }}"
+                                                            data-AI="{{ item.report.card['old_insights'] }}"
+                                                            data-metric="{{ item.report.card['summary']['max_necessity_metric'] }}"
+                                                            data-email="{{ item.email }}"
+                                                            data-report="{{ item.report }}">Descarregar</button>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="p-1">Não existem relatórios.</div>
+        {% endif %}
 	</div>
     <div class="d-flex mt-4 justify-content-center">
         <button id="add_button" type="button" class="rounded py-2 mx-1 mb-5 add_button_class"
-            onclick="pushToIndexPage()">Criar um Novo Relatório</button>
+            onclick="pushToIndexPage()">Criar Relatório</button>
     </div>
 </section>
 
